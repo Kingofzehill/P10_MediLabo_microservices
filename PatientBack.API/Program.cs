@@ -81,26 +81,26 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-// (UPD012) Authorization policies for admin and user.
+// (UPD012) Authorization policies for Organizer and Practitioner.
 builder.Services.AddAuthorizationBuilder()
-    .AddPolicy("Admin", policy =>
+    .AddPolicy("Organizer", policy =>
     {
         // should be authenticated.
         policy.RequireAuthenticatedUser();
-        policy.RequireRole("Admin");
+        policy.RequireRole("Organizer");
         policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
     })
-    .AddPolicy("User", policy =>
+    .AddPolicy("Practitioner", policy =>
     {
         policy.RequireAuthenticatedUser();
-        policy.RequireRole("User");
+        policy.RequireRole("Practitioner");
         policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
     })
-    .AddPolicy("AdminOrUser", policy =>
+    .AddPolicy("OrganizerOrPractioner", policy =>
     {
         policy.RequireAuthenticatedUser();
         policy.RequireAssertion(context =>
-            context.User.IsInRole("Admin") || context.User.IsInRole("User"));
+            context.User.IsInRole("Organizer") || context.User.IsInRole("Practitioner"));
         policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
     });
 
@@ -128,6 +128,11 @@ Log.Logger = new LoggerConfiguration()
 builder.Services.AddHttpContextAccessor();
 
 // (TD001) addscope for interfaces and repositories.
+// (UPD016) Scoped services for Patient and Address.
+/*builder.Services.AddScoped<IPatientRepository, PatientRepository>();
+builder.Services.AddScoped<IPatientServices, PatientServices>();
+builder.Services.AddScoped<IAdressRepository, AdressRepository>();
+builder.Services.AddScoped<IAuthenticationServices, AuthenticationServices>();*/
 
 var app = builder.Build();
 
@@ -139,7 +144,26 @@ if (app.Environment.IsDevelopment())
 }
 
 // (TD002) RequiredService.
+// (UPD017) Service provider required for DbContext, Authenticatino, Identity users and roles.
+using (var scope = app.Services.CreateScope())
+{
+    var dbcontext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
+    //var authService = scope.ServiceProvider.GetService<AuthenticationServices>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
+    // Check if DB exists.
+    var succeed = dbcontext.Database.EnsureCreated();
+
+    // (UPD018) Admin, Organizer and Practitioner users. 
+    if (!succeed)
+    {
+        var usersAndRoles = new DBUsersAndRoles(userManager, roleManager);
+        await usersAndRoles.Admin();
+        await usersAndRoles.Organizer();
+        await usersAndRoles.Practitioner();
+    }
+}
 
 app.UseHttpsRedirection();
 
