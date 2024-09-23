@@ -1,18 +1,22 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PatientBack.API.Data;
+using PatientBack.API.Repositories;
+using PatientBack.API.Services;
 using Serilog;
 using System.Reflection;
 using System.Text;
+using PatientBack.API.Domain;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
+//ConfigurationManager configuration = builder.Configuration;
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -29,7 +33,7 @@ builder.Services.AddSwaggerGen(options =>
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
-        Description = "Entrer Bearer suivi de votre token pour avoir l'autorisation",
+        Description = "Entrer le token communiqué lors de votre authentification (login) pour avoir l'autorisation.",
         Scheme = "Bearer",
         Name = "Authorization",
         BearerFormat = "JWT",
@@ -46,13 +50,24 @@ builder.Services.AddSwaggerGen(options =>
                     Id = "Bearer"
                 }
             },
-            new List<string>()
+            new string[] {}
         }
     });
     // Swagger API xml documentation.
-    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+    /*var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));*/
 });
+
+// (UPD007) DbContext configuration with "Patient-back". 
+builder.Services.AddDbContext<LocalDbContext>(options =>
+        options.UseSqlServer(builder.Configuration.GetConnectionString("Patient-back")));
+/*builder.Services.AddDbContext<PatientBackAPIContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("PatientBackAPIContext") ?? throw new InvalidOperationException("Connection string 'PatientBackAPIContext' not found.")));*/
+
+// (UPD008) Identity configuration.
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+       .AddEntityFrameworkStores<LocalDbContext>()
+       .AddDefaultTokenProviders();
 
 // JWT configuration from appsettings.json.
 var jwt = builder.Configuration.GetSection("Jwt");
@@ -63,19 +78,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         // https not required.
-        options.RequireHttpsMetadata = false; 
+        options.RequireHttpsMetadata = false;
         options.SaveToken = true;
         // Token validation settings.
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
             // Mitigates forwarding attacks (ValidateIssuer / ValidateAudience).
-            ValidateIssuer = true,
-            ValidateAudience = true,
+            ValidateIssuer = false,//ValidateIssuer = true,
+            ValidateAudience = false,//ValidateAudience = true,
             ValidateLifetime = true,
             // Valid issuer and audience for token check.
-            ValidIssuer = jwt["Issuer"],
-            ValidAudience = jwt["Audience"],
+            //ValidIssuer = jwt["Issuer"],
+            //ValidAudience = jwt["Audience"],
             // Set security key to use.
             IssuerSigningKey = new SymmetricSecurityKey(key)
         };
@@ -96,22 +111,17 @@ builder.Services.AddAuthorizationBuilder()
         policy.RequireRole("Practitioner");
         policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
     })
-    .AddPolicy("OrganizerOrPractioner", policy =>
+
+    .AddPolicy("OrganizerOrPractitioner", policy =>
     {
         policy.RequireAuthenticatedUser();
+        // Policy which check roles Organizer OR Practitioner for authorization (could also be done through Claims).
+        //      https://stackoverflow.com/questions/35609632/asp-net-5-authorize-against-two-or-more-policies-or-combined-policy
+        //      https://github.com/dotnet/AspNetCore.Docs/issues/27761
         policy.RequireAssertion(context =>
             context.User.IsInRole("Organizer") || context.User.IsInRole("Practitioner"));
         policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
     });
-
-// (UPD007) DbContext configuration with "Patient-back". 
-builder.Services.AddDbContext<LocalDbContext>(options =>
-        options.UseSqlServer(builder.Configuration.GetConnectionString("Patient-back")));
-
-// (UPD008) Identity configuration.
-builder.Services.AddIdentity<IdentityUser, IdentityRole<int>>()
-       .AddEntityFrameworkStores<LocalDbContext>()
-       .AddDefaultTokenProviders();
 
 // (UPD013) application logs configuration (Serilog).
 // https://serilog.net/ 
@@ -128,11 +138,11 @@ Log.Logger = new LoggerConfiguration()
 builder.Services.AddHttpContextAccessor();
 
 // (TD001) addscope for interfaces and repositories.
-// (UPD016) Scoped services for Patient and Address.
-/*builder.Services.AddScoped<IPatientRepository, PatientRepository>();
-builder.Services.AddScoped<IPatientServices, PatientServices>();
-builder.Services.AddScoped<IAdressRepository, AdressRepository>();
-builder.Services.AddScoped<IAuthenticationServices, AuthenticationServices>();*/
+// (UPD016) Scoped services for Patient, Address, Login..
+builder.Services.AddScoped<IPatientRepository, PatientRepository>();
+builder.Services.AddScoped<IPatientService, PatientService>();
+builder.Services.AddScoped<IAddressRepository, AddressRepository>();
+builder.Services.AddScoped<ILoginService, LoginService>();
 
 var app = builder.Build();
 
@@ -143,12 +153,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// (TD002) RequiredService.
-// (UPD017) Service provider required for DbContext, Authenticatino, Identity users and roles.
 using (var scope = app.Services.CreateScope())
 {
+    // (TD002) RequiredService.
+    // (UPD017) Service provider required for DbContext, Login, Identity users and roles.
     var dbcontext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
-    //var authService = scope.ServiceProvider.GetService<AuthenticationServices>();
+    var authService = scope.ServiceProvider.GetService<LoginService>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
@@ -167,10 +177,10 @@ using (var scope = app.Services.CreateScope())
 
 app.UseHttpsRedirection();
 
+app.MapControllers();
+
+app.UseAuthentication(); // User authorized.
 // (UPD015) Authentication and Authorization Application Pipeline.
 app.UseAuthorization(); // User identity.
-app.UseAuthentication(); // User authorized.
-
-app.MapControllers();
 
 app.Run();

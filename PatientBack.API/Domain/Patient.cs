@@ -2,6 +2,10 @@
 
 namespace PatientBack.API.Domain
 {
+    /// <summary>
+    /// DTO Patient Class.
+    /// </summary>
+    /// <remarks></remarks>
     // (UPD001) Sprint 01, US 01 : Patient class.
     public class Patient
     {

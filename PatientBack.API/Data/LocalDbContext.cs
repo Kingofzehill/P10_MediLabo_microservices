@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using PatientBack.API.Domain;
 
 namespace PatientBack.API.Data
 {
+    //public class LocalDbContext : IdentityDbContext
     public class LocalDbContext : IdentityDbContext
     {
         public LocalDbContext(DbContextOptions<LocalDbContext> options) : base(options) { }
