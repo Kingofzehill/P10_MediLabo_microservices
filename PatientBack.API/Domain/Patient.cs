@@ -19,5 +19,11 @@ namespace PatientBack.API.Domain
         public int? AddressId { get; set; }
         public Address? Address { get; set; }
         public string? PhoneNumber { get; set; }
+
+        // Format BirthDate "yyyy/MM/dd".
+        public string FormatBirthDate()
+        {
+            return BirthDate.ToString("yyyy/MM/dd");
+        }
     }
 }

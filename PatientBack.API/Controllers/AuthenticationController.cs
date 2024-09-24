@@ -36,24 +36,24 @@ namespace PatientBack.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Login([FromBody] LoginModel loginModel)
         {
-            Log.Information("[HttpPost] user {UserName} authentification.", loginModel.Username);
+            Log.Information("[HttpPost] Authentication/Login. User {UserName} authentification.", loginModel.Username);
             try
             {
                 var token = await _loginService.Login(loginModel.Username, loginModel.Password);
                 if (token != "")
                 {
-                    Log.Information("User {UserName} authentified.", loginModel.Username);
+                    Log.Information("User authentified.");
                     return Ok(new { value = token });                    
                 }
+                Log.Warning("Not found (404).", loginModel.Username);
+                return NotFound();
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Internal error (500) occurs on {UserName} user login.", loginModel.Username);
+                Log.Error(ex, "Internal error (500) occurs.", loginModel.Username);
                 Log.Error($"{ex.StackTrace} : {ex.Message}");
                 return StatusCode(500, "Internal error occurs.");
-            }
-            Log.Warning("Not found result (404) for {UserName} user authentification.", loginModel.Username);
-            return NotFound();                        
+            }            
         }
     }
 }
