@@ -54,8 +54,14 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
     // Swagger API xml documentation.
-    /*var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));*/
+    /*
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";    
+    //options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+    //FileStream fs = new FileStream(@"" + offlinePath, FileMode.Create);
+    var repFic = "C:\\Users\\smour\\source\\repos\\OCR\\Prj10";
+    var fichier = File.Create(repFic, 512, FileOptions.None);
+    options.IncludeXmlComments(Path.Combine("C:\\Users\\smour\\source\\repos\\OCR\\Prj10", xmlFilename));
+    */
 });
 
 // (UPD007) DbContext configuration with "Patient-back". 
