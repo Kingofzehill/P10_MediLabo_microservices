@@ -21,7 +21,7 @@ namespace PatientBack.API.Controllers
         /// <summary>User login which generates a token if successfull.</summary> 
         /// <param name="loginModel">User input model object.</param>
         /// <returns>Generated token.</returns> 
-        /// <remarks>Login controller Login method. 
+        /// <remarks>Authentication controller Login method. 
         /// URI: /Authentication/Login.</remarks>
         /// <response code ="200">OK.</response>
         /// <response code ="401">Unauthorized.</response>
@@ -50,7 +50,7 @@ namespace PatientBack.API.Controllers
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Internal error (500) occurs.", loginModel.Username);
+                Log.Error(ex, "Internal error (500) occurs on {username} authentication.", loginModel.Username);
                 Log.Error($"{ex.StackTrace} : {ex.Message}");
                 return StatusCode(500, "Internal error occurs.");
             }            

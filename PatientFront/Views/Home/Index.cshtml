@@ -1,8 +1,15 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "MédiLabo Solutions";
+}
+
+@if (TempData["AuthenticationOK"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["AuthenticationOK"]
+    </div>
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h4 class="display-4">MédiLabo Solutions</h4>
+    <h4>We care for you</h4>
 </div>
