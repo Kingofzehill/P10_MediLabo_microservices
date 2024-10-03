@@ -1,14 +1,12 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using PatientBack.API.Models;
-using PatientBack.API.Services;
-using Serilog;
+﻿using PatientBackAPI.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json;
 
 namespace PatientFront.Services
 {
-    // Use interface of PatientBack.API/Services.
+    // Use interface of PatientBackAPI/Services.
     public class AuthenticationService : ILoginService
     {
         private readonly HttpClient _httpClient;
@@ -18,11 +16,15 @@ namespace PatientFront.Services
         public AuthenticationService(HttpClient httpClient, ILogger<AuthenticationService> logger, IHttpContextAccessor httpContextAccessor)
         {
             httpClient.DefaultRequestHeaders.Accept.Clear();
+            // Set Content-Type header for an HttpClient request : application/json
+            //      https://www.dofactory.com/code-examples/csharp/content-type-header
             httpClient.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
             _httpClient = httpClient;
             _logger = logger;
-            _httpContextAccessor = httpContextAccessor;
+            _httpContextAccessor = httpContextAccessor;            
+            //_httpContextAccessor.HttpContext.Request.ContentType = "application/json";
+            //_httpContextAccessor.HttpContext.Request.Method = "POST";
         }
 
         /// <summary>Front Authentication Service. Connection method.
@@ -30,7 +32,7 @@ namespace PatientFront.Services
         /// <param name="username">Username for authentication.</param>
         /// <param name="password">Password for authentication.</param>
         /// <returns>Generated token.</returns> 
-        /// <remarks>Autentication controller Login method from PatientBack.API. 
+        /// <remarks>Autentication controller Login method from PatientBackAPI. 
         /// URI: /Authentication/Login.</remarks>
         public async Task<string> Login(string username, string password)
         {
@@ -55,8 +57,6 @@ namespace PatientFront.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error during login");
-                _logger.LogError(ex, "Internal error (500) occurs on {username} authentication.", username);
-                Log.Error($"{ex.StackTrace} : {ex.Message}");
             }
 
             return string.Empty;

@@ -1,8 +1,8 @@
-﻿using PatientBack.API.Domain;
-using PatientBack.API.Models.InputModels;
-using PatientBack.API.Models.OutputModels;
+﻿using PatientBackAPI.Domain;
+using PatientBackAPI.Models.InputModels;
+using PatientBackAPI.Models.OutputModels;
 
-namespace PatientBack.API.Services
+namespace PatientBackAPI.Services
 {
     public interface IPatientService
     {

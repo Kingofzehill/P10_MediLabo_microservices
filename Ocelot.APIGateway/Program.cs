@@ -11,17 +11,17 @@ app.Run();
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
+// Ocelot configuration.
+builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
 // Ocelot service.
 builder.Services.AddOcelot(builder.Configuration);
 
-// Ocelot configuration.
-builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
+//WebApplication app = builder.Build();
+var app = builder.Build();
 
-WebApplication app = builder.Build();
-
-app.UseRouting();
+/*app.UseRouting();
 app.UseAuthorization();
-app.UseEndpoints(_ => { });
+app.UseEndpoints(_ => { });*/
 
 await app.UseOcelot();
-await app.RunAsync();
+app.Run();

@@ -1,17 +1,16 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PatientFront.Services;
-using PatientBack.API.Models; // For LoginModel use.
+using PatientBackAPI.Models; // For LoginModel use.
 using Serilog;
 
 namespace PatientFront.Controllers
 {
-    public class AuthenticationController : Controller
+    public class LoginController : Controller
     {
         private readonly AuthenticationService _authenticationService;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AuthenticationController(AuthenticationService authenticationService, IHttpContextAccessor httpContextAccessor)
+        public LoginController(AuthenticationService authenticationService, IHttpContextAccessor httpContextAccessor)
         {
             _authenticationService = authenticationService;
             _httpContextAccessor = httpContextAccessor;
@@ -26,15 +25,15 @@ namespace PatientFront.Controllers
             return View(new LoginModel());
         }
 
-        [HttpPost]
+        [HttpPost]        
         public async Task<IActionResult> Login([FromForm] LoginModel model)
         {
             if (ModelState.IsValid)
             {
                 try
-                {
+                {                    
                     var token = await _authenticationService.Login(model.Username, model.Password);
-                    if (token != null)
+                    if (token != null && token != "")
                     {
                         // JWT dans le header
                         var cookieOptions = new CookieOptions

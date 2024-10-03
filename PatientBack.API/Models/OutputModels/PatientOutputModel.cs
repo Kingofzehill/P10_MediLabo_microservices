@@ -1,4 +1,4 @@
-﻿namespace PatientBack.API.Models.OutputModels
+﻿namespace PatientBackAPI.Models.OutputModels
 {
     /// <summary>
     /// POCO output Patient Class.

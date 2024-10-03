@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace PatientBack.API.Domain
+namespace PatientBackAPI.Domain
 {
     /// <summary>
     /// DTO Patient Class.

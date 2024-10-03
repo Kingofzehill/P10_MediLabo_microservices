@@ -1,4 +1,4 @@
-﻿namespace PatientBack.API.Models.InputModels
+﻿namespace PatientBackAPI.Models.InputModels
 {
     /// <summary>
     /// POCO input Patient Class.

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using PatientBack.API.Domain;
+using PatientBackAPI.Domain;
 
-namespace PatientBack.API.Data
+namespace PatientBackAPI.Data
 {
     public class PatientBackAPIContext : DbContext
     {
@@ -14,6 +14,6 @@ namespace PatientBack.API.Data
         {
         }
 
-        public DbSet<PatientBack.API.Domain.Patient> Patient { get; set; } = default!;
+        public DbSet<PatientBackAPI.Domain.Patient> Patient { get; set; } = default!;
     }
 }

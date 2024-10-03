@@ -4,7 +4,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-	<RootNamespace>PatientBack.API</RootNamespace>
+	<RootNamespace>PatientBackAPI</RootNamespace> 
+    <UserSecretsId>16e048ca-d83a-4775-95d5-05290e531071</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - MédiLaba Solutions</title>
+    <title>@ViewData["Title"] - MédiLabo Solutions</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/PatientFront.styles.css" asp-append-version="true" />
@@ -33,7 +33,7 @@
                         @if (HttpContextAccessor.HttpContext.Request.Cookies["Jwt"] != null)
                         {
                             <li class="nav-item">
-                                <form asp-controller="Authentication" asp-action="Logout" method="post" class="form-inline">
+                                <form asp-controller="Login" asp-action="Logout" method="post" class="form-inline">
                                     <button type="submit" class="btn btn-link nav-link text-dark">Se déconnecter</button>
                                 </form>
                             </li>
@@ -41,7 +41,7 @@
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Authentication" asp-action="Index">Se connecter</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Login" asp-action="Index">Se connecter</a>
                             </li>
                         }
                     </ul>
@@ -57,7 +57,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2024 - Médi Labo Solutions @*- <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>*@
+            &copy; 2024 - MédiLabo Solutions @*- <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>*@
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

@@ -1,4 +1,4 @@
-﻿namespace PatientBack.API.Services
+﻿namespace PatientBackAPI.Services
 {
     public interface ILoginService
     {

@@ -3,15 +3,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using PatientBack.API.Data;
-using PatientBack.API.Repositories;
-using PatientBack.API.Services;
 using Serilog;
-using System.Reflection;
 using System.Text;
-using PatientBack.API.Domain;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.Extensions.DependencyInjection;
+using PatientBackAPI.Data;
+using PatientBackAPI.Repositories;
+using PatientBackAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 //ConfigurationManager configuration = builder.Configuration;
@@ -50,7 +46,7 @@ builder.Services.AddSwaggerGen(options =>
                     Id = "Bearer"
                 }
             },
-            new string[] {}
+            new List<string>()
         }
     });
     // Swagger API xml documentation.
@@ -183,10 +179,10 @@ using (var scope = app.Services.CreateScope())
 
 app.UseHttpsRedirection();
 
-app.MapControllers();
-
 app.UseAuthentication(); // User authorized.
 // (UPD015) Authentication and Authorization Application Pipeline.
 app.UseAuthorization(); // User identity.
+
+app.MapControllers();
 
 app.Run();

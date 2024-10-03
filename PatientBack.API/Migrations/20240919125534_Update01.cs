@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace PatientBack.API.Migrations
+namespace PatientBackAPI.Migrations
 {
     /// <inheritdoc />
     public partial class Update01 : Migration

@@ -7,14 +7,14 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PatientBack.API.Data;
-using PatientBack.API.Domain;
-using PatientBack.API.Models;
-using PatientBack.API.Models.InputModels;
-using PatientBack.API.Services;
+using PatientBackAPI.Data;
+using PatientBackAPI.Domain;
+using PatientBackAPI.Models;
+using PatientBackAPI.Models.InputModels;
+using PatientBackAPI.Services;
 using Serilog;
 
-namespace PatientBack.API.Controllers
+namespace PatientBackAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]

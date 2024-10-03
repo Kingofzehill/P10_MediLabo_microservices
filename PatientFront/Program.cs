@@ -1,7 +1,8 @@
 using PatientFront.Services;
-using PatientBack.API.Services;
+using PatientBackAPI.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Serilog;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,20 +24,33 @@ builder.Services.AddSession(options =>
 
 builder.Services.AddHttpContextAccessor();
 
-
-// (UPD023) Add http client to PatientBack.API app Services for login authentication.
-builder.Services.AddHttpClient<AuthenticationService>(client =>
+// Creates a new HttpClient instance as a singleton
+//builder.Services.AddSingleton((serviceProvider) => new HttpClient());
+/*builder.Services.AddSingleton((serviceProvider) => new HttpClient(new SocketsHttpHandler
 {
-    client.BaseAddress = new Uri("https://localhost:7243"); // URL from PatientBack.API launchSettings.json.
+    // Update the DNS every 60 seconds.
+    PooledConnectionLifetime = TimeSpan.FromSeconds(60)//FromMinutes(5)
+}));*/
+
+// (UPD024) Add http client to PatientBackAPI app Services for PatientBack API access.
+builder.Services.AddHttpClient<PatientBackAPIService>(serviceProvider =>
+{
+    serviceProvider.BaseAddress = new Uri("https://localhost:7243"); // URL from PatientBackAPIlaunchSettings.json.
 });
 
-// (UPD024) Add http client to PatientBack.API app Services for PatientBack API access.
-builder.Services.AddHttpClient<PatientBackAPIService>(client =>
+// (UPD023) Add http client to PatientBackAPI app Services for login authentication.
+builder.Services.AddHttpClient<AuthenticationService>(serviceProvider =>
 {
-    client.BaseAddress = new Uri("https://localhost:7243"); // URL from PatientBack.APIlaunchSettings.json.
+    serviceProvider.BaseAddress = new Uri("https://localhost:7243"); // URL from PatientBackAPI launchSettings.json.
 });
 
-// (UPD026) Add dependency to service ILoginService (interface) from PatientBack.API with AuthenticationService type.
+/*// (UPD023) Add http client to PatientBackAPI app Services for login authentication.
+builder.Services.AddHttpClient<AuthenticationService>(serviceProvider =>
+{
+    serviceProvider.BaseAddress = new Uri("http://localhost:5033"); // URL from PatientBackAPI launchSettings.json.
+});*/
+
+// (UPD026) Add dependency to service ILoginService (interface) from PatientBackAPI with AuthenticationService type.
 builder.Services.AddScoped<ILoginService, AuthenticationService>();
 
 // (UPD019.Front) Add authentication / httpContextAccessor services (example 18).

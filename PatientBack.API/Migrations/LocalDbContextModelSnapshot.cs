@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using PatientBack.API.Data;
+using PatientBackAPI.Data;
 
 #nullable disable
 
-namespace PatientBack.API.Migrations
+namespace PatientBackAPI.Migrations
 {
     [DbContext(typeof(LocalDbContext))]
     partial class LocalDbContextModelSnapshot : ModelSnapshot
@@ -220,7 +220,7 @@ namespace PatientBack.API.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("PatientBack.API.Domain.Address", b =>
+            modelBuilder.Entity("PatientBackAPI.Domain.Address", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -237,7 +237,7 @@ namespace PatientBack.API.Migrations
                     b.ToTable("Addresses");
                 });
 
-            modelBuilder.Entity("PatientBack.API.Domain.Patient", b =>
+            modelBuilder.Entity("PatientBackAPI.Domain.Patient", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -324,9 +324,9 @@ namespace PatientBack.API.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("PatientBack.API.Domain.Patient", b =>
+            modelBuilder.Entity("PatientBackAPI.Domain.Patient", b =>
                 {
-                    b.HasOne("PatientBack.API.Domain.Address", "Address")
+                    b.HasOne("PatientBackAPI.Domain.Address", "Address")
                         .WithMany("Patients")
                         .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.SetNull);
@@ -334,7 +334,7 @@ namespace PatientBack.API.Migrations
                     b.Navigation("Address");
                 });
 
-            modelBuilder.Entity("PatientBack.API.Domain.Address", b =>
+            modelBuilder.Entity("PatientBackAPI.Domain.Address", b =>
                 {
                     b.Navigation("Patients");
                 });

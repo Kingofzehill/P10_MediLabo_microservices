@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PatientBack.API.Data;
-using PatientBack.API.Domain;
+using PatientBackAPI.Data;
+using PatientBackAPI.Domain;
 
-namespace PatientBack.API.Repositories
+namespace PatientBackAPI.Repositories
 {
     public class AddressRepository : IAddressRepository
     {

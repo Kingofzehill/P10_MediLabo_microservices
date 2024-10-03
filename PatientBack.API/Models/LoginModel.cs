@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PatientBack.API.Models
+namespace PatientBackAPI.Models
 {
     public class LoginModel
     {

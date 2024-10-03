@@ -1,16 +1,19 @@
 {
-  // (UPD019) Ocelot service configuration and routes to PatientBack.API methods.
+  // (UPD019) Ocelot service configuration and routes to PatientBackAPI methods.
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost:7195"
+  },
   "Routes": [
     {
       "UpstreamPathTemplate": "/gateway/Authentication/Login",
       "UpstreamHttpMethod": [ "Post" ],
       "DownstreamPathTemplate": "/Authentication/Login",
       "DownstreamScheme": "https",
-      // PatientBack.API app https configuration (from launchsettings.json). 
+      // PatientBackAPI app https configuration (from launchsettings.json). 
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7196
+          "Port": 7243
         }
       ],
       //  ignore SSL warnings (errors). (make sense in local development environments).
@@ -25,7 +28,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7196
+          "Port": 7243
         }
       ],
       "DangerousAcceptAnyServerCertificateValidator": true
@@ -38,7 +41,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7196
+          "Port": 7243
         }
       ],
       "DangerousAcceptAnyServerCertificateValidator": true
@@ -51,7 +54,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7196
+          "Port": 7243
         }
       ],
       "DangerousAcceptAnyServerCertificateValidator": true
@@ -64,7 +67,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7196
+          "Port": 7243
         }
       ],
       "DangerousAcceptAnyServerCertificateValidator": true
@@ -77,16 +80,10 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7196
+          "Port": 7243
         }
       ],
       "DangerousAcceptAnyServerCertificateValidator": true
     }
-  ],
-  "GlobalConfiguration": {
-    "BaseUrl": "https://localhost:7196",
-    "RateLimitOptions": {
-      "DisableRateLimitHeaders": true
-    }
-  }
+  ]
 }

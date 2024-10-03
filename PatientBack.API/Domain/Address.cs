@@ -1,4 +1,4 @@
-﻿namespace PatientBack.API.Domain
+﻿namespace PatientBackAPI.Domain
 {
     /// <summary>
     /// DTO Address Class.

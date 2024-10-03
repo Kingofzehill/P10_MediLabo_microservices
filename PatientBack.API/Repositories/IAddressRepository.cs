@@ -1,6 +1,6 @@
-﻿using PatientBack.API.Domain;
+﻿using PatientBackAPI.Domain;
 
-namespace PatientBack.API.Repositories
+namespace PatientBackAPI.Repositories
 {
     public interface IAddressRepository
     {

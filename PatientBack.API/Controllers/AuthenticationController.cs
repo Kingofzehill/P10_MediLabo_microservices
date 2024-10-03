@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using PatientBack.API.Services;
-using PatientBack.API.Models;
+using PatientBackAPI.Services;
+using PatientBackAPI.Models;
 using Serilog;
 using Microsoft.AspNetCore.Authorization;
 
-namespace PatientBack.API.Controllers
+namespace PatientBackAPI.Controllers
 {    
     [ApiController]
     [Route("[controller]")]

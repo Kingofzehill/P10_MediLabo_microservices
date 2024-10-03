@@ -1,9 +1,9 @@
-﻿using PatientBack.API.Domain;
-using PatientBack.API.Models.InputModels;
-using PatientBack.API.Models.OutputModels;
-using PatientBack.API.Repositories;
+﻿using PatientBackAPI.Domain;
+using PatientBackAPI.Models.InputModels;
+using PatientBackAPI.Models.OutputModels;
+using PatientBackAPI.Repositories;
 
-namespace PatientBack.API.Services
+namespace PatientBackAPI.Services
 {
     public class PatientService : IPatientService
     {

@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using PatientBack.API.Domain;
+using PatientBackAPI.Domain;
 
-namespace PatientBack.API.Data
+namespace PatientBackAPI.Data
 {
     //public class LocalDbContext : IdentityDbContext
     public class LocalDbContext : IdentityDbContext

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 
-namespace PatientBack.API.Data
+namespace PatientBackAPI.Data
 {
     public class DBUsersAndRoles
     {

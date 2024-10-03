@@ -1,4 +1,4 @@
-namespace PatientBack.API
+namespace PatientBackAPI
 {
     public class WeatherForecast
     {
