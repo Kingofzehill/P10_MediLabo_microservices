@@ -1,0 +1,14 @@
+﻿@model PatientBackAPI.Models.OutputModels.PatientOutputModel
+
+
+@{
+    ViewData["Title"] = "Suppression d'un Patient";
+}
+<h2>@ViewData["Title"]</h2>
+<h4>Êtes-vous sûr de vouloir supprimer le patient <strong>@Model.Firstname @Model.Lastname</strong> ?</h4>
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <button type="submit" class="btn btn-primary">Oui</button>
+    <a asp-action="Index" class="btn btn-secondary">Non (Retour à la liste des Patients).</a>
+</form>

@@ -1,0 +1,48 @@
+﻿@model IEnumerable<PatientBackAPI.Models.OutputModels.PatientOutputModel>
+
+@{
+    ViewData["Title"] = "Liste des Patients";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">        
+        @TempData["SuccessMessage"]
+    </div>
+}
+<a asp-action="Create" class="btn btn-outline-success">Créer un patient</a>
+<table class="table">
+    <thead>
+        <tr class="text-center">
+            <th>Identifiant</th>
+            <th>Prénom et nom</th>
+            <th>Date de Naissance</th>
+            <th>Genre</th>
+            <th>Adresse</th>
+            <th>Téléphone</th>            
+            <th>Actions</th>            
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var patient in Model)
+        {
+            <tr class="text-center">
+                <td>@patient.Id</td>
+                <td>@patient.Firstname @patient.Lastname</td>
+                <td>@patient.BirthDate.ToString("yyyy/MM/dd")</td>
+                <td>@patient.Gender</td>
+                <td>@patient.Address</td>
+                <td>@patient.PhoneNumber</td>                
+                <td>
+                    <a asp-action="Detail" asp-route-id="@patient.Id">Détail</a> |
+                    <a asp-action="Update" asp-route-id="@patient.Id">Mettre à jour</a> |
+                    <a asp-action="Delete" asp-route-id="@patient.Id">Supprimer</a>
+                </td>                
+            </tr>
+        }
+    </tbody>
+</table>
+
+

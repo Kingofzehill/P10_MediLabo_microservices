@@ -1,7 +1,10 @@
 {
   // (UPD019) Ocelot service configuration and routes to PatientBackAPI methods.
   "GlobalConfiguration": {
-    "BaseUrl": "https://localhost:7195"
+    "BaseUrl": "https://localhost:7195",
+    "RateLimitOptions": {
+      "DisableRateLimitHeaders": true
+    }
   },
   "Routes": [
     {
@@ -17,7 +20,7 @@
         }
       ],
       //  ignore SSL warnings (errors). (make sense in local development environments).
-      // https://ocelot.readthedocs.io/en/latest/features/configuration.html.
+      //    https://ocelot.readthedocs.io/en/latest/features/configuration.html.
       "DangerousAcceptAnyServerCertificateValidator": true
     },
     {

@@ -1,8 +1,12 @@
-﻿using PatientBackAPI.Services;
+﻿using PatientBackAPI.Domain;
+using PatientBackAPI.Services;
+using Serilog;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace PatientFront.Services
 {
@@ -56,7 +60,8 @@ namespace PatientFront.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error during login");
+                _logger.LogError(ex, "[PatientFront][AuthenticationService] Error on Login.");
+                Log.Error($"{ex.StackTrace} : {ex.Message}");
             }
 
             return string.Empty;

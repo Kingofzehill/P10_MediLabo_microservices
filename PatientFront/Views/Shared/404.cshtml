@@ -4,7 +4,7 @@
 
 @if (TempData["ErrorTitle"] != null)
 {
-    <div class="text-center">
+    <div class="alert alert-danger">
         <h2>@TempData["ErrorTitle"]</h2>
         <p>@TempData["ErrorMessage"]</p>
     </div>

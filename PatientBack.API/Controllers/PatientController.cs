@@ -1,15 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using PatientBackAPI.Data;
-using PatientBackAPI.Domain;
-using PatientBackAPI.Models;
 using PatientBackAPI.Models.InputModels;
 using PatientBackAPI.Services;
 using Serilog;
@@ -27,7 +17,6 @@ namespace PatientBackAPI.Controllers
             _patientService = patientService;
         }
 
-
         /// <summary>API method: Get a list of Patient items.</summary>  
         /// <returns>Patients list.</returns> 
         /// <remarks>[HttpGet] Patients controller List method.
@@ -37,7 +26,7 @@ namespace PatientBackAPI.Controllers
         /// <response code ="401">Unauthorized.</response>           
         [HttpGet]
         [Route("List")]
-        [Authorize("OrganizerOrPractitioner")]
+        [Authorize(Policy = "OrganizerOrPractitioner")] // Authorize for specific policy (this policy check if user has role Organizer or Practitioner).
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -45,12 +34,12 @@ namespace PatientBackAPI.Controllers
         {            
             try
             {
-                Log.Information("[HttpGet] /Patient/. Get patients List.");
+                Log.Information("[PatientBackAPI][HttpGet] Get patients List.");
                 return Ok(await _patientService.List());
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Internal error (500) occurs.");
+                Log.Error(ex, "[PatientBackAPI] error on Patient List.");
                 Log.Error($"{ex.StackTrace} : {ex.Message}");
                 // Returns detailed problem with message and stackTrace.
                 //      https://learn.microsoft.com/fr-fr/aspnet/core/web-api/handle-errors?view=aspnetcore-8.0
@@ -63,6 +52,7 @@ namespace PatientBackAPI.Controllers
         }
 
         /// <summary>API method: Get a Patient from his id.</summary>  
+        /// <param name="id">Patient id.</param>        
         /// <returns>Patient POCO output model object.</returns> 
         /// <remarks>[HttpGet] Patients controller Get method.
         /// Access limited to authenticated and authorized User with role Organizer or Practioner.
@@ -74,7 +64,7 @@ namespace PatientBackAPI.Controllers
         [HttpGet]
         //[Route("Get/{id}")]
         [Route("Get")]
-        [Authorize("OrganizerOrPractitioner")]
+        [Authorize(Policy = "OrganizerOrPractitioner")] // Authorize for specific policy (this policy check if user has role Organizer or Practitioner).
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -83,19 +73,19 @@ namespace PatientBackAPI.Controllers
         {
             try
             {
-                Log.Information("[HttpGet] Patient/{id}. Get patient from id: {UserName}.", id);
+                Log.Information("[PatientBackAPI][HttpGet] Get patient from id: {UserName}.", id);
                 var patient = await _patientService.Get(id);
 
                 if (patient is not null)
                 {
                     return Ok(patient);
                 }
-                Log.Warning("Patient not found (404).");
+                Log.Warning("[PatientBackAPI] Patient not found (404).");
                 return NotFound();
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Internal error (500) occurs.");
+                Log.Error(ex, "[PatientBackAPI] Internal error (500) occurs.");
                 Log.Error($"{ex.StackTrace} : {ex.Message}");                                
                 return Problem(
                     detail: ex.StackTrace,
@@ -103,7 +93,8 @@ namespace PatientBackAPI.Controllers
             }
         }
 
-        /// <summary>API method: create a Patient.</summary>  
+        /// <summary>API method: create a Patient.</summary>          
+        /// <param name="input">Patient POCO inputmodel object.</param>
         /// <returns>Patient POCO object.</returns> 
         /// <remarks>[HttpGet] Patients controller Create method.
         /// Access limited to authenticated and authorized User with role Organizer.
@@ -113,20 +104,23 @@ namespace PatientBackAPI.Controllers
         /// <response code ="500">Internal error (exception).</response>
         [HttpPost]
         [Route("Create")]
-        [Authorize("Organizer")]
+        //[Authorize]
+        [Authorize("Practitioner")]
+        //[Authorize(Roles = "Organizer")] // Authorize for user which has the specified role.
+        //[Authorize(Policy = "Organizer")] // Authorize policy (user which has the specified role).
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Create([FromBody] PatientInputModel input)
-        {
+        {            
             try
             {
-                Log.Information("[HttpPost] Patient/. Create patient {Firstname} {Lastname}.", input.Firstname, input.Lastname);
+                Log.Information("[PatientBackAPI][HttpPost] Create patient {Firstname} {Lastname}.", input.Firstname, input.Lastname);
                 return Ok(await _patientService.Create(input));
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Internal error (500) occurs.");
+                Log.Error(ex, "[PatientBackAPI] Internal error (500) occurs.");
                 Log.Error($"{ex.StackTrace} : {ex.Message}");
                 return Problem(
                     detail: ex.StackTrace,
@@ -149,6 +143,8 @@ namespace PatientBackAPI.Controllers
         //[Route("Update/{id}")]
         [Route("Update")]
         [Authorize("Organizer")]
+        //[Authorize(Roles = "Organizer")] // Authorize for user which has the specified role.
+        //[Authorize(Policy = "Organizer")] // Authorize policy (user which has the specified role).
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -157,19 +153,19 @@ namespace PatientBackAPI.Controllers
         {
             try
             {
-                Log.Information("[HttpPut] Patient/. Update patient {id} {Firstname} {Lastname}.", id, input.Firstname, input.Lastname);
+                Log.Information("[PatientBackAPI][HttpPut] Update patient {id} {Firstname} {Lastname}.", id, input.Firstname, input.Lastname);
                 var patient = await _patientService.Update(id, input);
 
                 if (patient is not null)
                 {
                     return Ok(patient);
                 }
-                Log.Warning("Patient not found (404).");
+                Log.Warning("[PatientBackAPI] Patient not found (404).");
                 return NotFound();
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Internal error (500) occurs.");
+                Log.Error(ex, "[PatientBackAPI] Internal error (500) occurs.");
                 Log.Error($"{ex.StackTrace} : {ex.Message}");
                 return Problem(
                     detail: ex.StackTrace,
@@ -191,6 +187,8 @@ namespace PatientBackAPI.Controllers
         //[Route("Delete/{id}")]
         [Route("Delete")]
         [Authorize("Organizer")]
+        //[Authorize(Roles = "Organizer")] // Authorize for user which has the specified role.
+        //[Authorize(Policy = "Organizer")] // Authorize policy (user which has the specified role).
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -199,7 +197,7 @@ namespace PatientBackAPI.Controllers
         {
             try
             {
-                Log.Information("[HttpDelete] Patient/. Delete patient {id}.", id);
+                Log.Information("[PatientBackAPI][HttpDelete] Delete patient {id}.", id);
                 var patient = await _patientService.Delete(id);
 
                 if (patient is not null)
@@ -207,12 +205,12 @@ namespace PatientBackAPI.Controllers
                     return Ok(patient);
                 }
 
-                Log.Warning("Patient not found (404).");
+                Log.Warning("[PatientBackAPI] Patient not found (404).");
                 return NotFound();
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Internal error (500) occurs.");
+                Log.Error(ex, "[PatientBackAPI] Internal error (500) occurs.");
                 Log.Error($"{ex.StackTrace} : {ex.Message}");
                 return Problem(
                     detail: ex.StackTrace,

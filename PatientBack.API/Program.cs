@@ -8,6 +8,7 @@ using System.Text;
 using PatientBackAPI.Data;
 using PatientBackAPI.Repositories;
 using PatientBackAPI.Services;
+using Microsoft.CodeAnalysis.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 //ConfigurationManager configuration = builder.Configuration;
@@ -20,6 +21,7 @@ builder.Services.AddEndpointsApiExplorer();
 // https://medium.com/@rahman3593/implementing-jwt-authentication-with-swagger-ca991b7aca08
 builder.Services.AddSwaggerGen(options =>
 {
+    options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
     options.SwaggerDoc("v1", new()
     {
         Title = "MediLabo Patient-back API",
@@ -99,18 +101,21 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 // (UPD012) Authorization policies for Organizer and Practitioner.
+//      https://learn.microsoft.com/en-us/aspnet/core/security/authorization/policies?view=aspnetcore-8.0
 builder.Services.AddAuthorizationBuilder()
     .AddPolicy("Organizer", policy =>
     {
         // should be authenticated.
         policy.RequireAuthenticatedUser();
         policy.RequireRole("Organizer");
+        //policy.RequireClaim("role", "Organizer");
         policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
     })
     .AddPolicy("Practitioner", policy =>
     {
         policy.RequireAuthenticatedUser();
         policy.RequireRole("Practitioner");
+        //policy.RequireClaim("role", "Practitioner");
         policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
     })
 
@@ -131,7 +136,7 @@ builder.Services.AddAuthorizationBuilder()
 // https://www.nuget.org/packages/Serilog.Sinks.Console 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
-    .WriteTo.File("logs/MediLabo_Patient-back_log.txt", rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
+    .WriteTo.File("logs/MediLabo_PatientBackAPI_log.txt", rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
     .CreateLogger();
 
 // (UPD014) HttpContextAccessor implementation ==> encapsulates all information
@@ -178,11 +183,8 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.UseHttpsRedirection();
-
-app.UseAuthentication(); // User authorized.
 // (UPD015) Authentication and Authorization Application Pipeline.
 app.UseAuthorization(); // User identity.
-
+app.UseAuthentication(); // User authorized.
 app.MapControllers();
-
 app.Run();

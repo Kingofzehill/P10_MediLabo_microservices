@@ -31,23 +31,23 @@ namespace PatientFront.Controllers
                 //return await Task.FromResult(View("404")); //"~/Views/Shared/_AddBranch.cshtml"
                 //return await Task.FromResult(View("Views/Shared/404.cshtml"));
                 TempData["ErrorTitle"] = "404 - Page Not Found";
-                TempData["ErrorMessage"] = "Désolé, les identifiants saisis ne sont pas trouvés. Veuillez vérifier utilisateur et mot de passe.";   
+                TempData["ErrorMessage"] = "Les identifiants saisis ne sont pas trouvés. Veuillez vérifier utilisateur et mot de passe.";   
                 return View("Views/Shared/404.cshtml");
             }
             else if (statusCode == 401)
             {
                 TempData["ErrorTitle"] = "401 - Unauthorized";
-                TempData["ErrorMessage"] = "Désolé, vous n'êtes pas authentifié. Vous ne pouvez pas à accéder à cette page.";
+                TempData["ErrorMessage"] = "Vous n'êtes pas authentifié. Vous ne pouvez pas à accéder à cette page.";
                 return await Task.FromResult(View("404"));
             } else if (statusCode == 403)
             {
                 TempData["ErrorTitle"] = "403 - Forbidden";
-                TempData["ErrorMessage"] = "Désolé, vous n'êtes pas autorisé (token). Vous ne pouvez pas à accéder à cette page.";
+                TempData["ErrorMessage"] = "Vous n'êtes pas autorisé (token). Vous ne pouvez pas à accéder à cette page.";
                 return await Task.FromResult(View("404"));
             } else if (statusCode == 415)
             {
                 TempData["ErrorTitle"] = "415 - Unsupported media type";
-                TempData["ErrorMessage"] = "Désolé, le serveur refuse d'accepter la requête de votre navigateur.";
+                TempData["ErrorMessage"] = "Le serveur refuse d'accepter la requête de votre navigateur.";
                 return await Task.FromResult(View("404"));
             }
             

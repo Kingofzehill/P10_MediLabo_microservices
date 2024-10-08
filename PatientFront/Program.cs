@@ -33,7 +33,7 @@ builder.Services.AddHttpContextAccessor();
 }));*/
 
 // (UPD024) Add http client to PatientBackAPI app Services for PatientBack API access.
-builder.Services.AddHttpClient<PatientBackAPIService>(serviceProvider =>
+builder.Services.AddHttpClient<PatientFront.Services.PatientService>(serviceProvider =>
 {
     serviceProvider.BaseAddress = new Uri("https://localhost:7243"); // URL from PatientBackAPIlaunchSettings.json.
 });
@@ -64,8 +64,16 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
        });
 
 // (TODO05) Replace for using Serilog.
+/*Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateLogger();*/
+// (UPD013) application logs configuration (Serilog).
+// https://serilog.net/ 
+// https://www.nuget.org/packages/Serilog.Sinks.File 
+// https://www.nuget.org/packages/Serilog.Sinks.Console 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
+    .WriteTo.File("logs/MediLabo_PatientFront_log.txt", rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
     .CreateLogger();
 
 var app = builder.Build();

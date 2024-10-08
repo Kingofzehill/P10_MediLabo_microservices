@@ -1,0 +1,18 @@
+﻿@model PatientBackAPI.Models.OutputModels.PatientOutputModel
+
+@{
+    ViewData["Title"] = "Affichage Patient";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div>
+    <p><strong>Identifiant :</strong> @Model.Id</p>
+    <p><strong>Nom et prénom :</strong> @Model.Firstname @Model.Lastname</p>
+    <p><strong>Date de Naissance :</strong> @Model.BirthDate.ToString("yyyy/MM/dd")</p>
+    <p><strong>Genre :</strong> @Model.Gender</p>
+    <p><strong>Adresse :</strong> @Model.Address</p>
+    <p><strong>Téléphone :</strong> @Model.PhoneNumber</p>
+</div>
+
+<a asp-action="Index">Retour à la liste des Patients.</a>

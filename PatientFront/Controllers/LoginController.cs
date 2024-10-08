@@ -16,7 +16,7 @@ namespace PatientFront.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        /// <summary>PatientFront. Authentication controller. Index method.</summary>  
+        /// <summary>PatientFront. Login controller. Index method.</summary>  
         /// <returns>LoginModel view.</returns> 
         /// <remarks>[HttpGet]</remarks>
         [HttpGet]
@@ -25,6 +25,9 @@ namespace PatientFront.Controllers
             return View(new LoginModel());
         }
 
+        /// <summary>PatientFront. Login controller. Login method.</summary>  
+        /// <returns>LoginModel view.</returns> 
+        /// <remarks>[HttpPost]</remarks>
         [HttpPost]        
         public async Task<IActionResult> Login([FromForm] LoginModel model)
         {
@@ -34,38 +37,37 @@ namespace PatientFront.Controllers
                 {                    
                     var token = await _authenticationService.Login(model.Username, model.Password);
                     if (token != null && token != "")
-                    {
-                        // JWT dans le header
+                    {                        
                         var cookieOptions = new CookieOptions
                         {
                             HttpOnly = true,
                             Secure = true,
-                            Expires = DateTime.UtcNow.AddDays(1) // Définir la durée de vie du cookie
+                            Expires = DateTime.UtcNow.AddDays(1) // Cookie lifetime.
                         };
-                        _httpContextAccessor.HttpContext.Response.Cookies.Append("Jwt", token, cookieOptions);
 
-                        // Message de connexion avec le nom de l'utilisateur
+                        _httpContextAccessor.HttpContext.Response.Cookies.Append("Jwt", token, cookieOptions);                        
                         TempData["AuthenticationOK"] = $"Authentification réussie : {model.Username}.";
-
                         return RedirectToAction("Index", "Home");
                     }
                     ModelState.AddModelError(string.Empty, "Login failed.");
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex, "An error occurred during the login process.");
+                    Log.Error(ex, $"[PatientFront] An error occurred during user login.");
                     return StatusCode(500, "Internal server error");
                 }
             }
             return View(model);
         }
 
+        /// <summary>PatientFront. Login controller. Logout method.</summary>  
+        /// <returns>Home Index view.</returns> 
+        /// <remarks>[HttpPost]</remarks>
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
             try
-            {
-                // Récupérer le token JWT depuis le cookie
+            {                
                 var token = HttpContext.Request.Cookies["Jwt"];
                 var userName = "Utilisateur";
 
@@ -75,8 +77,7 @@ namespace PatientFront.Controllers
                 }
 
                 HttpContext.Session.Clear();
-
-                // Supprimer le cookie JWT
+                
                 if (HttpContext.Request.Cookies["Jwt"] != null)
                 {
                     var cookieOptions = new CookieOptions
@@ -92,7 +93,7 @@ namespace PatientFront.Controllers
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "An error occurred during the logout process.");
+                Log.Error(ex, $"[PatientFront] An error occurred during user logout.");
                 return StatusCode(500, "Internal server error");
             }
         }
