@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "MédiLabo Solutions";
+}
+
+@if (TempData["AuthenticationOK"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["AuthenticationOK"]
+    </div>
+}
+
+<div class="text-center">
+    <h4 class="display-4">MédiLabo Solutions</h4>
+    <h4>We care for you</h4>
+</div>

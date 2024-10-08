@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatientBack.API", "PatientBack.API\PatientBack.API.csproj", "{EBDB4664-C021-40AC-B35A-0E93775960F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PatientBackAPI", "PatientBack.API\PatientBackAPI.csproj", "{EBDB4664-C021-40AC-B35A-0E93775960F6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OcelotAPIGateway", "Ocelot.APIGateway\OcelotAPIGateway.csproj", "{8836AA82-AEB0-4F50-9D00-0073EB6CE50C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PatientFront", "PatientFront\PatientFront.csproj", "{0C68A497-60A4-4FF5-BD4A-7FDAACB3156C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{EBDB4664-C021-40AC-B35A-0E93775960F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBDB4664-C021-40AC-B35A-0E93775960F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBDB4664-C021-40AC-B35A-0E93775960F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8836AA82-AEB0-4F50-9D00-0073EB6CE50C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8836AA82-AEB0-4F50-9D00-0073EB6CE50C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8836AA82-AEB0-4F50-9D00-0073EB6CE50C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8836AA82-AEB0-4F50-9D00-0073EB6CE50C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C68A497-60A4-4FF5-BD4A-7FDAACB3156C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C68A497-60A4-4FF5-BD4A-7FDAACB3156C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C68A497-60A4-4FF5-BD4A-7FDAACB3156C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C68A497-60A4-4FF5-BD4A-7FDAACB3156C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
