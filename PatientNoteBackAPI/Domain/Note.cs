@@ -16,8 +16,8 @@ namespace PatientNoteBackAPI.Domain
         // Annotated with[BsonRepresentation(BsonType.ObjectId)] to allow passing the parameter as type string instead of an ObjectId structure.Mongo handles the conversion from string to ObjectId.
         public string? Id { get; set; }
         public int PatientId { get; set; }
-        [BsonElement("NoteContent")]
+        //[BsonElement("NoteContent")]
         // The NoteContent property is annotated with the [BsonElement] attribute. The attribute's value of Name represents the property name in the MongoDB collection.
-        public string Content { get; set; } = null!;
+        public string NoteContent { get; set; } = null!;
     }
 }

@@ -6,9 +6,10 @@ using MongoDB.Driver;
 using Serilog;
 using PatientNoteBackAPI.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using PatientNoteBackAPI.Repositories;
+using PatientNoteBackAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -103,6 +104,10 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .WriteTo.File("logs/MediLabo_PatientNotesBackAPI_log.txt", rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
     .CreateLogger();
+
+// Scoped services for Note Repository and Service.
+builder.Services.AddScoped<INoteRepository, NoteRepository>();
+builder.Services.AddScoped<INoteService, NoteService>();
 
 var app = builder.Build();
 
