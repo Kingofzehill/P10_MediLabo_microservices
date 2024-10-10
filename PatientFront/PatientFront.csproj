@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PatientBack.API\PatientBackAPI.csproj" />
+    <ProjectReference Include="..\PatientNoteBackAPI\PatientNoteBackAPI.csproj" />
   </ItemGroup>
 
   <ItemGroup>
