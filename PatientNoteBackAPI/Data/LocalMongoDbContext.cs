@@ -4,15 +4,15 @@ using MongoDB.EntityFrameworkCore.Extensions;
 
 namespace PatientNoteBackAPI.Data
 {
-    public class LocalMongoDbContext : DbContext
+    public class LocalMongoDbContext(DbContextOptions options) : DbContext(options)
     {
-        public DbSet<Note> Notes { get; set; }
-        public LocalMongoDbContext(DbContextOptions options) : base(options) { }
-        protected override void OnModelCreating(ModelBuilder model)
+        //public LocalMongoDbContext(DbContextOptions options) : base(options) { }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(model);
+            base.OnModelCreating(modelBuilder);
             // Model class Note to MongoDb collection Notes.
-            model.Entity<Note>().ToCollection("Notes");
-        }        
+            modelBuilder.Entity<Note>().ToCollection("Notes");
+        }
+        public DbSet<Note> Notes { get; init; }
     }
 }

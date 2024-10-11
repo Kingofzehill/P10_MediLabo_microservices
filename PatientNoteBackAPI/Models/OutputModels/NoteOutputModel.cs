@@ -4,8 +4,9 @@ namespace PatientNoteBackAPI.Models.OutputModels
 {
     public class NoteOutputModel
     {
-        public string? Id { get; set; }
+        //public string? Id { get; set; }
+        public ObjectId Id { get; set; }
         public int PatientId { get; set; }
-        public string Content { get; set; } = null!;        
+        public string NoteContent { get; set; } = null!;        
     }
 }

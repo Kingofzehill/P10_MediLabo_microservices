@@ -1,8 +1,12 @@
-﻿namespace PatientNoteBackAPI.Models.InputModels
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace PatientNoteBackAPI.Models.InputModels
 {
     public class NoteInputModel
     {
+        [Required]
         public int PatientId { get; set; }
-        public string Content { get; set; } = null!;             
+        [Required]
+        public string NoteContent { get; set; } = null!;             
     }
 }

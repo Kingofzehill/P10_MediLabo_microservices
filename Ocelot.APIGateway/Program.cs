@@ -22,6 +22,7 @@ builder.Services.AddCors(options =>
 {
     var patientFrontUrl = builder.Configuration.GetValue<string>("PatientFrontUrl");
     var patientBackAPIUrl = builder.Configuration.GetValue<string>("PatientBackAPIUrl");
+    var PatientNoteAPIUrl = builder.Configuration.GetValue<string>("PatientNoteAPIUrl");
     options.AddPolicy("CorsPolicy",
         policy =>
         {
@@ -32,6 +33,10 @@ builder.Services.AddCors(options =>
             if (!string.IsNullOrEmpty(patientBackAPIUrl))
             {
                 policy.WithOrigins(patientBackAPIUrl);
+            }
+            if (!string.IsNullOrEmpty(PatientNoteAPIUrl))
+            {
+                policy.WithOrigins(PatientNoteAPIUrl);
             }
             policy.AllowAnyMethod();
             policy.AllowAnyHeader();

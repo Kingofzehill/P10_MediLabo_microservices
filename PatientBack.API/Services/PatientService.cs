@@ -17,8 +17,8 @@ namespace PatientBackAPI.Services
         }
 
         /// <summary>Patient Service (business rules). ToOutputModel. 
-        /// Load Bidlist DTO object into POCO output model object.</summary>  
-        /// <param name="bidList">Patient DTO object.</param>
+        /// Load Patient DTO object into POCO output model object.</summary>  
+        /// <param name="patient">Patient DTO object.</param>
         /// <remarks></remarks>
         private async Task<PatientOutputModel> ToOutputModel(Patient patient)
         {
@@ -53,9 +53,9 @@ namespace PatientBackAPI.Services
 
         /// <summary>Patient Service (Business rules). Entity private method.
         /// Create a Patient DTO object and Patient Address DTO object</summary>      
-        /// <return>Returns POCO object of the created Patient.</return> 
         /// <param name="id">Patient id.</param>
         /// <param name="input">POCO Patient object.</param>
+        /// <return>Returns POCO object of the created Patient.</return>         
         /// <remarks></remarks>
         private async Task<Patient> PocoToDtoAndControls(PatientInputModel input, int id)
         {
@@ -120,8 +120,8 @@ namespace PatientBackAPI.Services
         }
 
         /// <summary>Patient Service (Business rules). Get by id.</summary>      
-        /// <return>Returns POCO object of the Patient.</return> 
         /// <param name="id">Patient.</param>
+        /// <return>Returns POCO object of the Patient.</return>         
         /// <remarks></remarks>
         public async Task<PatientOutputModel> Get(int id)
         {
@@ -154,8 +154,8 @@ namespace PatientBackAPI.Services
         }
 
         /// <summary>Patient Service (Business rules). Creation.</summary>      
-        /// <return>Returns POCO object of the created Patient.</return> 
         /// <param name="input">POCO Patient object.</param>
+        /// <return>Returns POCO object of the created Patient.</return>         
         /// <remarks></remarks>
         public async Task<PatientOutputModel> Create(PatientInputModel input)
         {
@@ -170,10 +170,10 @@ namespace PatientBackAPI.Services
             }
         }
 
-        /// <summary>Patient Service (Business rules). Update.</summary>      
-        /// <return>Returns POCO object of the updated Patient.</return> 
+        /// <summary>Patient Service (Business rules). Update.</summary> 
         /// <param name="id">Patient id</param>
         /// <param name="input">POCO Patient object.</param>
+        /// <return>Returns POCO object of the updated Patient.</return>         
         /// <remarks></remarks>
         public async Task<PatientOutputModel?> Update(int id, PatientInputModel input)
         {
@@ -192,9 +192,9 @@ namespace PatientBackAPI.Services
                 throw;
             }
         }
-        /// <summary>Patient Service (Business rules). Delete.</summary>      
-        /// <return>Returns POCO object of the deleted Patient.</return> 
-        /// <param name="id">Patient id</param>        
+        /// <summary>Patient Service (Business rules). Delete.</summary> 
+        /// <param name="id">Patient id</param>       
+        /// <return>Returns POCO object of the deleted Patient.</return>          
         /// <remarks></remarks>
         public async Task<PatientOutputModel?> Delete(int id)
         {

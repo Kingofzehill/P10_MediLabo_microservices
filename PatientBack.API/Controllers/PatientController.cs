@@ -17,11 +17,10 @@ namespace PatientBackAPI.Controllers
             _patientService = patientService;
         }
 
-        /// <summary>API method: Get a list of Patient items.</summary>  
+        /// <summary>[HttpGet] Patient API method List: get the list of Patients.</summary>  
         /// <returns>Patients list.</returns> 
-        /// <remarks>[HttpGet] Patients controller List method.
-        /// Access limited to authenticated and authorized User with role Organizer or Practioner.
-        /// URI: /Patient/List/.</remarks>
+        /// <remarks> URI: /Patient/List/.
+        /// Access limited to authenticated and authorized User with role Organizer or Practitioner.</remarks>
         /// <response code ="200">OK.</response>    
         /// <response code ="401">Unauthorized.</response>           
         [HttpGet]
@@ -42,21 +41,18 @@ namespace PatientBackAPI.Controllers
                 Log.Error(ex, "[PatientBackAPI] error on Patient List.");
                 Log.Error($"{ex.StackTrace} : {ex.Message}");
                 // Returns detailed problem with message and stackTrace.
-                //      https://learn.microsoft.com/fr-fr/aspnet/core/web-api/handle-errors?view=aspnetcore-8.0
-                //var exceptionHandlerFeature = HttpContext.Features.Get<IExceptionHandlerFeature>()!;
-                //return Problem();
+                //      https://learn.microsoft.com/fr-fr/aspnet/core/web-api/handle-errors?view=aspnetcore-8.0                
                 return Problem(
                     detail: ex.StackTrace,
                     title: ex.Message);
             }            
         }
 
-        /// <summary>API method: Get a Patient from his id.</summary>  
+        /// <summary>[HttpGet] Patient API method Get: get a Patient from his id.</summary>  
         /// <param name="id">Patient id.</param>        
         /// <returns>Patient POCO output model object.</returns> 
-        /// <remarks>[HttpGet] Patients controller Get method.
-        /// Access limited to authenticated and authorized User with role Organizer or Practioner.
-        /// URI: /Patient/Get/.</remarks>
+        /// <remarks> URI: /Patient/Get/.
+        /// Access limited to authenticated and authorized User with role Organizer or Practioner.</remarks>
         /// <response code ="200">OK.</response>    
         /// <response code ="401">Unauthorized.</response>  
         /// <response code ="404">Not found.</response>
@@ -93,12 +89,11 @@ namespace PatientBackAPI.Controllers
             }
         }
 
-        /// <summary>API method: create a Patient.</summary>          
+        /// <summary>[HttpPost] Patient API method Create: create a Patient.</summary>          
         /// <param name="input">Patient POCO inputmodel object.</param>
         /// <returns>Patient POCO object.</returns> 
-        /// <remarks>[HttpGet] Patients controller Create method.
-        /// Access limited to authenticated and authorized User with role Organizer.
-        /// URI: /Patient/Create/.</remarks>
+        /// <remarks> URI: /Patient/Create/.
+        /// Access limited to authenticated and authorized User with role Organizer.</remarks>
         /// <response code ="200">OK.</response>    
         /// <response code ="401">Unauthorized.</response>  
         /// <response code ="500">Internal error (exception).</response>
@@ -128,13 +123,12 @@ namespace PatientBackAPI.Controllers
             }
         }
 
-        /// <summary>API method: update a Patient.</summary>  
+        /// <summary>[HttpPut] Patient API method Update: update a Patient.</summary>  
         /// <returns>Patient POCO object.</returns> 
         /// <param name="id">Patient id.</param>
         /// <param name="input">Patient POCO inputmodel object.</param>
-        /// <remarks>[HttpGet] Patients controller Update method.
-        /// Access limited to authenticated and authorized User with role Organizer.
-        /// URI: /Patient/Update/.</remarks>
+        /// <remarks>URI: /Patient/Update/.
+        /// Access limited to authenticated and authorized User with role Organizer.</remarks>
         /// <response code ="200">OK.</response>    
         /// <response code ="401">Unauthorized.</response>  
         /// <response code ="404">Not found.</response>
@@ -173,12 +167,11 @@ namespace PatientBackAPI.Controllers
             }
         }
 
-        /// <summary>API method: delete a Patient.</summary>  
+        /// <summary>[HttpDelete] Patient API method Delete: delete a Patient.</summary>  
         /// <returns>Patient POCO object.</returns> 
         /// <param name="id">Patient id.</param>        
-        /// <remarks>[HttpGet] Patients controller Delete method.
-        /// Access limited to authenticated and authorized User with role Organizer.
-        /// URI: /Patient/Delete/{id}.</remarks>
+        /// <remarks>URI: /Patient/Delete/.
+        /// Access limited to authenticated and authorized User with role Organizer.</remarks>
         /// <response code ="200">OK.</response>    
         /// <response code ="401">Unauthorized.</response>  
         /// <response code ="404">Not found.</response>
