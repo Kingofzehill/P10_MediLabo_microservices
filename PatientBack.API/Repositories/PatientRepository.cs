@@ -21,7 +21,7 @@ namespace PatientBackAPI.Repositories
         { 
             try
             {
-                return await _context.Patients.Include(p => p.Address).ToListAsync());
+                return await _context.Patients.Include(p => p.Address).ToListAsync();
             }
             catch
             {

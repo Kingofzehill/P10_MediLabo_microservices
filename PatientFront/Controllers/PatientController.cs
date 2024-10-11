@@ -28,7 +28,7 @@ namespace PatientFront.Controllers
         {
             try
             {
-                Log.Information($"[PatientFront][PatientController][List][HttpGet]. Get patients List.");
+                Log.Information($"[PatientFront][PatientController][List][HttpGet]. Get Patients List.");
                 var patients = await _patientService.List();
                 if (patients == null)
                 {
@@ -59,7 +59,7 @@ namespace PatientFront.Controllers
         {
             try
             {
-                Log.Information($"[PatientFront][Controller][Get][HttpGet]. Get patient {id}.", id);
+                Log.Information($"[PatientFront][Controller][Get][HttpGet]. Get Patient {id}.", id);
                 var patient = await _patientService.Get(id);
                 if (patient == null)
                 {
@@ -144,14 +144,13 @@ namespace PatientFront.Controllers
                     var patient = await _patientService.Create(input);
                     if (patient == null)
                     {
-                        Log.Error($"[PatientFront][PatientController][Create][HttpPost]. Patients PostCreate = null.");
+                        Log.Error($"[PatientFront][PatientController][Create][HttpPost]. Patients Create = null.");
                         TempData["ErrorTitle"] = "Création Patient";
                         TempData["ErrorMessage"] = "Une erreur est survenue durant la création du Patient.";
                         return View("404");
                     }
                     
-                    TempData["SuccessMessage"] = "Le patient "+patient.Firstname+" "+patient.Lastname+" a été créé.";
-                    //return View(patients);
+                    TempData["SuccessMessage"] = "Le patient "+patient.Firstname+" "+patient.Lastname+" a été créé.";                    
                     return RedirectToAction(nameof(Index));
                 }
                 
@@ -164,8 +163,7 @@ namespace PatientFront.Controllers
                 Log.Error($"{ex.StackTrace} : {ex.Message}");
                 return Problem(
                     detail: ex.StackTrace,
-                    title: ex.Message);
-                //return StatusCode(500, "Internal server error");
+                    title: ex.Message);                
             }
         }
 

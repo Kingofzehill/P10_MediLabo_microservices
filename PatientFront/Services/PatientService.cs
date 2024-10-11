@@ -5,7 +5,7 @@ using System.Net.Http.Headers;
 
 namespace PatientFront.Services
 {
-    /// <summary>PatientBackAPIService class to PatienBack API for Patient API methods.</summary> 
+    /// <summary>PatientService class provide access to PatienBack API for Patient API methods.</summary> 
     /// <remarks>Use HttpClient defined for accessing Patient API methods:
     /// - List.
     /// - Get.
@@ -44,14 +44,13 @@ namespace PatientFront.Services
             try
             {               
                 // Call Patient List method from PatientBackAPI.
-                var patients = await _httpClient.GetFromJsonAsync<List<PatientOutputModel>>("/Patient/List");
+                var patients = await _httpClient.GetFromJsonAsync<List<PatientOutputModel>>("/Patient/List");                
                 return patients;
             }
             catch (Exception ex)
             {
                 Log.Error(ex, $"[PatientFront][PatientService][List] Error on Patient List.");
-                Log.Error($"{ex.StackTrace} : {ex.Message}");
-                //return new List<PatientOutputModel>();
+                Log.Error($"{ex.StackTrace} : {ex.Message}");                
                 return null;
             }
         }
@@ -67,7 +66,6 @@ namespace PatientFront.Services
             {
                 // Call Patient Get method from PatientBackAPI.
                 var response = await _httpClient.GetAsync($"/Patient/Get?id={id}");
-
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
                 {                    
                     Log.Error($"[PatientFront][PatientService][Get] Unauthorized(401) or Forbidden(403)  on Patient Get, id: {id}, statusCode: {response.StatusCode}.");
@@ -97,7 +95,6 @@ namespace PatientFront.Services
             {
                 // Call Patient Create method from PatientBackAPI.
                 var response = await _httpClient.PostAsJsonAsync("/Patient/Create", input);
-
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
                 {
                     Log.Warning($"[PatientFront][PatientService][Create] Unauthorized(401) or Forbidden(403) error code on Patient Create, statusCode: {response.StatusCode}.");
@@ -130,14 +127,13 @@ namespace PatientFront.Services
             {
                 // Call Patient Update method from PatientBackAPI.
                 var response = await _httpClient.PutAsJsonAsync($"/Patient/update?id={id}", input);
-
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
                 {
                     Log.Warning($"[PatientFront][PatientService][Update] Unauthorized(401) or Forbidden(403) on Patient Update, id:{id}, statusCode: {response.StatusCode}.");
                     return null;
                 }
-                response.EnsureSuccessStatusCode();
 
+                response.EnsureSuccessStatusCode();
                 var patient = await response.Content.ReadFromJsonAsync<PatientOutputModel>();
                 return patient;
             }
@@ -161,17 +157,13 @@ namespace PatientFront.Services
             {
                 // Call Patient Delete method from PatientBackAPI.
                 var response = await _httpClient.DeleteAsync($"/Patient/Delete?id={id}");
-
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
                 {
                     Log.Warning($"[PatientFront][PatientService][Delete] Unauthorized(401) or Forbidden(403) on Patient Delete, id: {id}, statusCode: {response.StatusCode}.");
                     return null;
                 }
-                response.EnsureSuccessStatusCode();
 
-                /*// Get Patient List.
-                var patients = await _httpClient.GetFromJsonAsync<List<PatientOutputModel>>("/Patient/List");
-                return patients;*/
+                response.EnsureSuccessStatusCode();                
                 var patient = await response.Content.ReadFromJsonAsync<PatientOutputModel>();
                 return patient;
             }

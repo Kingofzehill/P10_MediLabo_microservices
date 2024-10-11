@@ -1,0 +1,36 @@
+﻿@model IEnumerable<PatientNoteBackAPI.Models.OutputModels.NoteOutputModel>
+
+@{
+    ViewData["Title"] = "Liste des Notes du Patient";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<a asp-action="Create" asp-controller="PatientNote" class="btn btn-outline-success">Créer une Note</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>PatientId</th>
+            <th>NoteContent</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var note in Model)
+        {
+            <tr>
+                <td>@note.PatientId</td>
+                <td>@note.NoteContent</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Index" asp-controller="Patient" class="btn btn-secondary">Retour à la liste des Patients</a>

@@ -3,6 +3,7 @@ using PatientBackAPI.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Serilog;
 using Microsoft.Extensions.DependencyInjection;
+using static System.Net.WebRequestMethods;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,7 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
+    // Should force cookie expiration for avoiding user access to stay alive.
     options.Cookie.Expiration = TimeSpan.FromMinutes(30);
 });
 
@@ -33,23 +35,29 @@ builder.Services.AddHttpContextAccessor();
     PooledConnectionLifetime = TimeSpan.FromSeconds(60)//FromMinutes(5)
 }));*/
 
-// (UPD024) Add http client to PatientBackAPI app Services for PatientBack API access.
+// (UPD024) Add http client to PatientBackAPI app Services for Patient API methods access.
 builder.Services.AddHttpClient<PatientFront.Services.PatientService>(serviceProvider =>
 {
     serviceProvider.BaseAddress = new Uri("https://localhost:7243"); // URL from PatientBackAPIlaunchSettings.json.
 });
 
-// (UPD023) Add http client to PatientBackAPI app Services for login authentication.
+// (UPD023) Add http client to PatientBackAPI app Services for login authentication method access.
 builder.Services.AddHttpClient<AuthenticationService>(serviceProvider =>
 {
     serviceProvider.BaseAddress = new Uri("https://localhost:7243"); // URL from PatientBackAPI launchSettings.json.
 });
-
-/*// (UPD023) Add http client to PatientBackAPI app Services for login authentication.
+/*// (UPD023) Add http client to PatientBackAPI app Services for login authentication method access.
 builder.Services.AddHttpClient<AuthenticationService>(serviceProvider =>
 {
     serviceProvider.BaseAddress = new Uri("http://localhost:5033"); // URL from PatientBackAPI launchSettings.json.
 });*/
+
+// (UPD028)Add http client to PatientNoteBackAPI app Services for PatientNote API methods access.
+builder.Services.AddHttpClient<PatientNoteService>(client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7079"); // URL from PatientNoteBackAPI launchSettings.json.
+});
+
 
 // (UPD026) Add dependency to service ILoginService (interface) from PatientBackAPI with AuthenticationService type.
 builder.Services.AddScoped<ILoginService, AuthenticationService>();
