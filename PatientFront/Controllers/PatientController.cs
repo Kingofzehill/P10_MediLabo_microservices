@@ -261,7 +261,7 @@ namespace PatientFront.Controllers
                     }
                     
                     TempData["SuccessMessage"] = "Le patient "+patient.Firstname+" "+patient.Lastname+" a été mis à jour.";
-                    return RedirectToAction(nameof(Index), new { id = patient.Id });
+                    return RedirectToAction(nameof(Index));
                 }
                 return View(input);
             }
@@ -323,12 +323,11 @@ namespace PatientFront.Controllers
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "[PatientFront][PatientController][Update][HttpPost] Internal error (500) occurs.");
+                Log.Error(ex, "[PatientFront][PatientController][Delete][HttpPost] Internal error (500) occurs.");
                 Log.Error($"{ex.StackTrace} : {ex.Message}");
                 return Problem(
                     detail: ex.StackTrace,
-                    title: ex.Message);
-                //return StatusCode(500, "Internal server error");
+                    title: ex.Message);              
             }
         }
     }

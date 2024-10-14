@@ -194,7 +194,7 @@ namespace PatientBackAPI.Services
         }
         /// <summary>Patient Service (Business rules). Delete.</summary> 
         /// <param name="id">Patient id</param>       
-        /// <return>Returns POCO object of the deleted Patient.</return>          
+        /// <return>Returns POCO Output Model object of the deleted Patient.</return>          
         /// <remarks></remarks>
         public async Task<PatientOutputModel?> Delete(int id)
         {

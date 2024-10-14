@@ -34,6 +34,7 @@ namespace PatientFront.Controllers
                     TempData["ErrorMessage"] = "La liste des Notes du Patient a généré une erreur.";
                     return View("404");
                 }
+                TempData["PatientId"] = id;
                 return View(notes);
             }
             catch (Exception ex)
@@ -51,8 +52,9 @@ namespace PatientFront.Controllers
         /// <returns>Patient Note Create View.</returns> 
         /// <remarks>[HttpGet]</remarks>
         [HttpGet]
-        public IActionResult Create()
+        public IActionResult Create(int id)
         {
+            TempData["PatientId"] = id;
             return View();
         }
 
@@ -62,7 +64,7 @@ namespace PatientFront.Controllers
         /// <remarks>[HttpPost]</remarks>        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PatientId", "Content")] NoteInputModel input)
+        public async Task<IActionResult> Create([Bind("PatientId", "NoteContent")] NoteInputModel input)
         {
             try
             {
@@ -77,9 +79,12 @@ namespace PatientFront.Controllers
                         TempData["ErrorMessage"] = "Une erreur est survenue durant la création de la note du Patient.";
                         return View("404");
                     }
-                    TempData["SuccessMessage"] = "La note du patient a été créée.";                    
+                    TempData["SuccessMessage"] = "La note du patient a été créée.";
+                    TempData["PatientId"] = note.PatientId;
                     //return RedirectToAction(nameof(Index));
-                    return RedirectToAction("Index", "Patient");
+                    //return RedirectToAction("Index", "Patient");
+                    //return RedirectToAction("Index", "PatientNote");
+                    return RedirectToAction("Index", new { id = note.PatientId });
                 }
                 ModelState.AddModelError(string.Empty, "Les informations fournies sont incomplètes. Veuillez vérifier les informations saisies.");
                 return RedirectToAction(nameof(Index));
@@ -94,79 +99,61 @@ namespace PatientFront.Controllers
             }
         }
 
-        /*// GET: PatientNotesController
-        public ActionResult Index()
+        /// <summary>PatientFront. PatientNote Controller. Delete method.</summary>  
+        /// Displays Patient Note for delete confirmation.</summary>      
+        /// <param name="id">Patient Note id (MongoDbB ObjectId type).</param> 
+        /// <returns>Patient Note Outputmodel View.</returns> 
+        /// <remarks>[HttpGet]</remarks>
+        [HttpGet]
+        public async Task<IActionResult> Delete(string id)
         {
-            return View();
+            var note = await _patientNoteService.Get(id);
+
+            if (note == null)
+            {
+                Log.Error($"[PatientFront][PatientNoteController][Delete][HttpGet]. Get Patient Note to delete, objectId: {id} = null.");
+                TempData["ErrorTitle"] = "Recherche Note";
+                TempData["ErrorMessage"] = "Une erreur est survenue lors de la recherche de la Note du Patient à supprimer.";
+                return View("404");
+            }
+            TempData["PatientId"] = note.PatientId;
+            return View(note);
         }
 
-        // GET: PatientNotesController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: PatientNotesController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: PatientNotesController/Create
+        /// <summary>PatientFront. PatientNote Controller. DeleteConfirmed method.
+        /// Post delete of the Patient Note.</summary>                
+        /// <param name="id">Patient id.</param>   
+        /// <returns>Index view.</returns> 
+        /// <remarks>[HttpGett]</remarks>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var note = await _patientNoteService.Delete(id);
+
+                if (note == null)
+                {
+                    Log.Error($"[PatientFront][PatientNoteController][Delete][HttpPost]. Patients Note Delete, objectId: {id} = null.");
+                    TempData["ErrorTitle"] = "Suppression Note";
+                    TempData["ErrorMessage"] = "Une erreur est survenue lors de la suppression de la Note du Patient.";
+                    return View("404");
+                }
+
+                TempData["SuccessMessage"] = "La Note du patient a été supprimée.";
+                TempData["PatientId"] = note.PatientId;
+                //return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", new { id = note.PatientId }); 
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                Log.Error(ex, "[PatientFront][PatientNoteController][Delete][HttpPost] Internal error (500) occurs.");
+                Log.Error($"{ex.StackTrace} : {ex.Message}");
+                return Problem(
+                    detail: ex.StackTrace,
+                    title: ex.Message);                
             }
         }
-
-        // GET: PatientNotesController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: PatientNotesController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: PatientNotesController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: PatientNotesController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }*/
     }
 }

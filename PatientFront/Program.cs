@@ -22,7 +22,16 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
     // Should force cookie expiration for avoiding user access to stay alive.
-    options.Cookie.Expiration = TimeSpan.FromMinutes(30);
+    // options.Cookie.Expiration = TimeSpan.FromMinutes(30);
+});
+
+// (UPD028) Change cookie expiration from "until browser close" to 30 minutes
+//      https://serverless.industries/2022/03/08/net-core-session-cookie-lifetime.en.html
+builder.Services.AddCookiePolicy(opts => {
+    opts.CheckConsentNeeded = ctx => false;
+    opts.OnAppendCookie = ctx => {
+        ctx.CookieOptions.Expires = DateTimeOffset.UtcNow.AddMinutes(30);
+    };
 });
 
 builder.Services.AddHttpContextAccessor();

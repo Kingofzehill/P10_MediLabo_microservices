@@ -12,25 +12,47 @@
         @TempData["SuccessMessage"]
     </div>
 }
+@*
+@{
+    bool bCreateDisplay = false;
+}
+@foreach (var note in Model)
+{
+    if (bCreateDisplay == false)
+    {
+        <a asp-action="Create" asp-controller="PatientNote" asp-route-Id="@note.PatientId" class="btn btn-outline-secondary">Créer une Note</a>
+        bCreateDisplay = true;
+    }
+}*@
+@{
+    var patientId = TempData["PatientId"];
+    if (patientId != null)
+    {
+        <a asp-action="Create" asp-controller="PatientNote" asp-route-Id="@patientId" class="btn btn-outline-secondary">Créer une Note</a>
+    }
+}
 
-<a asp-action="Create" asp-controller="PatientNote" class="btn btn-outline-success">Créer une Note</a>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>PatientId</th>
-            <th>NoteContent</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var note in Model)
-        {
-            <tr>
-                <td>@note.PatientId</td>
-                <td>@note.NoteContent</td>
+    <table class="table">
+        <thead>
+            <tr>                
+                <th>Identifiant Patient</th>
+                <th>Identifiant Note</th>
+                <th>Note</th>
+                <th>Actions</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var note in Model)
+            {
+                <tr>
+                    <td>@note.PatientId</td>
+                    @*<td>@string.IsNullOrEmpty(note.Id)</td>*@
+                    <td>@note.Id</td>
+                    <td>@note.NoteContent</td>
+                    <td><a asp-action="Delete" asp-controller="PatientNote" asp-route-Id="@note.Id">Supprimer</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
 <a asp-action="Index" asp-controller="Patient" class="btn btn-secondary">Retour à la liste des Patients</a>

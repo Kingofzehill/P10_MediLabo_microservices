@@ -1,4 +1,5 @@
-﻿using PatientNoteBackAPI.Models.InputModels;
+﻿using PatientBackAPI.Models.OutputModels;
+using PatientNoteBackAPI.Models.InputModels;
 using PatientNoteBackAPI.Models.OutputModels;
 using Serilog;
 using System.Net;
@@ -88,6 +89,64 @@ namespace PatientFront.Services
             {
                 Log.Error(ex, $"[PatientFront][PatientNoteService][Create] Error on Patient Note Create.");
                 Log.Error($"{ex.StackTrace} : {ex.Message}");
+                return null;
+            }
+        }
+
+        /// <summary>Front PatientNote Service. Get method.
+        /// Use PatientNoteBack API for Patient Note Get.</summary>     
+        /// <param name="id">Patient Note id (MongoDB ObjectId type).</param>    
+        /// <returns>Output model Patient Note.</returns> 
+        /// <remarks> URI: /Note/Get?id={Id}.</remarks>
+        public async Task<NoteOutputModel> Get(string id)
+        {
+            try
+            {
+                // Call Patien tNote Get method from PatientNoteBackAPI.
+                var response = await _httpClient.GetAsync($"/Note/Get?id={id}");
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                {
+                    Log.Error($"[PatientFront][PatientNoteService][Get] Unauthorized(401) or Forbidden(403)  on Patient Note Get, ObjectId: {id}, statusCode: {response.StatusCode}.");
+                    return null;
+                }
+
+                response.EnsureSuccessStatusCode();
+                var note = await response.Content.ReadFromJsonAsync<NoteOutputModel>();
+                return note;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, $"[PatientFront][PatientNoteService][Get] Error on Patient Note Get, Objectid: {id}");
+                Log.Error($"{ex.StackTrace} : {ex.Message}");
+                return null;
+            }
+        }
+
+        /// <summary>Front PatientNote Service. Delete method.
+        /// Use PatientNoteBack API for Patient Note Delete.</summary>     
+        /// <param name="id">Patient Note id (MongoDB ObjectId type).</param>      
+        /// <returns>Patient Note Output Model.</returns> 
+        /// <remarks> URI: /Note/Delete?id={Id}.</remarks>        
+        public async Task<NoteOutputModel> Delete(string id)
+        {
+            try
+            {
+                // Call Patient Note Delete method from PatientNoteBackAPI.
+                var response = await _httpClient.DeleteAsync($"/Note/Delete?id={id}");
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                {
+                    Log.Warning($"[PatientFront][PatientNoteService][Delete] Unauthorized(401) or Forbidden(403) on Patient Note Delete, ObjectId: {id}, statusCode: {response.StatusCode}.");
+                    return null;
+                }
+
+                response.EnsureSuccessStatusCode();
+                var note = await response.Content.ReadFromJsonAsync<NoteOutputModel>();
+                return note;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, $"[PatientFront][PatientNoteService][Delete] Error on Patient Note Delete, ObjectId: {id}.");
+                Log.Error($"{ex.StackTrace} : {ex.Message}");                
                 return null;
             }
         }

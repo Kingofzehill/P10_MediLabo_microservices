@@ -52,7 +52,7 @@ namespace PatientBackAPI.Controllers
         /// <param name="id">Patient id.</param>        
         /// <returns>Patient POCO output model object.</returns> 
         /// <remarks> URI: /Patient/Get/.
-        /// Access limited to authenticated and authorized User with role Organizer or Practioner.</remarks>
+        /// Access limited to authenticated and authorized User with role Organizer or Practitioner.</remarks>
         /// <response code ="200">OK.</response>    
         /// <response code ="401">Unauthorized.</response>  
         /// <response code ="404">Not found.</response>
@@ -69,7 +69,7 @@ namespace PatientBackAPI.Controllers
         {
             try
             {
-                Log.Information("[PatientBackAPI][HttpGet] Get patient from id: {UserName}.", id);
+                Log.Information("[PatientBackAPI][HttpGet] Get patient from id: {id}.", id);
                 var patient = await _patientService.Get(id);
 
                 if (patient is not null)
@@ -124,9 +124,9 @@ namespace PatientBackAPI.Controllers
         }
 
         /// <summary>[HttpPut] Patient API method Update: update a Patient.</summary>  
-        /// <returns>Patient POCO object.</returns> 
         /// <param name="id">Patient id.</param>
         /// <param name="input">Patient POCO inputmodel object.</param>
+        /// <returns>Patient POCO object.</returns> 
         /// <remarks>URI: /Patient/Update/.
         /// Access limited to authenticated and authorized User with role Organizer.</remarks>
         /// <response code ="200">OK.</response>    
@@ -168,8 +168,8 @@ namespace PatientBackAPI.Controllers
         }
 
         /// <summary>[HttpDelete] Patient API method Delete: delete a Patient.</summary>  
-        /// <returns>Patient POCO object.</returns> 
         /// <param name="id">Patient id.</param>        
+        /// <returns>Patient POCO object.</returns> 
         /// <remarks>URI: /Patient/Delete/.
         /// Access limited to authenticated and authorized User with role Organizer.</remarks>
         /// <response code ="200">OK.</response>    
