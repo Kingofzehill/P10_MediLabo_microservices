@@ -24,7 +24,7 @@ builder.Services.AddSwaggerGen(options =>
     options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
     options.SwaggerDoc("v1", new()
     {
-        Title = "MediLabo Patient-back API",
+        Title = "MediLabo PatientBackAPI",
         Version = "v1",
         Description = "An ASP.NET Core Web API for managing Patients."
     });

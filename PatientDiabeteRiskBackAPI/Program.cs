@@ -1,15 +1,11 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
-using MongoDB.Driver;
-using Serilog;
-using PatientNoteBackAPI.Data;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
-using PatientNoteBackAPI.Repositories;
-using PatientNoteBackAPI.Services;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,23 +17,23 @@ builder.Services.AddEndpointsApiExplorer();
 // https://medium.com/@rahman3593/implementing-jwt-authentication-with-swagger-ca991b7aca08
 builder.Services.AddSwaggerGen(options =>
 {
-options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
-options.SwaggerDoc("v1", new()
-{
-    Title = "MediLabo PatientNotesBackAPI",
-    Version = "v1",
-    Description = "An ASP.NET Core Web API for managing Patient Notes."
-});
-options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-{
-    In = ParameterLocation.Header,
-    Description = "Entrer le token communiqué lors de votre authentification (login) pour avoir l'autorisation.",
-    Scheme = "Bearer",
-    Name = "Authorization",
-    BearerFormat = "JWT",
-    Type = SecuritySchemeType.Http
-});
-options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+    options.SwaggerDoc("v1", new()
+    {
+        Title = "MediLabo PatientDiabeteRiskBackAPI",
+        Version = "v1",
+        Description = "An ASP.NET Core Web API for managing Patient Notes."
+    });
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Entrer le token communiqué lors de votre authentification (login) pour avoir l'autorisation.",
+        Scheme = "Bearer",
+        Name = "Authorization",
+        BearerFormat = "JWT",
+        Type = SecuritySchemeType.Http
+    });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
             new OpenApiSecurityScheme
@@ -98,26 +94,14 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
         .AddEntityFrameworkStores<IdentityDbContext>()
         .AddDefaultTokenProviders();
 
-// DB connection for Patient Notes.
-var mongoDbappsettings = builder.Configuration.GetSection("MongoDb");
-var mongoClient = new MongoClient(mongoDbappsettings["ConnectionString"]);
-var dbContextOptions =
-    new DbContextOptionsBuilder<LocalMongoDbContext>().UseMongoDB(mongoClient, mongoDbappsettings["DatabaseName"]!);
-var db = new LocalMongoDbContext(dbContextOptions.Options);
-builder.Services.AddSingleton(db);
-
 // Logs configuration (Serilog).
 // https://serilog.net/ 
 // https://www.nuget.org/packages/Serilog.Sinks.File 
 // https://www.nuget.org/packages/Serilog.Sinks.Console 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
-    .WriteTo.File("logs/MediLabo_PatientNotesBackAPI_log.txt", rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
+    .WriteTo.File("logs/MediLabo_PatientDiabeteRiskBackAPI_log.txt", rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
     .CreateLogger();
-
-// Scoped services for Note Repository and Service.
-builder.Services.AddScoped<INoteRepository, NoteRepository>();
-builder.Services.AddScoped<INoteService, NoteService>();
 
 var app = builder.Build();
 

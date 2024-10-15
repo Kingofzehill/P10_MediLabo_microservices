@@ -1,0 +1,6 @@
+@PatientDiabeteRiskBackAPI_HostAddress = http://localhost:5078
+
+GET {{PatientDiabeteRiskBackAPI_HostAddress}}
+Accept: application/json
+
+###
