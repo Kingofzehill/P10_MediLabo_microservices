@@ -44,7 +44,7 @@ builder.Services.AddHttpContextAccessor();
     PooledConnectionLifetime = TimeSpan.FromSeconds(60)//FromMinutes(5)
 }));*/
 
-// (UPD024) Add http client to PatientBackAPI app Services for Patient API methods access.
+// (UPD024) Add http client to PatientBackAPI app Services for API methods access.
 builder.Services.AddHttpClient<PatientFront.Services.PatientService>(serviceProvider =>
 {
     serviceProvider.BaseAddress = new Uri("https://localhost:7243"); // URL from PatientBackAPIlaunchSettings.json.
@@ -61,12 +61,17 @@ builder.Services.AddHttpClient<AuthenticationService>(serviceProvider =>
     serviceProvider.BaseAddress = new Uri("http://localhost:5033"); // URL from PatientBackAPI launchSettings.json.
 });*/
 
-// (UPD028)Add http client to PatientNoteBackAPI app Services for PatientNote API methods access.
+// (UPD028)Add http client to PatientNoteBackAPI app Services for API methods access.
 builder.Services.AddHttpClient<PatientNoteService>(client =>
 {
     client.BaseAddress = new Uri("https://localhost:7079"); // URL from PatientNoteBackAPI launchSettings.json.
 });
 
+// (UPD028)Add http client to PatientDiabeteRiskBackAPI app Services for API methods access.
+builder.Services.AddHttpClient<PatientDiabeteService>(client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7088"); // URL from PatientDiabeteRiskBackAPI launchSettings.json.
+});
 
 // (UPD026) Add dependency to service ILoginService (interface) from PatientBackAPI with AuthenticationService type.
 builder.Services.AddScoped<ILoginService, AuthenticationService>();
