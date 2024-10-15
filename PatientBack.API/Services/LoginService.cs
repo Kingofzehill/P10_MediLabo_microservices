@@ -44,7 +44,9 @@ namespace PatientBackAPI.Services
                     var tokenDescriptor = new SecurityTokenDescriptor
                     {
                         Subject = new ClaimsIdentity(claims),
-                        Expires = DateTime.UtcNow.AddHours(24),
+                        // (UPD029) Change token expiration from "until browser close" to 30 minutes in conjonction of cookie expiration time limit.
+                        //Expires = DateTime.UtcNow.AddHours(24),
+                        Expires = DateTime.UtcNow.AddMinutes(30),
                         Audience = _config["Jwt:Audience"],
                         Issuer = _config["Jwt:Issuer"],
                         SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

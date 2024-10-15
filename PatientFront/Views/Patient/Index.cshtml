@@ -12,7 +12,7 @@
         @TempData["SuccessMessage"]
     </div>
 }
-<a asp-action="Create" class="btn btn-outline-success">Créer un patient</a>
+<a asp-action="Create" class="btn btn-outline-secondary">Créer un patient</a>
 <table class="table">
     <thead>
         <tr class="text-center">
@@ -21,7 +21,8 @@
             <th>Date de Naissance</th>
             <th>Genre</th>
             <th>Adresse</th>
-            <th>Téléphone</th>            
+            <th>Téléphone</th> 
+            <th>Notes Patient</th>
             <th>Actions</th>            
         </tr>
     </thead>
@@ -34,10 +35,13 @@
                 <td>@patient.BirthDate.ToString("yyyy/MM/dd")</td>
                 <td>@patient.Gender</td>
                 <td>@patient.Address</td>
-                <td>@patient.PhoneNumber</td>                
+                <td>@patient.PhoneNumber</td>
+                <td>
+                    <a asp-action="Index" asp-controller="PatientNote" asp-route-Id="@patient.Id" class="btn btn-outline-secondary">Notes</a>
+                </td>
                 <td>
                     <a asp-action="Detail" asp-route-id="@patient.Id">Détail</a> |
-                    <a asp-action="Update" asp-route-id="@patient.Id">Mettre à jour</a> |
+                    <a asp-action="Update" asp-route-id="@patient.Id">Modifier</a> |
                     <a asp-action="Delete" asp-route-id="@patient.Id">Supprimer</a>
                 </td>                
             </tr>

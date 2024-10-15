@@ -1,0 +1,19 @@
+﻿@model PatientNoteBackAPI.Models.OutputModels.NoteOutputModel
+
+
+@{
+    ViewData["Title"] = "Suppression d'une Note";
+    var patientId = TempData["PatientId"];
+    if (patientId == null)
+    {
+        patientId = 0;
+    }
+}
+<h2>@ViewData["Title"]</h2>
+<h4>Êtes-vous sûr de vouloir supprimer la Note : <strong>@Model.NoteContent</strong> ?</h4>
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <button type="submit" class="btn btn-primary">Oui</button>
+    <a asp-action="Index" asp-route-Id="@patientId" class="btn btn-secondary">Non (Retour à la liste des Notes du Patient).</a>
+</form>
