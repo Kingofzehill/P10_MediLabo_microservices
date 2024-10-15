@@ -36,39 +36,26 @@ builder.Services.AddCookiePolicy(opts => {
 
 builder.Services.AddHttpContextAccessor();
 
-// Creates a new HttpClient instance as a singleton
-//builder.Services.AddSingleton((serviceProvider) => new HttpClient());
-/*builder.Services.AddSingleton((serviceProvider) => new HttpClient(new SocketsHttpHandler
-{
-    // Update the DNS every 60 seconds.
-    PooledConnectionLifetime = TimeSpan.FromSeconds(60)//FromMinutes(5)
-}));*/
-
-// (UPD024) Add http client to PatientBackAPI app Services for API methods access.
+// (UPD024) Add http client to PatientBackAPI microservice for API methods access.
 builder.Services.AddHttpClient<PatientFront.Services.PatientService>(serviceProvider =>
 {
     serviceProvider.BaseAddress = new Uri("https://localhost:7243"); // URL from PatientBackAPIlaunchSettings.json.
 });
 
-// (UPD023) Add http client to PatientBackAPI app Services for login authentication method access.
-builder.Services.AddHttpClient<AuthenticationService>(serviceProvider =>
+// (UPD023) Add http client to PatientBackAPI microservice for login authentication method access.
+builder.Services.AddHttpClient<PatientFront.Services.AuthenticationService>(serviceProvider =>
 {
     serviceProvider.BaseAddress = new Uri("https://localhost:7243"); // URL from PatientBackAPI launchSettings.json.
 });
-/*// (UPD023) Add http client to PatientBackAPI app Services for login authentication method access.
-builder.Services.AddHttpClient<AuthenticationService>(serviceProvider =>
-{
-    serviceProvider.BaseAddress = new Uri("http://localhost:5033"); // URL from PatientBackAPI launchSettings.json.
-});*/
 
-// (UPD028)Add http client to PatientNoteBackAPI app Services for API methods access.
-builder.Services.AddHttpClient<PatientNoteService>(client =>
+// (UPD028)Add http client to PatientNoteBackAPI microservice for API methods access.
+builder.Services.AddHttpClient<PatientFront.Services.PatientNoteService>(client =>
 {
     client.BaseAddress = new Uri("https://localhost:7079"); // URL from PatientNoteBackAPI launchSettings.json.
 });
 
-// (UPD028)Add http client to PatientDiabeteRiskBackAPI app Services for API methods access.
-builder.Services.AddHttpClient<PatientDiabeteService>(client =>
+// (UPD028)Add http client to PatientDiabeteRiskBackAPI microservice for API methods access.
+builder.Services.AddHttpClient<PatientFront.Services.PatientDiabeteService>(client =>
 {
     client.BaseAddress = new Uri("https://localhost:7088"); // URL from PatientDiabeteRiskBackAPI launchSettings.json.
 });
@@ -86,10 +73,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
            //options.AccessDeniedPath = "/error/403";
        });
 
-// (TODO05) Replace for using Serilog.
-/*Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
-    .CreateLogger();*/
 // (UPD013) application logs configuration (Serilog).
 // https://serilog.net/ 
 // https://www.nuget.org/packages/Serilog.Sinks.File 
@@ -121,8 +104,8 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-// (UPD022) Midlleware Service for authentication errors management.
-app.UseMiddleware<MiddlewareService>();
+// (UPD022) Midlleware Service.
+app.UseMiddleware<PatientFront.Services.MiddlewareService>();
 
 app.MapControllerRoute(
     name: "default",
