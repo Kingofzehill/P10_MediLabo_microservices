@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using Serilog;
+using PatientNoteBackAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -116,6 +117,10 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .WriteTo.File("logs/MediLabo_PatientDiabeteRiskBackAPI_log.txt", rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
     .CreateLogger();
+
+builder.Services.AddScoped<PatientDiabeteRiskBackAPI.Services.PatientService>();
+builder.Services.AddScoped<PatientDiabeteRiskBackAPI.Services.PatientNoteService>();
+builder.Services.AddScoped<PatientDiabeteRiskBackAPI.Services.DiabeteService>();
 
 var app = builder.Build();
 
