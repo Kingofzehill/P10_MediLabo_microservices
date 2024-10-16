@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using Azure;
+using Serilog;
 
 namespace PatientDiabeteRiskBackAPI.Services
 {
@@ -18,10 +19,14 @@ namespace PatientDiabeteRiskBackAPI.Services
                 await _httpResponse(context);
 
                 // errors management: 401 (unauthorized) // 403 (forbidden) // 404 (notfound) // 415 (unsupportedmediatype)
-                if (context.Response.StatusCode == StatusCodes.Status415UnsupportedMediaType || context.Response.StatusCode == StatusCodes.Status404NotFound || context.Response.StatusCode == StatusCodes.Status403Forbidden || context.Response.StatusCode == StatusCodes.Status401Unauthorized)
+                if (context.Response.StatusCode != StatusCodes.Status200OK)
                 {
-                    Log.Error("[PatientDiabeteRiskBackAPI][MiddlewareService] Response error, StatusCode: {context.Response.StatusCode}", context.Response.StatusCode);                    
+                    Log.Error($"[PatientDiabeteRiskBackAPI][MiddlewareService] Http request response error, statusCode: {context.Response.StatusCode}.");
                 }
+            }
+            catch (HttpRequestException ex)
+            {                
+                Log.Error($"[PatientDiabeteRiskBackAPI][MiddlewareService] HTTP request failed: {ex.Message}");
             }
             catch (Exception ex)
             {
