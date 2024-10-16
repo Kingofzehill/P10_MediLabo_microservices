@@ -1,5 +1,6 @@
 ﻿using PatientNoteBackAPI.Models.OutputModels;
 using Serilog;
+using System.Net;
 using System.Net.Http.Headers;
 
 namespace PatientDiabeteRiskBackAPI.Services
@@ -24,6 +25,35 @@ namespace PatientDiabeteRiskBackAPI.Services
             if (!string.IsNullOrEmpty(token))
             {
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
+        }
+
+        /// <summary>PatientDiabeteRiskBackAPI. Patient Note Service. List method.
+        /// Use PatientNoteNoteAPI for Patient Notes List.</summary>         
+        /// <param name="id">Patient Id.</param>    
+        /// <returns>Output model Notes List.</returns> 
+        /// <remarks> URI: /Note/List?id={Id}.</remarks>
+        public async Task<List<NoteOutputModel>> List(int id)
+        {
+            try
+            {
+                // Call Patient Notes List method from PatientNoteBackAPI.
+                var response = await _httpClient.GetAsync($"/Note/List?id={id}");
+                if (response.StatusCode == HttpStatusCode.Unauthorized || response.StatusCode == HttpStatusCode.Forbidden)
+                {
+                    Log.Error($"[PatientDiabeteRiskBackAPI][PatientNoteService][List] Unauthorized(401) or Forbidden(403)  on Patient Notes List, Patient id: {id}, statusCode: {response.StatusCode}.");
+                    return null;
+                }
+
+                response.EnsureSuccessStatusCode();
+                var notes = await response.Content.ReadFromJsonAsync<List<NoteOutputModel>>();
+                return notes;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, $"[PatientDiabeteRiskBackAPI][PatientNoteService][List] Error on Patient Notes List.");
+                Log.Error($"{ex.StackTrace} : {ex.Message}");
+                return null;
             }
         }
 
