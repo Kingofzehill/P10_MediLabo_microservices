@@ -1,4 +1,7 @@
-﻿using System.Net.Http.Headers;
+﻿using Serilog;
+using System.Net.Http.Headers;
+using PatientDiabeteRiskBackAPI.Models;
+using PatientBackAPI.Models.OutputModels;
 
 namespace PatientFront.Services
 {
@@ -22,6 +25,34 @@ namespace PatientFront.Services
             {
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
+        }
+
+        /// <summary>Front Patient Diabete Service. GetReport method.
+        /// Use PatientDiabeteRiskBackAPI for Patient GetReport.</summary>     
+        /// <param name="id">Patient id.</param>    
+        /// <returns>Risk.</returns> 
+        /// <remarks> URI: /Diabete/Get?id={id}.</remarks>
+        public async Task<Risk?> GetReport(int id)
+        {
+            try
+            {
+                // Call Get method from PatientDiabeteRiskBackAPI.
+                var response = await _httpClient.GetAsync($"/Diabete/Get?id={id}");
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                {
+                    Log.Error($"[PatientFront][PatientDiabeteService][GetReport] Unauthorized(401) or Forbidden(403) on Get Diabete Report, Patient id: {id}, statusCode: {response.StatusCode}.");
+                    return null;
+                }
+
+                response.EnsureSuccessStatusCode();
+                return await response.Content.ReadFromJsonAsync<Risk?>();                
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, $"[PatientFront][PatientDiabeteService][GetReport] Error on Get Diabete Report, Patient id: {id}");
+                Log.Error($"{ex.StackTrace} : {ex.Message}");
+                return null;
+            }            
         }
     }
 }

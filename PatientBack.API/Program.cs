@@ -147,9 +147,9 @@ builder.Services.AddHttpContextAccessor();
 // (TD001) addscope for interfaces and repositories.
 // (UPD016) Scoped services for Patient, Address, Login..
 builder.Services.AddScoped<IPatientRepository, PatientRepository>();
-builder.Services.AddScoped<IPatientService, PatientService>();
+builder.Services.AddScoped<IPatientService, PatientBackAPI.Services.PatientService>();
 builder.Services.AddScoped<IAddressRepository, AddressRepository>();
-builder.Services.AddScoped<ILoginService, LoginService>();
+builder.Services.AddScoped<ILoginService, PatientBackAPI.Services.LoginService>();
 
 var app = builder.Build();
 
@@ -165,7 +165,7 @@ using (var scope = app.Services.CreateScope())
     // (TD002) RequiredService.
     // (UPD017) Service provider required for DbContext, Login, Identity users and roles.
     var dbcontext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
-    var authService = scope.ServiceProvider.GetService<LoginService>();
+    var authService = scope.ServiceProvider.GetService<PatientBackAPI.Services.LoginService>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 

@@ -62,6 +62,7 @@ WebApplication app = builder.Build();
 //var app = builder.Build();
 
 app.UseRouting();
+//app.UseCors("CorsPolicy");
 app.UseAuthorization();
 app.UseEndpoints(_ => { });
 

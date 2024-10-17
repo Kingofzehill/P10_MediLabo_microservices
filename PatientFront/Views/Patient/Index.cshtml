@@ -23,6 +23,7 @@
             <th>Adresse</th>
             <th>Téléphone</th> 
             <th>Notes Patient</th>
+            <th>Rapport</th>
             <th>Actions</th>            
         </tr>
     </thead>
@@ -40,10 +41,14 @@
                     <a asp-action="Index" asp-controller="PatientNote" asp-route-Id="@patient.Id" class="btn btn-outline-secondary">Notes</a>
                 </td>
                 <td>
+                    <a asp-action="GetReport" asp-controller="PatientDiabete" asp-route-Id="@patient.Id" class="btn btn-outline-secondary">Risque diabète</a>
+                    @*@ViewBag.Risk*@
+                </td>
+                <td>
                     <a asp-action="Detail" asp-route-id="@patient.Id">Détail</a> |
                     <a asp-action="Update" asp-route-id="@patient.Id">Modifier</a> |
                     <a asp-action="Delete" asp-route-id="@patient.Id">Supprimer</a>
-                </td>                
+                </td>
             </tr>
         }
     </tbody>

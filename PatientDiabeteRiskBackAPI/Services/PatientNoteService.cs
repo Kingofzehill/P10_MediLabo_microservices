@@ -9,10 +9,12 @@ namespace PatientDiabeteRiskBackAPI.Services
     {
         private readonly HttpClient _httpClient;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILogger<PatientNoteService> _logger;
+        private readonly ILogger<PatientDiabeteRiskBackAPI.Services.PatientNoteService> _logger;
 
-        public PatientNoteService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor, ILogger<PatientNoteService> logger)
+        public PatientNoteService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor, ILogger<PatientDiabeteRiskBackAPI.Services.PatientNoteService> logger)
         {
+            // Fix baseaddress defined in httpclient of program.cs for PatientNoteService which etrangly remains at null.
+            httpClient.BaseAddress = new Uri("https://localhost:7079");
             httpClient.DefaultRequestHeaders.Accept.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
@@ -25,6 +27,11 @@ namespace PatientDiabeteRiskBackAPI.Services
             if (!string.IsNullOrEmpty(token))
             {
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            }
+            else
+            {
+                // For standalone use of the microservice.
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "testtoken");
             }
         }
 

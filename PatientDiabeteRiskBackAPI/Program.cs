@@ -61,10 +61,11 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddHttpContextAccessor();
 
+
 // Add http client to PatientBackAPI microservice for API methods access.
-builder.Services.AddHttpClient<PatientDiabeteRiskBackAPI.Services.PatientService>(serviceProvider =>
+builder.Services.AddHttpClient<PatientDiabeteRiskBackAPI.Services.PatientService>(client =>
 {
-    serviceProvider.BaseAddress = new Uri("https://localhost:7243"); // URL from PatientBackAPIlaunchSettings.json.
+    client.BaseAddress = new Uri("https://localhost:7243"); // URL from PatientBackAPIlaunchSettings.json.
 });
 
 // Add http client to PatientNoteBackAPI microservice for API methods access.
@@ -123,6 +124,11 @@ builder.Services.AddScoped<PatientDiabeteRiskBackAPI.Services.PatientNoteService
 builder.Services.AddScoped<PatientDiabeteRiskBackAPI.Services.DiabeteService>();
 
 var app = builder.Build();
+
+/*// test
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();*/
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

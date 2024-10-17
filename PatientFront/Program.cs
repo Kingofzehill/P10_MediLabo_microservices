@@ -43,9 +43,9 @@ builder.Services.AddHttpClient<PatientFront.Services.PatientService>(serviceProv
 });
 
 // (UPD023) Add http client to PatientBackAPI microservice for login authentication method access.
-builder.Services.AddHttpClient<PatientFront.Services.AuthenticationService>(serviceProvider =>
+builder.Services.AddHttpClient<PatientFront.Services.AuthenticationService>(client =>
 {
-    serviceProvider.BaseAddress = new Uri("https://localhost:7243"); // URL from PatientBackAPI launchSettings.json.
+    client.BaseAddress = new Uri("https://localhost:7243"); // URL from PatientBackAPI launchSettings.json.
 });
 
 // (UPD028)Add http client to PatientNoteBackAPI microservice for API methods access.

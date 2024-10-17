@@ -1,0 +1,15 @@
+﻿@model Risk?
+@using PatientDiabeteRiskBackAPI.Models
+
+@{
+    ViewData["Title"] = "Rapport de risque diabète";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="text-center">
+
+    <h4>Le risque de diabète est :<span class="text-danger"> @Model </span></h4>
+    
+    <a asp-action="Index" asp-controller="Patient" class="btn btn-secondary">Retour à la liste des Patients</a>
+</div>

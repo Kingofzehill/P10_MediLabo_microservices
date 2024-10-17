@@ -21,7 +21,7 @@ namespace PatientDiabeteRiskBackAPI.Services
                 // errors management: 401 (unauthorized) // 403 (forbidden) // 404 (notfound) // 415 (unsupportedmediatype)
                 if (context.Response.StatusCode != StatusCodes.Status200OK)
                 {
-                    Log.Error($"[PatientDiabeteRiskBackAPI][MiddlewareService] Http request response error, statusCode: {context.Response.StatusCode}.");
+                    Log.Error($"[PatientDiabeteRiskBackAPI][MiddlewareService] Http request response error, statusCode: {context.Response.StatusCode}."); 
                 }
             }
             catch (HttpRequestException ex)

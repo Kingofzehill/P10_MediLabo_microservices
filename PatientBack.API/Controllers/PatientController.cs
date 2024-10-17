@@ -101,6 +101,7 @@ namespace PatientBackAPI.Controllers
         [Route("Create")]
         //[Authorize]
         [Authorize("Practitioner")]
+        //[Authorize("Organizer")]
         //[Authorize(Roles = "Organizer")] // Authorize for user which has the specified role.
         //[Authorize(Policy = "Organizer")] // Authorize policy (user which has the specified role).
         [ProducesResponseType(StatusCodes.Status200OK)]
