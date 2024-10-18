@@ -1,4 +1,5 @@
-﻿using PatientNoteBackAPI.Models.OutputModels;
+﻿using NuGet.Common;
+using PatientNoteBackAPI.Models.OutputModels;
 using Serilog;
 using System.Net;
 using System.Net.Http.Headers;
@@ -22,26 +23,25 @@ namespace PatientDiabeteRiskBackAPI.Services
             _httpContextAccessor = httpContextAccessor;
             _logger = logger;
 
-            // Get Token from cookie.
+            /*// Get Token from cookie.
             var token = _httpContextAccessor.HttpContext.Request.Cookies["Jwt"];
             if (!string.IsNullOrEmpty(token))
             {
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            }
-            else
-            {
-                // For standalone use of the microservice.
-                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "testtoken");
-            }
+            }*/
         }
 
         /// <summary>PatientDiabeteRiskBackAPI. Patient Note Service. List method.
         /// Use PatientNoteNoteAPI for Patient Notes List.</summary>         
         /// <param name="id">Patient Id.</param>    
+        /// <param name="authorization">Contains token requested for authentication
+        /// in PatientBack and Patient API.</param>  
         /// <returns>Output model Notes List.</returns> 
         /// <remarks> URI: /Note/List?id={Id}.</remarks>
-        public async Task<List<NoteOutputModel>> List(int id)
+        public async Task<List<NoteOutputModel>> List(int id, string authorization)
         {
+            // extract token from header to provide httpclient authorization for PatientNoteBackAPI List method call.
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authorization.Replace("Bearer ", ""));
             try
             {
                 // Call Patient Notes List method from PatientNoteBackAPI.

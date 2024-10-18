@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PatientDiabeteRiskBackAPI.Models;
 using PatientDiabeteRiskBackAPI.Services;
 using Serilog;
@@ -19,6 +17,8 @@ namespace PatientDiabeteRiskBackAPI.Controllers
         }
 
         /// <summary>[HttpGet] PatientDiabeteRiskBackAPI. Method Get: evaluate Patient diabete risk.</summary>  
+        /// <param name="authorization">Contains token requested for authentication
+        /// in PatientBack and Patient API.</param>   
         /// <param name="id">Patient id.</param>        
         /// <returns>Risk.</returns> 
         /// <remarks> URI: /Diabete/Get?id={Id}.
@@ -34,17 +34,18 @@ namespace PatientDiabeteRiskBackAPI.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Get([FromQuery] int id)
+        public async Task<IActionResult> Get([FromHeader] string authorization, [FromQuery] int id)
         {
             try
             {
                 Log.Information($"[PatientDiabeteRiskBackAPI][HttpGet] Get diabete risk for Patient id: {id}.");
-                Risk? risk = await _diabeteService.EvaluateRisk(id); 
+                Risk? risk = await _diabeteService.EvaluateRisk(id, authorization); 
                 if (risk is null)
                 {                
                     Log.Warning($"[PatientDiabeteRiskBackAPI] Get diabete risk for Patient id: {id} not found (404).");
                     return NotFound();
                 }
+
                 return Ok(risk);
             }
             catch (Exception ex)

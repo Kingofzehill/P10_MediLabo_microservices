@@ -80,6 +80,10 @@ var key = Encoding.ASCII.GetBytes(jwt["SecretKey"]!);
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
+        // (FIX001) solve sharing authentication between microservices.
+        options.Authority = "https://localhost:7243"; // PatientBackAPI microservice.
+        options.Audience = "https://localhost:7243"; // PatientBackAPI microservice.
+
         options.RequireHttpsMetadata = false;
         options.SaveToken = true;
         options.TokenValidationParameters = new TokenValidationParameters
@@ -125,10 +129,6 @@ builder.Services.AddScoped<PatientDiabeteRiskBackAPI.Services.DiabeteService>();
 
 var app = builder.Build();
 
-/*// test
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-app.UseRouting();*/
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -137,9 +137,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// (FIX001) solve sharing authentication between microservices.
 app.UseHttpsRedirection();
-
+app.UseStaticFiles();
+app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
+app.UseEndpoints(_ => { });
 
 // (UPD022) Midlleware Service.
 app.UseMiddleware<PatientDiabeteRiskBackAPI.Services.MiddlewareService>();

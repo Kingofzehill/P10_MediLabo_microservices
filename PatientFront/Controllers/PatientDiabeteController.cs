@@ -24,9 +24,9 @@ namespace PatientFront.Controllers
             try
             {
                 Log.Information($"[PatientFront][PatientDiabeteController][HttpGet]. Get diabete Report for Patient id: {id}.", id);
-                var riskLevel = await _patientDiabeteService.GetReport(id);
+                var risk = await _patientDiabeteService.GetReport(id);
 
-                if (riskLevel == null)
+                if (risk == null)
                 {
                     Log.Error($"[PatientFront][PatientDiabeteController][HttpGet]. Get diabete Report for Patient id: {id} = null.");
                     TempData["ErrorTitle"] = "Rapport Diabète";
@@ -34,9 +34,7 @@ namespace PatientFront.Controllers
                     return View("404");
                 }
 
-                ViewBag.RiskLevel = riskLevel;
-
-                return View(riskLevel);
+                return View(risk);
             }
             catch (Exception ex)
             {

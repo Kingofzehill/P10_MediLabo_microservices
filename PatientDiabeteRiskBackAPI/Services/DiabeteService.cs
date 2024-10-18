@@ -1,4 +1,5 @@
-﻿using NuGet.Common;
+﻿using Microsoft.OpenApi.Extensions;
+using NuGet.Common;
 using PatientBackAPI.Services;
 using PatientDiabeteRiskBackAPI.Models;
 using PatientNoteBackAPI.Services;
@@ -33,21 +34,23 @@ namespace PatientDiabeteRiskBackAPI.Services
 
         /// <summary>PatientDiabeteRiskBackAPI. Diabete Service. Get method.
         /// Use PatientService for Patient Get from PatientBackAPI.
-        /// Use PatientNoteService for Patient Note Get from PatientNoteBackAPI.</summary>     
-        /// <param name="id">Patient Note id (MongoDB ObjectId type).</param>    
+        /// Use PatientNoteService for Patient Note Get from PatientNoteBackAPI.</summary>    
+        /// <param name="id">Patient id.</param>   
+        /// <param name="authorization">Contains token requested for authentication
+        /// in PatientBack and Patient API.</param>  
         /// <returns>Risk level (from Risk enum).</returns> 
         /// <remarks></remarks>
-        public async Task<Risk?> EvaluateRisk(int id)
+        public async Task<Risk?> EvaluateRisk(int id, string authorization)
         {
             // Get patient.
-            var patient = await _patientService.Get(id);
+            var patient = await _patientService.Get(id, authorization);
             if (patient == null)
             {
                 return null;
             }
 
             // Get Patient Notes.
-            var notes = await _patientNoteService.List(id);
+            var notes = await _patientNoteService.List(id, authorization);
             if (notes is null)
             {
                 return null;

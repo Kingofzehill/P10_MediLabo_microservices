@@ -1,4 +1,5 @@
-﻿using PatientBackAPI.Models.OutputModels;
+﻿using NuGet.Common;
+using PatientBackAPI.Models.OutputModels;
 using Serilog;
 using System.Net.Http.Headers;
 
@@ -27,20 +28,19 @@ namespace PatientDiabeteRiskBackAPI.Services
             {
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             }
-            else
-            {
-                // For standalone use of the microservice.
-                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", "testtoken");
-            }
         }
 
         /// <summary>PatientDiabeteRiskBackAPI. Patient Service. Get method.
         /// Use PatientBackAPI for Patient Get.</summary>     
         /// <param name="id">Patient id.</param>    
+        /// <param name="authorization">Contains token requested for authentication
+        /// in PatientBack and Patient API.</param>  
         /// <returns>Output model Patient.</returns> 
         /// <remarks> URI: /Patient/Get{id}.</remarks>
-        public async Task<PatientOutputModel> Get(int id)
+        public async Task<PatientOutputModel> Get(int id, string authorization)
         {
+            // extract token from header to provide httpclient authorization for PatientBackAPI Get method call.
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authorization.Replace("Bearer ", ""));
             try
             {
                 // Call Patient Get method from PatientBackAPI.

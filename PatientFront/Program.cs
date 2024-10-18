@@ -18,11 +18,11 @@ builder.Services.AddControllersWithViews()
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.IdleTimeout = TimeSpan.FromMinutes(120);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
     // Should force cookie expiration for avoiding user access to stay alive.
-    // options.Cookie.Expiration = TimeSpan.FromMinutes(30);
+    // options.Cookie.Expiration = TimeSpan.FromMinutes(120);
 });
 
 // (UPD028) Change cookie expiration from "until browser close" to 30 minutes
@@ -30,7 +30,7 @@ builder.Services.AddSession(options =>
 builder.Services.AddCookiePolicy(opts => {
     opts.CheckConsentNeeded = ctx => false;
     opts.OnAppendCookie = ctx => {
-        ctx.CookieOptions.Expires = DateTimeOffset.UtcNow.AddMinutes(30);
+        ctx.CookieOptions.Expires = DateTimeOffset.UtcNow.AddMinutes(120);
     };
 });
 
@@ -94,21 +94,18 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseSession();
+
+// (FIX001) solve sharing authentication between microservices.
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-// Session and cookie authentication.
-app.UseSession();
 app.UseAuthentication();
-
 app.UseAuthorization();
+app.UseEndpoints(_ => { });
 
-// (UPD022) Midlleware Service.
 app.UseMiddleware<PatientFront.Services.MiddlewareService>();
-
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
 app.Run();

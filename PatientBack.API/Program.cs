@@ -81,6 +81,10 @@ var key = Encoding.ASCII.GetBytes(jwt["SecretKey"]);
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
+        // (FIX001) solve sharing authentication between microservices.
+        options.Authority = "https://localhost:7243"; // PatientBackAPI microservice.
+        options.Audience = "https://localhost:7243"; // PatientBackAPI microservice.
+        
         // https not required.
         options.RequireHttpsMetadata = false;
         options.SaveToken = true;
@@ -182,9 +186,13 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+// (FIX001) solve sharing authentication between microservices.
 app.UseHttpsRedirection();
-// (UPD015) Authentication and Authorization Application Pipeline.
-app.UseAuthorization(); // User identity.
-app.UseAuthentication(); // User authorized.
+app.UseStaticFiles();
+app.UseRouting();
+app.UseAuthentication(); 
+app.UseAuthorization();
+app.UseEndpoints(_ => { });
+
 app.MapControllers();
 app.Run();
