@@ -24,7 +24,7 @@ builder.Services.AddSwaggerGen(options =>
     options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
     options.SwaggerDoc("v1", new()
     {
-        Title = "MediLabo Patient-back API",
+        Title = "MediLabo PatientBackAPI",
         Version = "v1",
         Description = "An ASP.NET Core Web API for managing Patients."
     });
@@ -81,6 +81,10 @@ var key = Encoding.ASCII.GetBytes(jwt["SecretKey"]);
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
+        // (FIX001) solve sharing authentication between microservices.
+        options.Authority = "https://localhost:7243"; // PatientBackAPI microservice.
+        options.Audience = "https://localhost:7243"; // PatientBackAPI microservice.
+        
         // https not required.
         options.RequireHttpsMetadata = false;
         options.SaveToken = true;
@@ -147,9 +151,9 @@ builder.Services.AddHttpContextAccessor();
 // (TD001) addscope for interfaces and repositories.
 // (UPD016) Scoped services for Patient, Address, Login..
 builder.Services.AddScoped<IPatientRepository, PatientRepository>();
-builder.Services.AddScoped<IPatientService, PatientService>();
+builder.Services.AddScoped<IPatientService, PatientBackAPI.Services.PatientService>();
 builder.Services.AddScoped<IAddressRepository, AddressRepository>();
-builder.Services.AddScoped<ILoginService, LoginService>();
+builder.Services.AddScoped<ILoginService, PatientBackAPI.Services.LoginService>();
 
 var app = builder.Build();
 
@@ -165,7 +169,7 @@ using (var scope = app.Services.CreateScope())
     // (TD002) RequiredService.
     // (UPD017) Service provider required for DbContext, Login, Identity users and roles.
     var dbcontext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
-    var authService = scope.ServiceProvider.GetService<LoginService>();
+    var authService = scope.ServiceProvider.GetService<PatientBackAPI.Services.LoginService>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
@@ -182,9 +186,13 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+// (FIX001) solve sharing authentication between microservices.
 app.UseHttpsRedirection();
-// (UPD015) Authentication and Authorization Application Pipeline.
-app.UseAuthorization(); // User identity.
-app.UseAuthentication(); // User authorized.
+app.UseStaticFiles();
+app.UseRouting();
+app.UseAuthentication(); 
+app.UseAuthorization();
+app.UseEndpoints(_ => { });
+
 app.MapControllers();
 app.Run();

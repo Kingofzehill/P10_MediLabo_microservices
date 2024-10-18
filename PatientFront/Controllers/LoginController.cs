@@ -44,7 +44,7 @@ namespace PatientFront.Controllers
                             Secure = true,
                             // (UPD028.1) Change cookie expiration from "until browser close" to 30 minutes.
                             //Expires = DateTime.UtcNow.AddDays(1) // Cookie lifetime.
-                            Expires = DateTimeOffset.UtcNow.AddMinutes(30)
+                            Expires = DateTimeOffset.UtcNow.AddMinutes(120)
                     };
 
                         _httpContextAccessor.HttpContext.Response.Cookies.Append("Jwt", token, cookieOptions);                        

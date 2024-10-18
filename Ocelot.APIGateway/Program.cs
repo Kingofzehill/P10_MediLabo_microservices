@@ -61,7 +61,12 @@ builder.Services.AddOcelot(builder.Configuration);
 WebApplication app = builder.Build();
 //var app = builder.Build();
 
+//app.UseCors("CorsPolicy");
+// (FIX001) solve sharing authentication between microservices.
+app.UseHttpsRedirection();
+app.UseStaticFiles();
 app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 app.UseEndpoints(_ => { });
 

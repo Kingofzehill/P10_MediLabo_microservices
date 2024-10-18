@@ -1,14 +1,11 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
-using MongoDB.Driver;
-using Serilog;
-using PatientNoteBackAPI.Data;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
-using PatientNoteBackAPI.Repositories;
+using Serilog;
 using PatientNoteBackAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,23 +18,23 @@ builder.Services.AddEndpointsApiExplorer();
 // https://medium.com/@rahman3593/implementing-jwt-authentication-with-swagger-ca991b7aca08
 builder.Services.AddSwaggerGen(options =>
 {
-options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
-options.SwaggerDoc("v1", new()
-{
-    Title = "MediLabo PatientNotesBackAPI",
-    Version = "v1",
-    Description = "An ASP.NET Core Web API for managing Patient Notes."
-});
-options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-{
-    In = ParameterLocation.Header,
-    Description = "Entrer le token communiqué lors de votre authentification (login) pour avoir l'autorisation.",
-    Scheme = "Bearer",
-    Name = "Authorization",
-    BearerFormat = "JWT",
-    Type = SecuritySchemeType.Http
-});
-options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+    options.SwaggerDoc("v1", new()
+    {
+        Title = "MediLabo PatientDiabeteRiskBackAPI",
+        Version = "v1",
+        Description = "An ASP.NET Core Web API for managing Patient Notes."
+    });
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Entrer le token communiqué lors de votre authentification (login) pour avoir l'autorisation.",
+        Scheme = "Bearer",
+        Name = "Authorization",
+        BearerFormat = "JWT",
+        Type = SecuritySchemeType.Http
+    });
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
             new OpenApiSecurityScheme
@@ -62,12 +59,31 @@ options.AddSecurityRequirement(new OpenApiSecurityRequirement
     */
 });
 
+builder.Services.AddHttpContextAccessor();
+
+
+// Add http client to PatientBackAPI microservice for API methods access.
+builder.Services.AddHttpClient<PatientDiabeteRiskBackAPI.Services.PatientService>(client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7243"); // URL from PatientBackAPIlaunchSettings.json.
+});
+
+// Add http client to PatientNoteBackAPI microservice for API methods access.
+builder.Services.AddHttpClient<PatientDiabeteRiskBackAPI.Services.PatientNoteService>(client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7079"); // URL from PatientNoteBackAPI launchSettings.json.
+});
+
 // Authentication with secretKey for token generation.
 var jwt = builder.Configuration.GetSection("Jwt");
 var key = Encoding.ASCII.GetBytes(jwt["SecretKey"]!);
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
+        // (FIX001) solve sharing authentication between microservices.
+        options.Authority = "https://localhost:7243"; // PatientBackAPI microservice.
+        options.Audience = "https://localhost:7243"; // PatientBackAPI microservice.
+
         options.RequireHttpsMetadata = false;
         options.SaveToken = true;
         options.TokenValidationParameters = new TokenValidationParameters
@@ -98,28 +114,21 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
         .AddEntityFrameworkStores<IdentityDbContext>()
         .AddDefaultTokenProviders();
 
-// DB connection for Patient Notes.
-var mongoDbappsettings = builder.Configuration.GetSection("MongoDb");
-var mongoClient = new MongoClient(mongoDbappsettings["ConnectionString"]);
-var dbContextOptions =
-    new DbContextOptionsBuilder<LocalMongoDbContext>().UseMongoDB(mongoClient, mongoDbappsettings["DatabaseName"]!);
-var db = new LocalMongoDbContext(dbContextOptions.Options);
-builder.Services.AddSingleton(db);
-
 // Logs configuration (Serilog).
 // https://serilog.net/ 
 // https://www.nuget.org/packages/Serilog.Sinks.File 
 // https://www.nuget.org/packages/Serilog.Sinks.Console 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
-    .WriteTo.File("logs/MediLabo_PatientNotesBackAPI_log.txt", rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
+    .WriteTo.File("logs/MediLabo_PatientDiabeteRiskBackAPI_log.txt", rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
     .CreateLogger();
 
-// Scoped services for Note Repository and Service.
-builder.Services.AddScoped<INoteRepository, NoteRepository>();
-builder.Services.AddScoped<INoteService, NoteService>();
+builder.Services.AddScoped<PatientDiabeteRiskBackAPI.Services.PatientService>();
+builder.Services.AddScoped<PatientDiabeteRiskBackAPI.Services.PatientNoteService>();
+builder.Services.AddScoped<PatientDiabeteRiskBackAPI.Services.DiabeteService>();
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -135,6 +144,9 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseEndpoints(_ => { });
+
+// (UPD022) Midlleware Service.
+app.UseMiddleware<PatientDiabeteRiskBackAPI.Services.MiddlewareService>();
 
 app.MapControllers();
 

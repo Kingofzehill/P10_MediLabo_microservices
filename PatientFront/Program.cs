@@ -18,11 +18,11 @@ builder.Services.AddControllersWithViews()
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.IdleTimeout = TimeSpan.FromMinutes(120);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
     // Should force cookie expiration for avoiding user access to stay alive.
-    // options.Cookie.Expiration = TimeSpan.FromMinutes(30);
+    // options.Cookie.Expiration = TimeSpan.FromMinutes(120);
 });
 
 // (UPD028) Change cookie expiration from "until browser close" to 30 minutes
@@ -30,43 +30,35 @@ builder.Services.AddSession(options =>
 builder.Services.AddCookiePolicy(opts => {
     opts.CheckConsentNeeded = ctx => false;
     opts.OnAppendCookie = ctx => {
-        ctx.CookieOptions.Expires = DateTimeOffset.UtcNow.AddMinutes(30);
+        ctx.CookieOptions.Expires = DateTimeOffset.UtcNow.AddMinutes(120);
     };
 });
 
 builder.Services.AddHttpContextAccessor();
 
-// Creates a new HttpClient instance as a singleton
-//builder.Services.AddSingleton((serviceProvider) => new HttpClient());
-/*builder.Services.AddSingleton((serviceProvider) => new HttpClient(new SocketsHttpHandler
-{
-    // Update the DNS every 60 seconds.
-    PooledConnectionLifetime = TimeSpan.FromSeconds(60)//FromMinutes(5)
-}));*/
-
-// (UPD024) Add http client to PatientBackAPI app Services for Patient API methods access.
+// (UPD024) Add http client to PatientBackAPI microservice for API methods access.
 builder.Services.AddHttpClient<PatientFront.Services.PatientService>(serviceProvider =>
 {
     serviceProvider.BaseAddress = new Uri("https://localhost:7243"); // URL from PatientBackAPIlaunchSettings.json.
 });
 
-// (UPD023) Add http client to PatientBackAPI app Services for login authentication method access.
-builder.Services.AddHttpClient<AuthenticationService>(serviceProvider =>
+// (UPD023) Add http client to PatientBackAPI microservice for login authentication method access.
+builder.Services.AddHttpClient<PatientFront.Services.AuthenticationService>(client =>
 {
-    serviceProvider.BaseAddress = new Uri("https://localhost:7243"); // URL from PatientBackAPI launchSettings.json.
+    client.BaseAddress = new Uri("https://localhost:7243"); // URL from PatientBackAPI launchSettings.json.
 });
-/*// (UPD023) Add http client to PatientBackAPI app Services for login authentication method access.
-builder.Services.AddHttpClient<AuthenticationService>(serviceProvider =>
-{
-    serviceProvider.BaseAddress = new Uri("http://localhost:5033"); // URL from PatientBackAPI launchSettings.json.
-});*/
 
-// (UPD028)Add http client to PatientNoteBackAPI app Services for PatientNote API methods access.
-builder.Services.AddHttpClient<PatientNoteService>(client =>
+// (UPD028)Add http client to PatientNoteBackAPI microservice for API methods access.
+builder.Services.AddHttpClient<PatientFront.Services.PatientNoteService>(client =>
 {
     client.BaseAddress = new Uri("https://localhost:7079"); // URL from PatientNoteBackAPI launchSettings.json.
 });
 
+// (UPD028)Add http client to PatientDiabeteRiskBackAPI microservice for API methods access.
+builder.Services.AddHttpClient<PatientFront.Services.PatientDiabeteService>(client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7088"); // URL from PatientDiabeteRiskBackAPI launchSettings.json.
+});
 
 // (UPD026) Add dependency to service ILoginService (interface) from PatientBackAPI with AuthenticationService type.
 builder.Services.AddScoped<ILoginService, AuthenticationService>();
@@ -81,10 +73,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
            //options.AccessDeniedPath = "/error/403";
        });
 
-// (TODO05) Replace for using Serilog.
-/*Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
-    .CreateLogger();*/
 // (UPD013) application logs configuration (Serilog).
 // https://serilog.net/ 
 // https://www.nuget.org/packages/Serilog.Sinks.File 
@@ -106,21 +94,18 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseSession();
+
+// (FIX001) solve sharing authentication between microservices.
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-// Session and cookie authentication.
-app.UseSession();
 app.UseAuthentication();
-
 app.UseAuthorization();
+app.UseEndpoints(_ => { });
 
-// (UPD022) Midlleware Service for authentication errors management.
-app.UseMiddleware<MiddlewareService>();
-
+app.UseMiddleware<PatientFront.Services.MiddlewareService>();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
 app.Run();

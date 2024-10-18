@@ -102,7 +102,7 @@ namespace PatientFront.Services
         {
             try
             {
-                // Call Patien tNote Get method from PatientNoteBackAPI.
+                // Call Patient Note Get method from PatientNoteBackAPI.
                 var response = await _httpClient.GetAsync($"/Note/Get?id={id}");
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized || response.StatusCode == System.Net.HttpStatusCode.Forbidden)
                 {

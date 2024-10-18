@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PatientFront", "PatientFron
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatientNoteBackAPI", "PatientNoteBackAPI\PatientNoteBackAPI.csproj", "{C06611DC-765B-4D79-B613-598676AD3AF1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PatientDiabeteRiskBackAPI", "PatientDiabeteRiskBackAPI\PatientDiabeteRiskBackAPI.csproj", "{89180256-568E-4CB5-AAF1-D0C183F8B3BD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{C06611DC-765B-4D79-B613-598676AD3AF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C06611DC-765B-4D79-B613-598676AD3AF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C06611DC-765B-4D79-B613-598676AD3AF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89180256-568E-4CB5-AAF1-D0C183F8B3BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89180256-568E-4CB5-AAF1-D0C183F8B3BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89180256-568E-4CB5-AAF1-D0C183F8B3BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89180256-568E-4CB5-AAF1-D0C183F8B3BD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

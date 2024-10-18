@@ -139,6 +139,19 @@
         }
       ],
       "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/Diabete/Get?id={id}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamPathTemplate": "/Diabete/Get?id={id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 7088
+        }
+      ],
+      "DangerousAcceptAnyServerCertificateValidator": true
     }
   ]
 }
