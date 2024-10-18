@@ -20,7 +20,7 @@ namespace PatientDiabeteRiskBackAPI.Services
             "Fumeuse",
             "Anormal",
             "Cholestérol",
-            "Vertiges",
+            "Vertige",
             "Rechute",
             "Réaction",
             "Anticorps"
@@ -84,13 +84,50 @@ namespace PatientDiabeteRiskBackAPI.Services
             }
 
             // evaluate risk level depending of patient age and gender.
+            if (string.Equals(patient.Gender, "M"))
+            {
+                if (patientAge < 30)
+                {
+                    if (nbTriggerTermsOccurence >= 3)
+                    {
+                        if (nbTriggerTermsOccurence >= 5)
+                        {
+                            return Risk.EarlyOnset;
+                        }
+                        else
+                        {
+                            return Risk.InDanger;
+                        }
+                    }
+                }
+            }
+
+            if (string.Equals(patient.Gender, "F"))
+            {
+                if (patientAge < 30)
+                {
+                    if (nbTriggerTermsOccurence >= 4)
+                    {
+                        if (nbTriggerTermsOccurence >= 7)
+                        {
+                            return Risk.EarlyOnset;
+                        }
+                        else
+                        {
+                            return Risk.InDanger;
+                        }
+                    }
+                }
+            }
+
+
             if (patientAge > 30)
             {
                 if (nbTriggerTermsOccurence >= 2 && nbTriggerTermsOccurence <= 5)
                 {
                     return Risk.Borderline;
                 }
-                if (nbTriggerTermsOccurence >= 6 && nbTriggerTermsOccurence <= 7)
+                if (nbTriggerTermsOccurence == 6 || nbTriggerTermsOccurence == 7)
                 {
                     return Risk.InDanger;
                 }
@@ -100,29 +137,6 @@ namespace PatientDiabeteRiskBackAPI.Services
                 }
             }
 
-            if (string.Equals(patient.Gender, "M"))
-            {
-                if (nbTriggerTermsOccurence >= 5)
-                {
-                    return Risk.EarlyOnset;
-                }
-                if (nbTriggerTermsOccurence >= 3)
-                {
-                    return Risk.InDanger;
-                }
-            }
-
-            if (string.Equals(patient.Gender, "F"))
-            {
-                if (nbTriggerTermsOccurence >= 8)
-                {
-                    return Risk.EarlyOnset;
-                }
-                if (nbTriggerTermsOccurence >= 4)
-                {
-                    return Risk.InDanger;
-                }
-            }
             // default diabete risk level.
             return Risk.None;
         }
