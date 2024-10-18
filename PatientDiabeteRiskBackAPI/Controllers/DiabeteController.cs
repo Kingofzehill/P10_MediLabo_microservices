@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PatientDiabeteRiskBackAPI.Models;
 using PatientDiabeteRiskBackAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Serilog;
 
 namespace PatientDiabeteRiskBackAPI.Controllers
@@ -29,7 +30,7 @@ namespace PatientDiabeteRiskBackAPI.Controllers
         /// <response code ="500">Internal error (exception).</response>
         [HttpGet]        
         [Route("Get")]
-        //[Authorize("Practitioner")] 
+        [Authorize("Practitioner")] 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
