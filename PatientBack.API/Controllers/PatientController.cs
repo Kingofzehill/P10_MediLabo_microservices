@@ -98,12 +98,8 @@ namespace PatientBackAPI.Controllers
         /// <response code ="401">Unauthorized.</response>  
         /// <response code ="500">Internal error (exception).</response>
         [HttpPost]
-        [Route("Create")]
-        //[Authorize]
-        [Authorize("Practitioner")]
-        //[Authorize("Organizer")]
-        //[Authorize(Roles = "Organizer")] // Authorize for user which has the specified role.
-        //[Authorize(Policy = "Organizer")] // Authorize policy (user which has the specified role).
+        [Route("Create")]        
+        [Authorize("Organizer")]        
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
