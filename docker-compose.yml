@@ -8,14 +8,15 @@ services:
       dockerfile: PatientBack.API/Dockerfile    
     #Sqlserver should run on container start.
     depends_on:
-      - sqlserver
+      - mssql
     #ConnectionString to sql server database P10_MediLabo_Patient-back.
-    environment:
+    #environment:
       #update connection string for using sa user.
      #- SQLSERVER_URL=Server=localhost;User Id=sa;Password=Sql20243107*;Integrated Security=True;Database=P10_MediLabo_Patient-back;Trusted_Connection=True;TrustServerCertificate=True;
      #- SQLSERVER_URL=Server=localhost;User Id=sa;Password=Sql20243107*;Integrated Security=True;Database=P10_MediLabo_Patient-back;Trusted_Connection=True;MultipleActiveResultSets=True;TrustServerCertificate=True;
      #- SQLSERVER_URL=Server=localhost;Integrated Security=True;Database=P10_MediLabo_Patient-back;Trusted_Connection=True;MultipleActiveResultSets=True;TrustServerCertificate=True;     
-      - SQLSERVER_URL=Server=localhost;Integrated Security=True;Database=P10_MediLabo_Patient-back;Trusted_Connection=True;TrustServerCertificate=True;
+     #- SQLSERVER_URL=Server=localhost;Integrated Security=True;Database=P10_MediLabo_Patient-back;Trusted_Connection=True;TrustServerCertificate=True;
+     #- SQLSERVER_URL=Server=127.0.0.1:1433;Integrated Security=True;Database=P10_MediLabo_Patient-back;Trusted_Connection=True;TrustServerCertificate=True;
       #- ASPNETCORE_ENVIRONMENT=Development
       #- ASPNETCORE_URLS=https://+:443;http://+:80
       #- ASPNETCORE_Kestrel__Certificates__Default__Password=Admin2024*
@@ -41,15 +42,16 @@ services:
       dockerfile: PatientNoteBackAPI/Dockerfile
     #Sqlserver and mongodb should run on container start.
     depends_on:
-      - sqlserver
+      - mssql
       - mongo
     #ConnectionString to sql server database P10_MediLabo_Patient-back.
-    environment:
+    #environment:
       #update connection string for using sa user.
      #- SQLSERVER_URL=Server=localhost;User Id=sa;Password=Sql20243107*;Integrated Security=True;Database=P10_MediLabo_Patient-back;Trusted_Connection=True;TrustServerCertificate=True;
      #- SQLSERVER_URL=Server=localhost;User Id=sa;Password=Sql20243107*;Integrated Security=True;Database=P10_MediLabo_Patient-back;Trusted_Connection=True;MultipleActiveResultSets=True;TrustServerCertificate=True;
      #- SQLSERVER_URL=Server=localhost;Integrated Security=True;Database=P10_MediLabo_Patient-back;Trusted_Connection=True;MultipleActiveResultSets=True;TrustServerCertificate=True;
-     - SQLSERVER_URL=Server=localhost;Integrated Security=True;Database=P10_MediLabo_Patient-back;Trusted_Connection=True;TrustServerCertificate=True;
+     #- SQLSERVER_URL=Server=localhost;Integrated Security=True;Database=P10_MediLabo_Patient-back;Trusted_Connection=True;TrustServerCertificate=True;
+     #- SQLSERVER_URL=Server=127.0.0.1:1433;Integrated Security=True;Database=P10_MediLabo_Patient-back;Trusted_Connection=True;TrustServerCertificate=True;
     ports:
       - "7079:8085" 
 
@@ -65,18 +67,17 @@ services:
   
   #SqlServer container. https://learn.microsoft.com/fr-fr/dotnet/architecture/microservices/multi-container-microservice-net-applications/database-server-container    
   #SqlServer configuration https://gist.github.com/rchardptrsn/508f954445829433e840c93167c042ef
-  sqlserver:
+  mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: mssql-db
     hostname: mssql-db
     environment:
       #comment sa user connection for avoiding updating connection string for sa user connection : https://stackoverflow.com/questions/69777990/cant-connect-from-the-docker-container-with-asp-net-core-to-sql-server-containe
-      - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=Sql20243107*
-      #- MSSQL_DATA_DIR=/var/opt/mssql/data      
-      #- MSSQL_TCP_PORT=1433 
-    ports:
-      #- "1434:1434"
+      - ACCEPT_EULA:'Y'
+      - MSSQL_SA_PASSWORD:'Sql20243107*'
+      - MSSQL_DATA_DIR:/var/opt/mssql/data      
+      - MSSQL_TCP_PORT:1433 
+    ports:      
       - "1433:1433"
     volumes:
       - ./data:/var/opt/mssql/data
@@ -117,8 +118,8 @@ services:
     depends_on:
       - patientbackapi 
 
-volumes:
+#volumes:
   #sqlserver data.
-  data:
+  #data:
   #mongodb data.
-  mongo-data:  
+  #mongo-data:  

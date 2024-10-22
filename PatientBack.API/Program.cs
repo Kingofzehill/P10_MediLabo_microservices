@@ -188,11 +188,11 @@ using (var scope = app.Services.CreateScope())
 
 // (FIX001) solve sharing authentication between microservices.
 app.UseHttpsRedirection();
-app.UseStaticFiles();
-app.UseRouting();
-app.UseAuthentication(); 
+//app.UseStaticFiles();
+//app.UseRouting();
 app.UseAuthorization();
-app.UseEndpoints(_ => { });
+app.UseAuthentication();
+//app.UseEndpoints(_ => { });
 
 app.MapControllers();
 app.Run();

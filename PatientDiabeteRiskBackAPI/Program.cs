@@ -10,6 +10,17 @@ using PatientNoteBackAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsMediLabo",
+        policy =>
+        {
+            policy.AllowAnyMethod();
+            policy.AllowAnyHeader();
+            policy.AllowCredentials();
+        });
+});
+
 // Add services to the container.
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -138,15 +149,16 @@ if (app.Environment.IsDevelopment())
 }
 
 // (FIX001) solve sharing authentication between microservices.
+app.UseCors("CorsMediLabo");
 app.UseHttpsRedirection();
-app.UseStaticFiles();
-app.UseRouting();
-app.UseAuthentication();
+//app.UseStaticFiles();
+//app.UseRouting();
+//app.UseAuthentication();
 app.UseAuthorization();
-app.UseEndpoints(_ => { });
+//app.UseEndpoints(_ => { });
 
 // (UPD022) Midlleware Service.
-app.UseMiddleware<PatientDiabeteRiskBackAPI.Services.MiddlewareService>();
+//app.UseMiddleware<PatientDiabeteRiskBackAPI.Services.MiddlewareService>();
 
 app.MapControllers();
 

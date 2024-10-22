@@ -130,11 +130,11 @@ if (app.Environment.IsDevelopment())
 
 // (FIX001) solve sharing authentication between microservices.
 app.UseHttpsRedirection();
-app.UseStaticFiles();
-app.UseRouting();
-app.UseAuthentication();
+//app.UseStaticFiles();
+//app.UseRouting();
+//app.UseAuthentication();
 app.UseAuthorization();
-app.UseEndpoints(_ => { });
+//app.UseEndpoints(_ => { });
 
 app.MapControllers();
 

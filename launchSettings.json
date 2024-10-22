@@ -9,7 +9,7 @@
         "patientbackapi": "StartDebugging",
         "patientdiabeteriskbackapi": "StartDebugging",
         "patientnotebackapi": "StartDebugging",
-        "patientfront": "StartWithoutDebugging",
+        "patientfront": "StartDebugging",
         "ocelotapigateway": "StartDebugging",
         "mongo": "StartWithoutDebugging",
         "sqlserver": "StartWithoutDebugging"

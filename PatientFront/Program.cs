@@ -2,8 +2,6 @@ using PatientFront.Services;
 using PatientBackAPI.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Serilog;
-using Microsoft.Extensions.DependencyInjection;
-using static System.Net.WebRequestMethods;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -94,15 +92,14 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseSession();
-
 // (FIX001) solve sharing authentication between microservices.
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseEndpoints(_ => { });
+//app.UseEndpoints(_ => { });
 
 app.UseMiddleware<PatientFront.Services.MiddlewareService>();
 app.MapControllerRoute(
