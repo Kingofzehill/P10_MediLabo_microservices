@@ -1,0 +1,44 @@
+#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
+# https://learn.microsoft.com/fr-fr/dotnet/core/docker/build-container?tabs=windows&pivots=dotnet-8-0#create-the-dockerfile
+
+#Dockerfile defines the steps for the docker image creation. https://www.ionos.fr/digitalguide/serveur/know-how/dockerfile/
+
+#defines base image.
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+USER app
+WORKDIR /app
+# container assigned ports.
+# https://docs.docker.com/get-started/docker-concepts/running-containers/publishing-ports/
+EXPOSE 8080
+EXPOSE 8081
+
+#Build microservice project
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+#Use release type build configuration
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
+COPY ["PatientFront/PatientFront.csproj", "PatientFront/"]
+#COPY ["PatientBack.API/PatientBackAPI.csproj", "PatientBack.API/"]
+#COPY ["PatientDiabeteRiskBackAPI/PatientDiabeteRiskBackAPI.csproj", "PatientDiabeteRiskBackAPI/"]
+#COPY ["PatientNoteBackAPI/PatientNoteBackAPI.csproj", "PatientNoteBackAPI/"]
+#Search external project dependencies referenced in csproj file and download it (NuGet).
+#	https://learn.microsoft.com/fr-fr/dotnet/core/tools/dotnet-restore
+RUN dotnet restore "./PatientFront/PatientFront.csproj"
+COPY . .
+WORKDIR "/src/PatientFront"
+#Build projet with all its dependencies using Build configuration.
+#	https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-build
+RUN dotnet build "./PatientFront.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+#Publish app with its dependencies using build generated in the previous step.
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+#	https://learn.microsoft.com/fr-fr/dotnet/core/tools/dotnet-publish
+RUN dotnet publish "./PatientFront.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+
+#Build runtime image.
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+#command for container execution (works as an executable).
+ENTRYPOINT ["dotnet", "PatientFront.dll"]

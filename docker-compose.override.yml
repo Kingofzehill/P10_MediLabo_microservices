@@ -1,37 +1,11 @@
-version: '3.4'
-
 services:
-  patientfront:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
-    ports:
-      - "8080"
-      - "8081"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
-  ocelotapigateway:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
-    ports:
-      - "8080"
-      - "8081"
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
-
   patientbackapi:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
+      - ASPNETCORE_HTTP_PORTS=8082
+      - ASPNETCORE_HTTPS_PORTS=8083
     ports:
-      - "8080"
-      - "8081"
+      - "7243:8083" 
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
@@ -39,11 +13,10 @@ services:
   patientdiabeteriskbackapi:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
+      - ASPNETCORE_HTTP_PORTS=8086
+      - ASPNETCORE_HTTPS_PORTS=8087
     ports:
-      - "8080"
-      - "8081"
+      - "7088:8087"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
@@ -51,11 +24,32 @@ services:
   patientnotebackapi:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8084
+      - ASPNETCORE_HTTPS_PORTS=8085
+    ports:
+      - "7079:8085"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+
+  patientfront:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
       - ASPNETCORE_HTTPS_PORTS=8081
     ports:
-      - "8080"
-      - "8081"
+      - "7287:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+
+  ocelotapigateway:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8088
+      - ASPNETCORE_HTTPS_PORTS=8089
+    ports:
+      - "7195:8089"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro

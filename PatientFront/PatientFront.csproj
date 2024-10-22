@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+	<RootNamespace>PatientFront</RootNamespace>
     <UserSecretsId>246298e5-aa96-46d6-b34c-c5ff8b0c6d0a</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>    
@@ -26,21 +27,6 @@
     <ProjectReference Include="..\PatientBack.API\PatientBackAPI.csproj" />
     <ProjectReference Include="..\PatientDiabeteRiskBackAPI\PatientDiabeteRiskBackAPI.csproj" />
     <ProjectReference Include="..\PatientNoteBackAPI\PatientNoteBackAPI.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

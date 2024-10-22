@@ -3,12 +3,16 @@
     "Docker Compose": {
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
+      "composeLaunchAction": "None",
+      "composeLaunchServiceName": "patientbackapi",
       "serviceActions": {
-        "patientfront": "StartDebugging",
-        "ocelotapigateway": "StartDebugging",
         "patientbackapi": "StartDebugging",
         "patientdiabeteriskbackapi": "StartDebugging",
-        "patientnotebackapi": "StartDebugging"
+        "patientnotebackapi": "StartDebugging",
+        "patientfront": "StartWithoutDebugging",
+        "ocelotapigateway": "StartDebugging",
+        "mongo": "StartWithoutDebugging",
+        "sqlserver": "StartWithoutDebugging"
       }
     }
   }

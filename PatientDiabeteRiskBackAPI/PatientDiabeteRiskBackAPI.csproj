@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+	  <RootNamespace>PatientDiabeteRiskBackAPI</RootNamespace>
     <UserSecretsId>0b2e6288-5259-4a65-909f-a32eae8f74c7</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>    
