@@ -6,7 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using Serilog;
-using PatientNoteBackAPI.Services;
+using PatientDiabeteRiskBackAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

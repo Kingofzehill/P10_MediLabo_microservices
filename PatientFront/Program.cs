@@ -65,8 +65,8 @@ builder.Services.AddScoped<ILoginService, AuthenticationService>();
 // (UPD021) Cookie for Microsoft Asp.Net authentication. 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
        .AddCookie(options =>
-       {           
-           options.LoginPath = "/Login/Index";           
+       {
+           options.LoginPath = "/Authentication/Index";//Route to login page.          
        });
 
 // (UPD013) application logs configuration (Serilog).

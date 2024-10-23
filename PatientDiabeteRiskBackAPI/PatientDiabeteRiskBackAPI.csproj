@@ -22,9 +22,4 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\PatientBack.API\PatientBackAPI.csproj" />
-    <ProjectReference Include="..\PatientNoteBackAPI\PatientNoteBackAPI.csproj" />
-  </ItemGroup>
-
 </Project>

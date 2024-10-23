@@ -1,5 +1,5 @@
-﻿using NuGet.Common;
-using PatientNoteBackAPI.Models.OutputModels;
+﻿//using NuGet.Common;
+using PatientDiabeteRiskBackAPI.Models.OutputModels;
 using Serilog;
 using System.Net;
 using System.Net.Http.Headers;
