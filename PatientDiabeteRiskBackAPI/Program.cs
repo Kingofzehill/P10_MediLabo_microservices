@@ -10,23 +10,18 @@ using PatientNoteBackAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("CorsMediLabo",
-        policy =>
-        {
-            policy.AllowAnyMethod();
-            policy.AllowAnyHeader();
-            policy.AllowCredentials();
-        });
-});
+// DB connection for Identity.
+builder.Services.AddDbContext<IdentityDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Patient-Back")));
 
-// Add services to the container.
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+        .AddEntityFrameworkStores<IdentityDbContext>()
+        .AddDefaultTokenProviders();
+
 // Swagger : Open API Bearer http security scheme configuration.
 // https://medium.com/@rahman3593/implementing-jwt-authentication-with-swagger-ca991b7aca08
+var jwt = builder.Configuration.GetSection("Jwt");
+var key = Encoding.ASCII.GetBytes(jwt["SecretKey"]!);
 builder.Services.AddSwaggerGen(options =>
 {
     options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
@@ -70,30 +65,13 @@ builder.Services.AddSwaggerGen(options =>
     */
 });
 
-builder.Services.AddHttpContextAccessor();
-
-
-// Add http client to PatientBackAPI microservice for API methods access.
-builder.Services.AddHttpClient<PatientDiabeteRiskBackAPI.Services.PatientService>(client =>
-{
-    client.BaseAddress = new Uri("https://localhost:7243"); // URL from PatientBackAPIlaunchSettings.json.
-});
-
-// Add http client to PatientNoteBackAPI microservice for API methods access.
-builder.Services.AddHttpClient<PatientDiabeteRiskBackAPI.Services.PatientNoteService>(client =>
-{
-    client.BaseAddress = new Uri("https://localhost:7079"); // URL from PatientNoteBackAPI launchSettings.json.
-});
-
 // Authentication with secretKey for token generation.
-var jwt = builder.Configuration.GetSection("Jwt");
-var key = Encoding.ASCII.GetBytes(jwt["SecretKey"]!);
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         // (FIX001) solve sharing authentication between microservices.
-        options.Authority = "https://localhost:7243"; // PatientBackAPI microservice.
-        options.Audience = "https://localhost:7243"; // PatientBackAPI microservice.
+        //options.Authority = "https://localhost:7243"; // PatientBackAPI microservice.
+        //options.Audience = "https://localhost:7243"; // PatientBackAPI microservice.
 
         options.RequireHttpsMetadata = false;
         options.SaveToken = true;
@@ -117,13 +95,44 @@ builder.Services.AddAuthorizationBuilder()
         policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
     });
 
-// DB connection for Identity.
-builder.Services.AddDbContext<IdentityDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Patient-Back")));
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsMediLabo",
+        policy =>
+        {
+            policy.AllowAnyMethod();
+            policy.AllowAnyHeader();
+            policy.AllowCredentials();
+        });
+});
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-        .AddEntityFrameworkStores<IdentityDbContext>()
-        .AddDefaultTokenProviders();
+
+/* builder.Services.AddHttpContextAccessor();
+
+// Add http client to PatientBackAPI microservice for API methods access.
+builder.Services.AddHttpClient<PatientDiabeteRiskBackAPI.Services.PatientService>(client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7243"); // URL from PatientBackAPIlaunchSettings.json.
+});
+
+// Add http client to PatientNoteBackAPI microservice for API methods access.
+builder.Services.AddHttpClient<PatientDiabeteRiskBackAPI.Services.PatientNoteService>(client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7079"); // URL from PatientNoteBackAPI launchSettings.json.
+});
+*/
+
+
+// Add services to the container.
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<PatientDiabeteRiskBackAPI.Services.PatientService>();
+builder.Services.AddScoped<PatientDiabeteRiskBackAPI.Services.PatientNoteService>();
+builder.Services.AddScoped<PatientDiabeteRiskBackAPI.Services.DiabeteService>();
+builder.Services.AddHttpClient<PatientDiabeteRiskBackAPI.Services.PatientService>();
 
 // Logs configuration (Serilog).
 // https://serilog.net/ 
@@ -133,10 +142,6 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .WriteTo.File("logs/MediLabo_PatientDiabeteRiskBackAPI_log.txt", rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
     .CreateLogger();
-
-builder.Services.AddScoped<PatientDiabeteRiskBackAPI.Services.PatientService>();
-builder.Services.AddScoped<PatientDiabeteRiskBackAPI.Services.PatientNoteService>();
-builder.Services.AddScoped<PatientDiabeteRiskBackAPI.Services.DiabeteService>();
 
 var app = builder.Build();
 
