@@ -8,7 +8,6 @@ using System.Text;
 using PatientBackAPI.Data;
 using PatientBackAPI.Repositories;
 using PatientBackAPI.Services;
-using Microsoft.CodeAnalysis.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 //ConfigurationManager configuration = builder.Configuration;
@@ -17,8 +16,25 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// (UPD007) DbContext configuration with "Patient-back". 
+builder.Services.AddDbContext<LocalDbContext>(options =>
+        options.UseSqlServer(builder.Configuration.GetConnectionString("Patient-back")));
+/*builder.Services.AddDbContext<PatientBackAPIContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("PatientBackAPIContext") ?? throw new InvalidOperationException("Connection string 'PatientBackAPIContext' not found.")));*/
+
+// (UPD008) Identity configuration.
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+       .AddEntityFrameworkStores<LocalDbContext>()
+       .AddDefaultTokenProviders();
+
 // (UPD009) Swagger : Open API Bearer http security scheme configuration.
 // https://medium.com/@rahman3593/implementing-jwt-authentication-with-swagger-ca991b7aca08
+// JWT configuration from appsettings.json.
+var jwt = builder.Configuration.GetSection("Jwt");
+// Get SecretKey for token generation.
+var key = Encoding.ASCII.GetBytes(jwt["SecretKey"]);
 builder.Services.AddSwaggerGen(options =>
 {
     options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
@@ -62,28 +78,13 @@ builder.Services.AddSwaggerGen(options =>
     */
 });
 
-// (UPD007) DbContext configuration with "Patient-back". 
-builder.Services.AddDbContext<LocalDbContext>(options =>
-        options.UseSqlServer(builder.Configuration.GetConnectionString("Patient-back")));
-/*builder.Services.AddDbContext<PatientBackAPIContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("PatientBackAPIContext") ?? throw new InvalidOperationException("Connection string 'PatientBackAPIContext' not found.")));*/
-
-// (UPD008) Identity configuration.
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-       .AddEntityFrameworkStores<LocalDbContext>()
-       .AddDefaultTokenProviders();
-
-// JWT configuration from appsettings.json.
-var jwt = builder.Configuration.GetSection("Jwt");
-// Get SecretKey for token generation.
-var key = Encoding.ASCII.GetBytes(jwt["SecretKey"]);
 // (UPD011) JWT Bearer Authentication configuration with Secret Key to use for token generation.
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         // (FIX001) solve sharing authentication between microservices.
-        options.Authority = "https://localhost:7243"; // PatientBackAPI microservice.
-        options.Audience = "https://localhost:7243"; // PatientBackAPI microservice.
+        //options.Authority = "https://localhost:7243"; // PatientBackAPI microservice.
+        //options.Audience = "https://localhost:7243"; // PatientBackAPI microservice.
         
         // https not required.
         options.RequireHttpsMetadata = false;

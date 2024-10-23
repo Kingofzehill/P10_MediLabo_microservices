@@ -65,10 +65,8 @@ builder.Services.AddScoped<ILoginService, AuthenticationService>();
 // (UPD021) Cookie for Microsoft Asp.Net authentication. 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
        .AddCookie(options =>
-       {
-           //options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-           options.LoginPath = "/Authentication/Index";
-           //options.AccessDeniedPath = "/error/403";
+       {           
+           options.LoginPath = "/Login/Index";           
        });
 
 // (UPD013) application logs configuration (Serilog).
@@ -106,3 +104,18 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.Run();
+
+/*// (FIX001) solve sharing authentication between microservices.
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+app.UseSession();
+app.UseAuthentication();
+app.UseAuthorization();
+//app.UseEndpoints(_ => { });
+
+app.UseMiddleware<PatientFront.Services.MiddlewareService>();
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.Run();*/

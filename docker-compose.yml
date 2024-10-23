@@ -25,36 +25,6 @@ services:
     ports:
       - "7243:8083"    
 
-  patientdiabeteriskbackapi:
-    image: patientdiabeteriskbackapi
-    container_name: patientdiabeteriskbackapi
-    build:
-      context: .
-      dockerfile: PatientDiabeteRiskBackAPI/Dockerfile
-    ports:
-      - "7088:8087" 
-
-  patientnotebackapi:
-    image: patientnotebackapi
-    container_name: patientnotebackapi
-    build:
-      context: .
-      dockerfile: PatientNoteBackAPI/Dockerfile
-    #Sqlserver and mongodb should run on container start.
-    depends_on:
-      - mssql
-      - mongo
-    #ConnectionString to sql server database P10_MediLabo_Patient-back.
-    #environment:
-      #update connection string for using sa user.
-     #- SQLSERVER_URL=Server=localhost;User Id=sa;Password=Sql20243107*;Integrated Security=True;Database=P10_MediLabo_Patient-back;Trusted_Connection=True;TrustServerCertificate=True;
-     #- SQLSERVER_URL=Server=localhost;User Id=sa;Password=Sql20243107*;Integrated Security=True;Database=P10_MediLabo_Patient-back;Trusted_Connection=True;MultipleActiveResultSets=True;TrustServerCertificate=True;
-     #- SQLSERVER_URL=Server=localhost;Integrated Security=True;Database=P10_MediLabo_Patient-back;Trusted_Connection=True;MultipleActiveResultSets=True;TrustServerCertificate=True;
-     #- SQLSERVER_URL=Server=localhost;Integrated Security=True;Database=P10_MediLabo_Patient-back;Trusted_Connection=True;TrustServerCertificate=True;
-     #- SQLSERVER_URL=Server=127.0.0.1:1433;Integrated Security=True;Database=P10_MediLabo_Patient-back;Trusted_Connection=True;TrustServerCertificate=True;
-    ports:
-      - "7079:8085" 
-
   #MongoDB container.
   mongo:
     image: mongo:latest
@@ -84,17 +54,6 @@ services:
       - ./log:/var/opt/mssql/log
       - ./secrets:/var/opt/mssql/secrets   
 
-  patientfront:
-    image: patientfront
-    #Container name when it runs (DNS name used for inter-container communication). https://stackoverflow.com/questions/55522620/docker-compose-yml-container-name-and-hostname 
-    container_name: patientfront
-    build:
-      context: .
-      dockerfile: PatientFront/Dockerfile
-    # Host_port:container_port (example : https://localhost:8081). https://docs.docker.com/compose/how-tos/networking/
-    ports:
-      - "7287:8081"
-
   ocelotapigateway:
     image: ocelotapigateway
     container_name: ocelotapigateway
@@ -117,6 +76,47 @@ services:
     #Dependency (dependy service should run before starting container app). (could also set order of service startup(and stop)). https://geshan.com.np/blog/2024/02/docker-compose-depends-on/
     depends_on:
       - patientbackapi 
+
+  patientfront:
+    image: patientfront
+    #Container name when it runs (DNS name used for inter-container communication). https://stackoverflow.com/questions/55522620/docker-compose-yml-container-name-and-hostname 
+    container_name: patientfront
+    build:
+      context: .
+      dockerfile: PatientFront/Dockerfile
+    # Host_port:container_port (example : https://localhost:8081). https://docs.docker.com/compose/how-tos/networking/
+    ports:
+      - "7287:8081"
+
+  patientnotebackapi:
+    image: patientnotebackapi
+    container_name: patientnotebackapi
+    build:
+      context: .
+      dockerfile: PatientNoteBackAPI/Dockerfile
+    #Sqlserver and mongodb should run on container start.
+    depends_on:
+      - mssql
+      - mongo
+    #ConnectionString to sql server database P10_MediLabo_Patient-back.
+    #environment:
+      #update connection string for using sa user.
+     #- SQLSERVER_URL=Server=localhost;User Id=sa;Password=Sql20243107*;Integrated Security=True;Database=P10_MediLabo_Patient-back;Trusted_Connection=True;TrustServerCertificate=True;
+     #- SQLSERVER_URL=Server=localhost;User Id=sa;Password=Sql20243107*;Integrated Security=True;Database=P10_MediLabo_Patient-back;Trusted_Connection=True;MultipleActiveResultSets=True;TrustServerCertificate=True;
+     #- SQLSERVER_URL=Server=localhost;Integrated Security=True;Database=P10_MediLabo_Patient-back;Trusted_Connection=True;MultipleActiveResultSets=True;TrustServerCertificate=True;
+     #- SQLSERVER_URL=Server=localhost;Integrated Security=True;Database=P10_MediLabo_Patient-back;Trusted_Connection=True;TrustServerCertificate=True;
+     #- SQLSERVER_URL=Server=127.0.0.1:1433;Integrated Security=True;Database=P10_MediLabo_Patient-back;Trusted_Connection=True;TrustServerCertificate=True;
+    ports:
+      - "7079:8085" 
+
+  patientdiabeteriskbackapi:
+    image: patientdiabeteriskbackapi
+    container_name: patientdiabeteriskbackapi
+    build:
+      context: .
+      dockerfile: PatientDiabeteRiskBackAPI/Dockerfile
+    ports:
+      - "7088:8087" 
 
 #volumes:
   #sqlserver data.

@@ -47,11 +47,11 @@ builder.Services
     .AddHealthChecks()
     .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]);
 
-// Ocelot configuration.
-//builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
-builder.Configuration.AddJsonFile("ocelot.json");
 // Ocelot service.
 builder.Services.AddOcelot(builder.Configuration);
+
+// Ocelot configuration.
+builder.Configuration.AddJsonFile("ocelot.json");
 
 WebApplication app = builder.Build();
 //var app = builder.Build();
@@ -82,3 +82,33 @@ app.MapHealthChecks("/liveness", new HealthCheckOptions
 
 await app.UseOcelot();
 await app.RunAsync();
+//app.Run();
+
+/*
+// (FIX001) solve sharing authentication between microservices.
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+app.UseCors("CorsMediLabo");
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseEndpoints(_ => { });
+
+// (TD007) To activate for docker-compose.
+// Create health checks endpoints (/hc // /liveness) of the middleware.
+//      https://stackoverflow.com/questions/72384646/usehealthchecks-vs-maphealthchecks
+// (TD006) using RequireAuthorization??? for avoiding unauthorize client to usurp port.
+app.MapHealthChecks("/hc", new HealthCheckOptions()
+{
+    Predicate = _ => true,
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
+});
+
+app.MapHealthChecks("/liveness", new HealthCheckOptions
+{
+    Predicate = r => r.Name.Contains("self")
+});
+
+await app.UseOcelot();
+await app.RunAsync();
+*/
