@@ -2,10 +2,10 @@ services:
   patientbackapi:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      # !!! could be set like : ASPNETCORE_URLS=https://+:8083;http://+:8082" ==> A répliquer dans le launchsettings.json partie Container (Dockerfile) de chaque APP.
-      - ASPNETCORE_URLS=https://localhost;http://localhost # added from source https://github.com/dotnet/AspNetCore.Docs/issues/6199      
+      # could be set like : ASPNETCORE_URLS=https://+:8083;http://+:8082". A repliquer dans le launchsettings.json partie Container (Dockerfile) de chaque APP.
+      - ASPNETCORE_URLS=https://localhost;http://localhost # added from source https://github.com/dotnet/AspNetCore.Docs/issues/6199
       - ASPNETCORE_HTTPS_PORTS=7243 #from Launchsettings.json
-      # we only declare https port as specified in source https://github.com/dotnet/AspNetCore.Docs/issues/6199   
+      # we only declare https port as specified in source https://github.com/dotnet/AspNetCore.Docs/issues/6199
       #- ASPNETCORE_HTTP_PORTS=5033 #from Launchsettings.json
     ports:
       - "7243:8083" #https
@@ -13,7 +13,7 @@ services:
     volumes:
     # updated from source : https://github.com/dotnet/AspNetCore.Docs/issues/6199
       #- ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro #could be the right configuration
-      #- ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro #could be the right configuration    
+      #- ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro #could be the right configuration
       - ${APPDATA}/Microsoft/UserSecrets/:/root/.microsoft/usersecrets
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https/
 
@@ -22,7 +22,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://localhost;http://localhost # added from source https://github.com/dotnet/AspNetCore.Docs/issues/6199
       - ASPNETCORE_HTTPS_PORTS=7088 #from Launchsettings.json
-      # we only declare https port as specified in source https://github.com/dotnet/AspNetCore.Docs/issues/6199   
+      # we only declare https port as specified in source https://github.com/dotnet/AspNetCore.Docs/issues/6199
       #- ASPNETCORE_HTTP_PORTS=5078 #from Launchsettings.json
     ports:
       - "7088:8087" #https
@@ -30,7 +30,7 @@ services:
     volumes:
     # updated from source : https://github.com/dotnet/AspNetCore.Docs/issues/6199
       #- ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro #could be the right configuration
-      #- ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro #could be the right configuration    
+      #- ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro #could be the right configuration
       - ${APPDATA}/Microsoft/UserSecrets/:/root/.microsoft/usersecrets
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https/
 
@@ -39,7 +39,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://localhost;http://localhost # added from source https://github.com/dotnet/AspNetCore.Docs/issues/6199
       - ASPNETCORE_HTTPS_PORTS=7079 #from Launchsettings.json
-      # we only declare https port as specified in source https://github.com/dotnet/AspNetCore.Docs/issues/6199   
+      # we only declare https port as specified in source https://github.com/dotnet/AspNetCore.Docs/issues/6199
       #- ASPNETCORE_HTTP_PORTS=5247 #from Launchsettings.json
     ports:
       - "7079:8085" #https
@@ -47,7 +47,7 @@ services:
     volumes:
     # updated from source : https://github.com/dotnet/AspNetCore.Docs/issues/6199
       #- ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro #could be the right configuration
-      #- ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro #could be the right configuration    
+      #- ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro #could be the right configuration
       - ${APPDATA}/Microsoft/UserSecrets/:/root/.microsoft/usersecrets
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https/
 
@@ -56,7 +56,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://localhost;http://localhost # added from source https://github.com/dotnet/AspNetCore.Docs/issues/6199
       - ASPNETCORE_HTTPS_PORTS=7287 #from Launchsettings.json
-      # we only declare https port as specified in source https://github.com/dotnet/AspNetCore.Docs/issues/6199   
+      # we only declare https port as specified in source https://github.com/dotnet/AspNetCore.Docs/issues/6199
       #- ASPNETCORE_HTTP_PORTS=5174 #from Launchsettings.json
     ports:
       - "7287:8081" #https
@@ -64,7 +64,7 @@ services:
     volumes:
     # updated from source : https://github.com/dotnet/AspNetCore.Docs/issues/6199
       #- ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro #could be the right configuration
-      #- ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro #could be the right configuration    
+      #- ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro #could be the right configuration
       - ${APPDATA}/Microsoft/UserSecrets/:/root/.microsoft/usersecrets
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https/
 
@@ -73,7 +73,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://localhost;http://localhost # added from source https://github.com/dotnet/AspNetCore.Docs/issues/6199
       - ASPNETCORE_HTTPS_PORTS=7195 #from Launchsettings.json
-      # we only declare https port as specified in source https://github.com/dotnet/AspNetCore.Docs/issues/6199   
+      # we only declare https port as specified in source https://github.com/dotnet/AspNetCore.Docs/issues/6199
       #- ASPNETCORE_HTTP_PORTS=5236 #from Launchsettings.json
     ports:
       - "7195:8089" #https
@@ -81,6 +81,6 @@ services:
     volumes:
     # updated from source : https://github.com/dotnet/AspNetCore.Docs/issues/6199
       #- ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro #could be the right configuration
-      #- ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro #could be the right configuration    
+      #- ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro #could be the right configuration
       - ${APPDATA}/Microsoft/UserSecrets/:/root/.microsoft/usersecrets
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https/
