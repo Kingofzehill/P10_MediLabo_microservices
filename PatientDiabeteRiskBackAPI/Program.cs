@@ -106,7 +106,18 @@ builder.Services.AddCors(options =>
         });
 });
 
+// Add services to the container.
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped<PatientDiabeteRiskBackAPI.Services.PatientService>();
+builder.Services.AddScoped<PatientDiabeteRiskBackAPI.Services.PatientNoteService>();
+builder.Services.AddScoped<PatientDiabeteRiskBackAPI.Services.DiabeteService>();
+//replace AddHttpContextAccessor configuration, httpClient.BaseAddress is set directly in PatientService and PatientNoteService.
+builder.Services.AddHttpClient<PatientDiabeteRiskBackAPI.Services.PatientService>();
+// (FIX02) REPLACED by AddHttpClient. BaseAddress is set directly in Services files.
 /* builder.Services.AddHttpContextAccessor();
 
 // Add http client to PatientBackAPI microservice for API methods access.
@@ -121,18 +132,6 @@ builder.Services.AddHttpClient<PatientDiabeteRiskBackAPI.Services.PatientNoteSer
     client.BaseAddress = new Uri("https://localhost:7079"); // URL from PatientNoteBackAPI launchSettings.json.
 });
 */
-
-
-// Add services to the container.
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-builder.Services.AddScoped<PatientDiabeteRiskBackAPI.Services.PatientService>();
-builder.Services.AddScoped<PatientDiabeteRiskBackAPI.Services.PatientNoteService>();
-builder.Services.AddScoped<PatientDiabeteRiskBackAPI.Services.DiabeteService>();
-builder.Services.AddHttpClient<PatientDiabeteRiskBackAPI.Services.PatientService>();
 
 // Logs configuration (Serilog).
 // https://serilog.net/ 
@@ -155,6 +154,7 @@ if (app.Environment.IsDevelopment())
 
 // (FIX001) solve sharing authentication between microservices.
 app.UseCors("CorsMediLabo");
+
 app.UseHttpsRedirection();
 //app.UseStaticFiles();
 //app.UseRouting();

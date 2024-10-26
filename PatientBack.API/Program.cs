@@ -187,6 +187,14 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+
+/*app.UseCors(builder =>
+{
+    builder
+        .AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader();
+});*/
 // (FIX001) solve sharing authentication between microservices.
 app.UseHttpsRedirection();
 //app.UseStaticFiles();

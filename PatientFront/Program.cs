@@ -2,6 +2,7 @@ using PatientFront.Services;
 using PatientBackAPI.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Serilog;
+using System.Net.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +33,7 @@ builder.Services.AddCookiePolicy(opts => {
     };
 });
 
+// (FIX03) REPLACED by AddHttpClient. BaseAddress is set directly in Services files.
 builder.Services.AddHttpContextAccessor();
 
 // (UPD024) Add http client to PatientBackAPI microservice for API methods access.
@@ -44,6 +46,7 @@ builder.Services.AddHttpClient<PatientFront.Services.PatientService>(serviceProv
 builder.Services.AddHttpClient<PatientFront.Services.AuthenticationService>(client =>
 {
     client.BaseAddress = new Uri("https://localhost:7243"); // URL from PatientBackAPI launchSettings.json.
+    //client.BaseAddress = new Uri("https://192.168.1.20:7243"); // URL from PatientBackAPI launchSettings.json.    
 });
 
 // (UPD028)Add http client to PatientNoteBackAPI microservice for API methods access.
@@ -60,6 +63,13 @@ builder.Services.AddHttpClient<PatientFront.Services.PatientDiabeteService>(clie
 
 // (UPD026) Add dependency to service ILoginService (interface) from PatientBackAPI with AuthenticationService type.
 builder.Services.AddScoped<ILoginService, AuthenticationService>();
+
+//replace AddHttpContextAccessor configuration used by httpClient. BaseAddress is set directly in PatientService and PatientNoteService.
+/*builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient<PatientFront.Services.PatientService>();
+builder.Services.AddHttpClient<PatientFront.Services.AuthenticationService>();
+builder.Services.AddHttpClient<PatientFront.Services.PatientNoteService>();
+builder.Services.AddHttpClient<PatientFront.Services.PatientDiabeteService>();*/
 
 // (UPD019.Front) Add authentication / httpContextAccessor services (example 18).
 // (UPD021) Cookie for Microsoft Asp.Net authentication. 
@@ -87,6 +97,7 @@ if (!app.Environment.IsDevelopment())
     // (UPD027) Add middleware for dealing with error statut code (401, 403, 404).
     app.UseStatusCodePagesWithReExecute("/Home/Error{0}");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    // UseHsts isn't recommended in development because the HSTS settings are highly cacheable by browsers.
     app.UseHsts();
 }
 

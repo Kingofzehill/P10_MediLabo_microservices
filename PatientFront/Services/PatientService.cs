@@ -20,6 +20,8 @@ namespace PatientFront.Services
 
         public PatientService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor, ILogger<PatientService> logger)
         {
+            //(FIX3.2) Baseaddress of PatientBackAPI.
+            httpClient.BaseAddress = new Uri("https://localhost:7243");            
             httpClient.DefaultRequestHeaders.Accept.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));

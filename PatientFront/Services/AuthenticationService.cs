@@ -3,7 +3,10 @@ using PatientBackAPI.Services;
 using Serilog;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Net.Http.Headers;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -19,6 +22,12 @@ namespace PatientFront.Services
 
         public AuthenticationService(HttpClient httpClient, ILogger<AuthenticationService> logger, IHttpContextAccessor httpContextAccessor)
         {
+            //(FIX3.1) Baseaddress of PatientBackAPI.
+            //httpClient.BaseAddress = new Uri("https://localhost:7243");
+            //httpClient.BaseAddress = new Uri("https://192.168.1.20:7243"); //DNS IPV4 IP address of personnal computer
+            //httpClient.BaseAddress = new Uri("https://172.29.160.1:7243"); //IP IPV4 IP address of personnal computer (DNS)
+            //httpClient.BaseAddress = new Uri("https://host.docker.internal:7243"); //host.docker.internal:7287 equivalent to localhost for docker.
+            httpClient.BaseAddress = new Uri("https://patientbackapi"); // use DNS service name referenced in docker-compose.
             httpClient.DefaultRequestHeaders.Accept.Clear();
             // Set Content-Type header for an HttpClient request : application/json
             //      https://www.dofactory.com/code-examples/csharp/content-type-header
@@ -42,6 +51,8 @@ namespace PatientFront.Services
         {
             try
             {
+                //ServicePointManager.ServerCertificateValidationCallback = delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
+                
                 // Use HttpClient defined to PatientBack API authentication method, route "/Authentication/Login".
                 // Transmits username and password for login and check code 200 (success).
                 var connection = await _httpClient.PostAsJsonAsync("/Authentication/Login",

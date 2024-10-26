@@ -19,6 +19,8 @@ namespace PatientFront.Services
 
         public PatientNoteService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor, ILogger<PatientNoteService> logger)
         {
+            //(FIX3.4) Baseaddress of PatientNoteBackAPI.
+            httpClient.BaseAddress = new Uri("https://localhost:7079");
             httpClient.DefaultRequestHeaders.Accept.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));

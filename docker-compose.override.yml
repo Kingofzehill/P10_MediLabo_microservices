@@ -2,54 +2,85 @@ services:
   patientbackapi:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8082
-      - ASPNETCORE_HTTPS_PORTS=8083
+      # !!! could be set like : ASPNETCORE_URLS=https://+:8083;http://+:8082" ==> A répliquer dans le launchsettings.json partie Container (Dockerfile) de chaque APP.
+      - ASPNETCORE_URLS=https://localhost;http://localhost # added from source https://github.com/dotnet/AspNetCore.Docs/issues/6199      
+      - ASPNETCORE_HTTPS_PORTS=7243 #from Launchsettings.json
+      # we only declare https port as specified in source https://github.com/dotnet/AspNetCore.Docs/issues/6199   
+      #- ASPNETCORE_HTTP_PORTS=5033 #from Launchsettings.json
     ports:
-      - "7243:8083" 
+      - "7243:8083" #https
+      - "5033:8082" #http
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+    # updated from source : https://github.com/dotnet/AspNetCore.Docs/issues/6199
+      #- ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro #could be the right configuration
+      #- ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro #could be the right configuration    
+      - ${APPDATA}/Microsoft/UserSecrets/:/root/.microsoft/usersecrets
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https/
 
   patientdiabeteriskbackapi:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8086
-      - ASPNETCORE_HTTPS_PORTS=8087
+      - ASPNETCORE_URLS=https://localhost;http://localhost # added from source https://github.com/dotnet/AspNetCore.Docs/issues/6199
+      - ASPNETCORE_HTTPS_PORTS=7088 #from Launchsettings.json
+      # we only declare https port as specified in source https://github.com/dotnet/AspNetCore.Docs/issues/6199   
+      #- ASPNETCORE_HTTP_PORTS=5078 #from Launchsettings.json
     ports:
-      - "7088:8087"
+      - "7088:8087" #https
+      - "5078:8086"
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+    # updated from source : https://github.com/dotnet/AspNetCore.Docs/issues/6199
+      #- ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro #could be the right configuration
+      #- ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro #could be the right configuration    
+      - ${APPDATA}/Microsoft/UserSecrets/:/root/.microsoft/usersecrets
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https/
 
   patientnotebackapi:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8084
-      - ASPNETCORE_HTTPS_PORTS=8085
+      - ASPNETCORE_URLS=https://localhost;http://localhost # added from source https://github.com/dotnet/AspNetCore.Docs/issues/6199
+      - ASPNETCORE_HTTPS_PORTS=7079 #from Launchsettings.json
+      # we only declare https port as specified in source https://github.com/dotnet/AspNetCore.Docs/issues/6199   
+      #- ASPNETCORE_HTTP_PORTS=5247 #from Launchsettings.json
     ports:
-      - "7079:8085"
+      - "7079:8085" #https
+      - "5247:8084"
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+    # updated from source : https://github.com/dotnet/AspNetCore.Docs/issues/6199
+      #- ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro #could be the right configuration
+      #- ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro #could be the right configuration    
+      - ${APPDATA}/Microsoft/UserSecrets/:/root/.microsoft/usersecrets
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https/
 
   patientfront:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8080
-      - ASPNETCORE_HTTPS_PORTS=8081
+      - ASPNETCORE_URLS=https://localhost;http://localhost # added from source https://github.com/dotnet/AspNetCore.Docs/issues/6199
+      - ASPNETCORE_HTTPS_PORTS=7287 #from Launchsettings.json
+      # we only declare https port as specified in source https://github.com/dotnet/AspNetCore.Docs/issues/6199   
+      #- ASPNETCORE_HTTP_PORTS=5174 #from Launchsettings.json
     ports:
-      - "7287:8081"
+      - "7287:8081" #https
+      - "5174:8080"
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+    # updated from source : https://github.com/dotnet/AspNetCore.Docs/issues/6199
+      #- ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro #could be the right configuration
+      #- ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro #could be the right configuration    
+      - ${APPDATA}/Microsoft/UserSecrets/:/root/.microsoft/usersecrets
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https/
 
   ocelotapigateway:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=8088
-      - ASPNETCORE_HTTPS_PORTS=8089
+      - ASPNETCORE_URLS=https://localhost;http://localhost # added from source https://github.com/dotnet/AspNetCore.Docs/issues/6199
+      - ASPNETCORE_HTTPS_PORTS=7195 #from Launchsettings.json
+      # we only declare https port as specified in source https://github.com/dotnet/AspNetCore.Docs/issues/6199   
+      #- ASPNETCORE_HTTP_PORTS=5236 #from Launchsettings.json
     ports:
-      - "7195:8089"
+      - "7195:8089" #https
+      - "5236:8088"
     volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+    # updated from source : https://github.com/dotnet/AspNetCore.Docs/issues/6199
+      #- ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro #could be the right configuration
+      #- ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro #could be the right configuration    
+      - ${APPDATA}/Microsoft/UserSecrets/:/root/.microsoft/usersecrets
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https/

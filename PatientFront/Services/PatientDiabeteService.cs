@@ -12,6 +12,8 @@ namespace PatientFront.Services
         private readonly ILogger<PatientDiabeteService> _logger;
         public PatientDiabeteService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor, ILogger<PatientDiabeteService> logger)
         {
+            //(FIX3.3) Baseaddress of PatientDiabeteRiskBackAPI.
+            httpClient.BaseAddress = new Uri("https://localhost:7088");
             httpClient.DefaultRequestHeaders.Accept.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
