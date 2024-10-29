@@ -121,6 +121,11 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.File("logs/MediLabo_PatientNotesBackAPI_log.txt", rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
     .CreateLogger();
 
+builder.Services.AddHttpsRedirection(options =>
+{
+    options.HttpsPort = 7080;
+});
+builder.WebHost.UseUrls("http://localhost:5247", "https://localhost:7080");
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -7,7 +7,8 @@
 	<RootNamespace>PatientFront</RootNamespace>
     <UserSecretsId>246298e5-aa96-46d6-b34c-c5ff8b0c6d0a</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>    
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+	<ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
   </PropertyGroup>
 
   <ItemGroup>

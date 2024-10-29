@@ -10,13 +10,9 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["PatientFront/PatientFront.csproj", "PatientFront/"]
-# Not working ==> Projet references management: https://www.docker.com/blog/dockerfiles-now-support-multiple-build-contexts/
 COPY ["PatientBack.API/PatientBackAPI.csproj", "PatientBack.API/"]
-#COPY –from=PatientBackAPI . /src
 COPY ["PatientDiabeteRiskBackAPI/PatientDiabeteRiskBackAPI.csproj", "PatientDiabeteRiskBackAPI/"]
-#COPY –from=PatientDiabeteRiskBackAPI . /src
 COPY ["PatientNoteBackAPI/PatientNoteBackAPI.csproj", "PatientNoteBackAPI/"]
-#COPY –from=PatientNoteBackAPI . /src
 RUN dotnet restore "./PatientFront/PatientFront.csproj"
 COPY . .
 WORKDIR "/src/PatientFront"

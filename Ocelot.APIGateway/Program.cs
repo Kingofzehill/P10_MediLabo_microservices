@@ -53,6 +53,7 @@ builder.Services.AddOcelot(builder.Configuration);
 // Ocelot configuration.
 builder.Configuration.AddJsonFile("ocelot.json");
 
+builder.WebHost.UseUrls("http://localhost:5236", "https://localhost:7196");
 WebApplication app = builder.Build();
 //var app = builder.Build();
 

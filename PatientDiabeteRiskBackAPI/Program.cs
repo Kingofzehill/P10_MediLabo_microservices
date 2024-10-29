@@ -70,8 +70,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         // (FIX001) solve sharing authentication between microservices.
-        //options.Authority = "https://localhost:7243"; // PatientBackAPI microservice.
-        //options.Audience = "https://localhost:7243"; // PatientBackAPI microservice.
+        //options.Authority = "https://localhost:7244"; // PatientBackAPI microservice.
+        //options.Audience = "https://localhost:7244"; // PatientBackAPI microservice.
 
         options.RequireHttpsMetadata = false;
         options.SaveToken = true;
@@ -123,13 +123,13 @@ builder.Services.AddHttpClient<PatientDiabeteRiskBackAPI.Services.PatientService
 // Add http client to PatientBackAPI microservice for API methods access.
 builder.Services.AddHttpClient<PatientDiabeteRiskBackAPI.Services.PatientService>(client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7243"); // URL from PatientBackAPIlaunchSettings.json.
+    client.BaseAddress = new Uri("https://localhost:7244"); // URL from PatientBackAPIlaunchSettings.json.
 });
 
 // Add http client to PatientNoteBackAPI microservice for API methods access.
 builder.Services.AddHttpClient<PatientDiabeteRiskBackAPI.Services.PatientNoteService>(client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7079"); // URL from PatientNoteBackAPI launchSettings.json.
+    client.BaseAddress = new Uri("https://localhost:7080"); // URL from PatientNoteBackAPI launchSettings.json.
 });
 */
 
@@ -142,6 +142,11 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.File("logs/MediLabo_PatientDiabeteRiskBackAPI_log.txt", rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
     .CreateLogger();
 
+builder.Services.AddHttpsRedirection(options =>
+{
+    options.HttpsPort = 7089;
+});
+builder.WebHost.UseUrls("http://localhost:5078", "https://localhost:7089");
 var app = builder.Build();
 
 

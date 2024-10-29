@@ -39,26 +39,26 @@ builder.Services.AddHttpContextAccessor();
 // (UPD024) Add http client to PatientBackAPI microservice for API methods access.
 builder.Services.AddHttpClient<PatientFront.Services.PatientService>(serviceProvider =>
 {
-    serviceProvider.BaseAddress = new Uri("https://localhost:7243"); // URL from PatientBackAPIlaunchSettings.json.
+    serviceProvider.BaseAddress = new Uri("https://localhost:7244"); // URL from PatientBackAPIlaunchSettings.json.
 });
 
 // (UPD023) Add http client to PatientBackAPI microservice for login authentication method access.
 builder.Services.AddHttpClient<PatientFront.Services.AuthenticationService>(client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7243"); // URL from PatientBackAPI launchSettings.json.
-    //client.BaseAddress = new Uri("https://192.168.1.20:7243"); // URL from PatientBackAPI launchSettings.json.    
+    client.BaseAddress = new Uri("https://localhost:7244"); // URL from PatientBackAPI launchSettings.json.
+    //client.BaseAddress = new Uri("https://192.168.1.20:7244"); // URL from PatientBackAPI launchSettings.json.    
 });
 
 // (UPD028)Add http client to PatientNoteBackAPI microservice for API methods access.
 builder.Services.AddHttpClient<PatientFront.Services.PatientNoteService>(client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7079"); // URL from PatientNoteBackAPI launchSettings.json.
+    client.BaseAddress = new Uri("https://localhost:7080"); // URL from PatientNoteBackAPI launchSettings.json.
 });
 
 // (UPD028)Add http client to PatientDiabeteRiskBackAPI microservice for API methods access.
 builder.Services.AddHttpClient<PatientFront.Services.PatientDiabeteService>(client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7088"); // URL from PatientDiabeteRiskBackAPI launchSettings.json.
+    client.BaseAddress = new Uri("https://localhost:7089"); // URL from PatientDiabeteRiskBackAPI launchSettings.json.
 });
 
 // (UPD026) Add dependency to service ILoginService (interface) from PatientBackAPI with AuthenticationService type.
@@ -88,6 +88,11 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.File("logs/MediLabo_PatientFront_log.txt", rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
     .CreateLogger();
 
+builder.Services.AddHttpsRedirection(options =>
+{
+    options.HttpsPort = 7288;
+});
+builder.WebHost.UseUrls("http://localhost:5174", "https://localhost:7288");
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

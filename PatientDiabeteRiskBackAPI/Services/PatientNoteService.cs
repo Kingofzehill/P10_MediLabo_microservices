@@ -15,7 +15,7 @@ namespace PatientDiabeteRiskBackAPI.Services
         public PatientNoteService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor, ILogger<PatientDiabeteRiskBackAPI.Services.PatientNoteService> logger)
         {
             // Fix baseaddress defined in httpclient of program.cs for PatientNoteService which etrangly remains at null.
-            httpClient.BaseAddress = new Uri("https://localhost:7079");
+            httpClient.BaseAddress = new Uri("https://localhost:7080");
             httpClient.DefaultRequestHeaders.Accept.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));

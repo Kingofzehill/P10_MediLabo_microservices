@@ -83,8 +83,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         // (FIX001) solve sharing authentication between microservices.
-        //options.Authority = "https://localhost:7243"; // PatientBackAPI microservice.
-        //options.Audience = "https://localhost:7243"; // PatientBackAPI microservice.
+        //options.Authority = "https://localhost:7244"; // PatientBackAPI microservice.
+        //options.Audience = "https://localhost:7244"; // PatientBackAPI microservice.
         
         // https not required.
         options.RequireHttpsMetadata = false;
@@ -156,6 +156,11 @@ builder.Services.AddScoped<IPatientService, PatientBackAPI.Services.PatientServi
 builder.Services.AddScoped<IAddressRepository, AddressRepository>();
 builder.Services.AddScoped<ILoginService, PatientBackAPI.Services.LoginService>();
 
+builder.Services.AddHttpsRedirection(options =>
+{    
+    options.HttpsPort = 7244;
+});
+builder.WebHost.UseUrls("http://localhost:5033", "https://localhost:7244");
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
