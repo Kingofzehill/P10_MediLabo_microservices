@@ -15,23 +15,22 @@ builder.Services.AddControllersWithViews()
 
 // (UPD020) Session service.
 builder.Services.AddDistributedMemoryCache();
+
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(120);
     options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;
-    // Should force cookie expiration for avoiding user access to stay alive.
-    // options.Cookie.Expiration = TimeSpan.FromMinutes(120);
+    options.Cookie.IsEssential = true;    
 });
 
 // (UPD028) Change cookie expiration from "until browser close" to 30 minutes
 //      https://serverless.industries/2022/03/08/net-core-session-cookie-lifetime.en.html
-builder.Services.AddCookiePolicy(opts => {
+/*FIXRUN01 builder.Services.AddCookiePolicy(opts => {
     opts.CheckConsentNeeded = ctx => false;
     opts.OnAppendCookie = ctx => {
         ctx.CookieOptions.Expires = DateTimeOffset.UtcNow.AddMinutes(120);
     };
-});
+});*/
 
 // (FIX03) REPLACED by AddHttpClient. BaseAddress is set directly in Services files.
 builder.Services.AddHttpContextAccessor();
@@ -45,8 +44,7 @@ builder.Services.AddHttpClient<PatientFront.Services.PatientService>(serviceProv
 // (UPD023) Add http client to PatientBackAPI microservice for login authentication method access.
 builder.Services.AddHttpClient<PatientFront.Services.AuthenticationService>(client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7244"); // URL from PatientBackAPI launchSettings.json.
-    //client.BaseAddress = new Uri("https://192.168.1.20:7244"); // URL from PatientBackAPI launchSettings.json.    
+    client.BaseAddress = new Uri("https://localhost:7244"); // URL from PatientBackAPI launchSettings.json.    
 });
 
 // (UPD028)Add http client to PatientNoteBackAPI microservice for API methods access.
@@ -71,7 +69,6 @@ builder.Services.AddHttpClient<PatientFront.Services.AuthenticationService>();
 builder.Services.AddHttpClient<PatientFront.Services.PatientNoteService>();
 builder.Services.AddHttpClient<PatientFront.Services.PatientDiabeteService>();*/
 
-// (UPD019.Front) Add authentication / httpContextAccessor services (example 18).
 // (UPD021) Cookie for Microsoft Asp.Net authentication. 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
        .AddCookie(options =>
@@ -88,11 +85,11 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.File("logs/MediLabo_PatientFront_log.txt", rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
     .CreateLogger();
 
-builder.Services.AddHttpsRedirection(options =>
+/*//FIXRUN01 builder.Services.AddHttpsRedirection(options =>
 {
     options.HttpsPort = 7288;
 });
-builder.WebHost.UseUrls("http://localhost:5174", "https://localhost:7288");
+builder.WebHost.UseUrls("https://localhost:7288", "http://localhost:5174");*/
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -106,7 +103,6 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-// (FIX001) solve sharing authentication between microservices.
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
@@ -120,18 +116,3 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.Run();
-
-/*// (FIX001) solve sharing authentication between microservices.
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-app.UseRouting();
-app.UseSession();
-app.UseAuthentication();
-app.UseAuthorization();
-//app.UseEndpoints(_ => { });
-
-app.UseMiddleware<PatientFront.Services.MiddlewareService>();
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-app.Run();*/

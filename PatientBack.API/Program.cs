@@ -10,7 +10,6 @@ using PatientBackAPI.Repositories;
 using PatientBackAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-//ConfigurationManager configuration = builder.Configuration;
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -21,8 +20,6 @@ builder.Services.AddSwaggerGen();
 // (UPD007) DbContext configuration with "Patient-back". 
 builder.Services.AddDbContext<LocalDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("Patient-back")));
-/*builder.Services.AddDbContext<PatientBackAPIContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("PatientBackAPIContext") ?? throw new InvalidOperationException("Connection string 'PatientBackAPIContext' not found.")));*/
 
 // (UPD008) Identity configuration.
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
@@ -109,18 +106,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 //      https://learn.microsoft.com/en-us/aspnet/core/security/authorization/policies?view=aspnetcore-8.0
 builder.Services.AddAuthorizationBuilder()
     .AddPolicy("Organizer", policy =>
-    {
-        // should be authenticated.
+    {        
         policy.RequireAuthenticatedUser();
-        policy.RequireRole("Organizer");
-        //policy.RequireClaim("role", "Organizer");
+        policy.RequireRole("Organizer");        
         policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
     })
     .AddPolicy("Practitioner", policy =>
     {
         policy.RequireAuthenticatedUser();
-        policy.RequireRole("Practitioner");
-        //policy.RequireClaim("role", "Practitioner");
+        policy.RequireRole("Practitioner");        
         policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
     })
 
@@ -144,23 +138,21 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.File("logs/MediLabo_PatientBackAPI_log.txt", rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
     .CreateLogger();
 
-// (UPD014) HttpContextAccessor implementation ==> encapsulates all information
-// about an individual HTTP request and response.
+// (UPD014) HttpContextAccessor implementation ==> encapsulates all information of HTTP request and response.
 // https://learn.microsoft.com/en-us/aspnet/core/fundamentals/http-context?view=aspnetcore-8.0 
 builder.Services.AddHttpContextAccessor();
 
-// (TD001) addscope for interfaces and repositories.
 // (UPD016) Scoped services for Patient, Address, Login..
 builder.Services.AddScoped<IPatientRepository, PatientRepository>();
 builder.Services.AddScoped<IPatientService, PatientBackAPI.Services.PatientService>();
 builder.Services.AddScoped<IAddressRepository, AddressRepository>();
 builder.Services.AddScoped<ILoginService, PatientBackAPI.Services.LoginService>();
 
-builder.Services.AddHttpsRedirection(options =>
+/*//FIXRUN01 builder.Services.AddHttpsRedirection(options =>
 {    
     options.HttpsPort = 7244;
 });
-builder.WebHost.UseUrls("http://localhost:5033", "https://localhost:7244");
+builder.WebHost.UseUrls("http://localhost:5033", "https://localhost:7244");*/
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -171,9 +163,8 @@ if (app.Environment.IsDevelopment())
 }
 
 using (var scope = app.Services.CreateScope())
-{
-    // (TD002) RequiredService.
-    // (UPD017) Service provider required for DbContext, Login, Identity users and roles.
+{    
+    // (UPD017) Service provider for DbContext, Login, Identity users and roles.
     var dbcontext = scope.ServiceProvider.GetRequiredService<LocalDbContext>();
     var authService = scope.ServiceProvider.GetService<PatientBackAPI.Services.LoginService>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
@@ -193,14 +184,14 @@ using (var scope = app.Services.CreateScope())
 }
 
 
-/*app.UseCors(builder =>
+/*// FIXRUN01 app.UseCors(builder =>
 {
     builder
         .AllowAnyOrigin()
         .AllowAnyMethod()
         .AllowAnyHeader();
 });*/
-// (FIX001) solve sharing authentication between microservices.
+
 app.UseHttpsRedirection();
 //app.UseStaticFiles();
 //app.UseRouting();

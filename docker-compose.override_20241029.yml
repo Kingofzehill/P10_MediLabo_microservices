@@ -1,0 +1,88 @@
+version: '3.4'
+
+services:
+  patientbackapi:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      # could be set like : ASPNETCORE_URLS=https://+:8083;http://+:8082". A repliquer dans le launchsettings.json partie Container (Dockerfile) de chaque APP.
+      - ASPNETCORE_URLS=https://+:8083;http://+:8082 # added from source https://github.com/dotnet/AspNetCore.Docs/issues/6199
+      - ASPNETCORE_HTTPS_PORTS=8083 #from Launchsettings.json
+      # we only declare https port as specified in source https://github.com/dotnet/AspNetCore.Docs/issues/6199
+      - ASPNETCORE_HTTP_PORTS=5033 #from Launchsettings.json
+    ports:
+      - "7244:8083" #https
+      - "5033:8082" #http
+    volumes:
+    # updated from source : https://github.com/dotnet/AspNetCore.Docs/issues/6199
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro #could be the right configuration
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro #could be the right configuration
+      #- ${APPDATA}/Microsoft/UserSecrets/:/root/.microsoft/usersecrets
+      #- ${APPDATA}/ASP.NET/Https:/root/.aspnet/https/
+
+  patientdiabeteriskbackapi:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:8087;http://+:8086 # added from source https://github.com/dotnet/AspNetCore.Docs/issues/6199
+      - ASPNETCORE_HTTPS_PORTS=7089 #from Launchsettings.json
+      # we only declare https port as specified in source https://github.com/dotnet/AspNetCore.Docs/issues/6199
+      - ASPNETCORE_HTTP_PORTS=5078 #from Launchsettings.json
+    ports:
+      - "7089:8087" #https
+      - "5078:8086"
+    volumes:
+    # updated from source : https://github.com/dotnet/AspNetCore.Docs/issues/6199
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro #could be the right configuration
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro #could be the right configuration
+      #- ${APPDATA}/Microsoft/UserSecrets/:/root/.microsoft/usersecrets
+      #- ${APPDATA}/ASP.NET/Https:/root/.aspnet/https/
+
+  patientnotebackapi:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:8085;http://+:8084 # added from source https://github.com/dotnet/AspNetCore.Docs/issues/6199
+      - ASPNETCORE_HTTPS_PORTS=7080 #from Launchsettings.json
+      # we only declare https port as specified in source https://github.com/dotnet/AspNetCore.Docs/issues/6199
+      - ASPNETCORE_HTTP_PORTS=5247 #from Launchsettings.json
+    ports:
+      - "7080:8085" #https
+      - "5247:8084"
+    volumes:
+    # updated from source : https://github.com/dotnet/AspNetCore.Docs/issues/6199
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro #could be the right configuration
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro #could be the right configuration
+      #- ${APPDATA}/Microsoft/UserSecrets/:/root/.microsoft/usersecrets
+      #- ${APPDATA}/ASP.NET/Https:/root/.aspnet/https/
+
+  patientfront:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:8081;http://+:8080 # added from source https://github.com/dotnet/AspNetCore.Docs/issues/6199
+      - ASPNETCORE_HTTPS_PORTS=7288 #from Launchsettings.json
+      # we only declare https port as specified in source https://github.com/dotnet/AspNetCore.Docs/issues/6199
+      - ASPNETCORE_HTTP_PORTS=5174 #from Launchsettings.json
+    ports:
+      - "7288:8081" #https
+      - "5174:8080"
+    volumes:
+    # updated from source : https://github.com/dotnet/AspNetCore.Docs/issues/6199
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro #could be the right configuration
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro #could be the right configuration
+      #- ${APPDATA}/Microsoft/UserSecrets/:/root/.microsoft/usersecrets
+      #- ${APPDATA}/ASP.NET/Https:/root/.aspnet/https/
+
+  ocelotapigateway:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:8089;http://+:8088 # added from source https://github.com/dotnet/AspNetCore.Docs/issues/6199
+      - ASPNETCORE_HTTPS_PORTS=7196 #from Launchsettings.json
+      # we only declare https port as specified in source https://github.com/dotnet/AspNetCore.Docs/issues/6199
+      - ASPNETCORE_HTTP_PORTS=5236 #from Launchsettings.json
+    ports:
+      - "7196:8089" #https
+      - "5236:8088"
+    volumes:
+    # updated from source : https://github.com/dotnet/AspNetCore.Docs/issues/6199
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro #could be the right configuration
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro #could be the right configuration
+      #- ${APPDATA}/Microsoft/UserSecrets/:/root/.microsoft/usersecrets
+      #- ${APPDATA}/ASP.NET/Https:/root/.aspnet/https/

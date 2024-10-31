@@ -2,19 +2,19 @@
   "profiles": {
     "Docker Compose": {
       "commandName": "DockerCompose",
-      "commandVersion": "1.0",
-      "composeLaunchAction": "LaunchBrowser",
-      "composeLaunchServiceName": "patientbackapi",
-      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}",
+      "composeLaunchServiceName": "patientfront",
       "serviceActions": {
         "patientbackapi": "StartDebugging",
         "patientdiabeteriskbackapi": "StartDebugging",
         "patientnotebackapi": "StartDebugging",
         "patientfront": "StartDebugging",
         "ocelotapigateway": "StartDebugging",
-        "mongo": "StartWithoutDebugging",
+        "mongodb": "StartWithoutDebugging",
         "mssql": "StartWithoutDebugging"
-      }
+      },
+      "composeLaunchAction": "LaunchBrowser",
+      "commandVersion": "1.0",
+      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}"
     }
   }
 }
