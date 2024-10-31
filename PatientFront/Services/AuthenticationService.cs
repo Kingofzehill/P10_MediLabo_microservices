@@ -23,11 +23,16 @@ namespace PatientFront.Services
         public AuthenticationService(HttpClient httpClient, ILogger<AuthenticationService> logger, IHttpContextAccessor httpContextAccessor)
         {
             //(FIX3.1) Baseaddress of PatientBackAPI.
-            httpClient.BaseAddress = new Uri("https://localhost:7244");
+            // For development.
+            //httpClient.BaseAddress = new Uri("https://localhost:7244");
             //httpClient.BaseAddress = new Uri("https://192.168.1.20:7244"); //DNS IPV4 IP address of personnal computer
-            //httpClient.BaseAddress = new Uri("https://172.29.160.1:7244"); //IP IPV4 IP address of personnal computer (DNS)
-            //httpClient.BaseAddress = new Uri("https://host.docker.internal:7244"); //host.docker.internal:7288 equivalent to localhost for docker.
-            //httpClient.BaseAddress = new Uri("https://patientbackapi:7244"); // use DNS service name referenced in docker-compose.
+            //httpClient.BaseAddress = new Uri("https://172.29.160.1:7244"); //IP IPV4 IP address of personnal computer (DNS)            
+            //For docker containers.
+            //httpClient.BaseAddress = new Uri("https://patientbackapi:8081");
+            //httpClient.BaseAddress = new Uri("https://host.docker.internal:8081");
+            //httpClient.BaseAddress = new Uri("https://localhost:8081");
+            httpClient.BaseAddress = new Uri("http://localhost:8081"); 
+
             httpClient.DefaultRequestHeaders.Accept.Clear();
             // Set Content-Type header for an HttpClient request : application/json
             //      https://www.dofactory.com/code-examples/csharp/content-type-header

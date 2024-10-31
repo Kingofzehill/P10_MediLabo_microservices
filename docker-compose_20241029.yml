@@ -1,0 +1,198 @@
+version: '3.4'
+
+#Plugin version of Compose. https://stackoverflow.com/questions/76156527/what-does-the-first-line-in-the-docker-compose-yml-file-that-specifies-the-ve
+services:
+  patientbackapi:
+    image: ${DOCKER_REGISTRY-}patientbackapi
+    container_name: patientbackapi
+    build:
+      context: .
+      dockerfile: PatientBack.API/Dockerfile    
+    # Host_port:container_port.
+    ports:
+      - "7244:8083"    
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:8083;http://+:8082
+      - ASPNETCORE_HTTPS_PORT=8083
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Sql20243107*
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/patientfront.pfx
+    volumes:
+    # reference the certificate placed in the patientfront app Https folder and mount it in the container.
+        - ./PatientBack.API/https/patientfront.pfx:/https/patientfront.pfx:ro
+    depends_on:
+      - mssql
+    #ConnectionString to sql server database P10_MediLabo_Patient-back.
+    #environment:
+      #update connection string for using sa user.
+     #- SQLSERVER_URL=Server=localhost;User Id=sa;Password=Sql20243107*;Integrated Security=True;Database=P10_MediLabo_Patient-back;Trusted_Connection=True;TrustServerCertificate=True;
+     #- SQLSERVER_URL=Server=localhost;User Id=sa;Password=Sql20243107*;Integrated Security=True;Database=P10_MediLabo_Patient-back;Trusted_Connection=True;MultipleActiveResultSets=True;TrustServerCertificate=True;
+     #- SQLSERVER_URL=Server=localhost;Integrated Security=True;Database=P10_MediLabo_Patient-back;Trusted_Connection=True;MultipleActiveResultSets=True;TrustServerCertificate=True;     
+     #- SQLSERVER_URL=Server=localhost;Integrated Security=True;Database=P10_MediLabo_Patient-back;Trusted_Connection=True;TrustServerCertificate=True;
+     #- SQLSERVER_URL=Server=127.0.0.1:1433;Integrated Security=True;Database=P10_MediLabo_Patient-back;Trusted_Connection=True;TrustServerCertificate=True;
+      #- ASPNETCORE_ENVIRONMENT=Development
+      #- ASPNETCORE_URLS=https://+:443;http://+:80
+      #- ASPNETCORE_Kestrel__Certificates__Default__Password=Admin2024*
+      #- ASPNETCORE_Kestrel__Certificates__Default__Path=/https/patientbackapi.pfx
+    #Sqlserver should run on container start.
+
+  #MongoDB container.    
+  mongodb: #from https://www.mongodb.com/resources/products/compatibilities/docker https://www.bmc.com/blogs/mongodb-docker-container/
+    image: mongodb/mongodb-community-server:6.0-ubi8
+    #environment:
+    #  - MONGODB_INITDB_ROOT_USERNAME=1000
+    #  - MONGODB_INITDB_ROOT_PASSWORD=1000
+    volumes:
+      - type: bind
+        source: ./data
+        target: /data/db
+  #mongo:
+    #image: mongo:latest    
+    #container_name: mongodb
+    #restart: always
+    #ports:
+    #  - "27017:27017" 
+    #volumes:
+    #  - ./mongo-data:/data/db
+  
+  #SqlServer container. https://learn.microsoft.com/fr-fr/dotnet/architecture/microservices/multi-container-microservice-net-applications/database-server-container    
+  #SqlServer configuration https://gist.github.com/rchardptrsn/508f954445829433e840c93167c042ef
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mssql-db
+    hostname: mssql-db
+    ports:      
+      - "1433:1433"
+    environment:
+      - ACCEPT_EULA=1
+      - MSSQL_SA_PASSWORD=Sql20243107*
+    # from https://stackoverflow.com/questions/56499847/how-to-connect-to-a-sql-server-database-inside-a-docker-container
+    networks:
+      - mymssqlnet
+    # from https://stackoverflow.com/questions/56499847/how-to-connect-to-a-sql-server-database-inside-a-docker-container
+    cap_add:
+      - NET_ADMIN
+      #comment sa user connection for avoiding updating connection string for sa user connection : https://stackoverflow.com/questions/69777990/cant-connect-from-the-docker-container-with-asp-net-core-to-sql-server-containe
+      #- ACCEPT_EULA:'Y'
+      #- MSSQL_SA_PASSWORD:'Sql20243107*'
+      #- MSSQL_DATA_DIR:/var/opt/mssql/data      
+      #- MSSQL_TCP_PORT:1433 
+      #try to validate https certitificate
+      #- ASPNETCORE_ENVIRONMENT=Development
+      #- ASPNETCORE_URLS=https://+:1433;http://+:1433
+      #- ASPNETCORE_HTTPS_PORT=1433
+      #- ASPNETCORE_Kestrel__Certificates__Default__Password=Sql20243107*
+      #- ASPNETCORE_Kestrel__Certificates__Default__Path=/https/patientfront.pfx
+    volumes:
+    #try to validate https certitificate
+    # reference the certificate placed in the patientfront app Https folder and mount it in the container.
+      #- ./PatientFront/https/patientfront.pfx:/https/patientfront.pfx:ro    
+    #original configuration
+      - ./sql-data:/var/opt/mssql/data
+      #- ./log:/var/opt/mssql/log
+      #- ./secrets:/var/opt/mssql/secrets   
+
+  ocelotapigateway:
+    image: ${DOCKER_REGISTRY-}ocelotapigateway
+    container_name: ocelotapigateway
+    build:
+      context: .
+      dockerfile: Ocelot.APIGateway/Dockerfile
+    # Host_port:container_port.
+    ports:
+      - "7196:8089"
+    # Defines container environment. https://docs.docker.com/compose/how-tos/environment-variables/set-environment-variables/
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:8089;http://+:8088
+      - ASPNETCORE_HTTPS_PORT=8089
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Sql20243107*
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/patientfront.pfx
+      #Microservices gateways.
+      - PatientFrontUrl=https://localhost:7288
+      - PatientBackAPIUrl=https://localhost:7244
+      - PatientNoteBackAPIUrl=https://localhost:7080
+      - PatientDiabeteRiskBackAPIUrl=https://localhost:7089
+    volumes:
+    # reference the certificate placed in the patientfront app Https folder and mount it in the container.
+        - ./Ocelot.APIGateway/https/patientfront.pfx:/https/patientfront.pfx:ro
+    #Dependency (dependy service should run before starting container app). (could also set order of service startup(and stop)). https://geshan.com.np/blog/2024/02/docker-compose-depends-on/
+    depends_on:
+      - patientbackapi 
+
+  patientfront:
+    image: ${DOCKER_REGISTRY-}patientfront
+    #Container name when it runs (DNS name used for inter-container communication). https://stackoverflow.com/questions/55522620/docker-compose-yml-container-name-and-hostname 
+    container_name: patientfront
+    build:
+      context: .
+      dockerfile: PatientFront/Dockerfile
+    # Host_port:container_port (example : https://localhost:8081). https://docs.docker.com/compose/how-tos/networking/
+    ports:
+      - "7288:8081"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:8081;http://+:8080
+      - ASPNETCORE_HTTPS_PORT=8081
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Sql20243107*
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/patientfront.pfx
+    volumes:
+    # reference the certificate placed in the patientfront app Https folder and mount it in the container.
+        - ./PatientFront/https/patientfront.pfx:/https/patientfront.pfx:ro
+
+  patientnotebackapi:
+    image: ${DOCKER_REGISTRY-}patientnotebackapi
+    container_name: patientnotebackapi
+    build:
+      context: .
+      dockerfile: PatientNoteBackAPI/Dockerfile
+    ports:
+      - "7080:8085" 
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:8085;http://+:8084
+      - ASPNETCORE_HTTPS_PORT=8085
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Sql20243107*
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/patientfront.pfx
+    volumes:
+    # reference the certificate placed in the patientfront app Https folder and mount it in the container.
+        - ./PatientNoteBackAPI/https/patientfront.pfx:/https/patientfront.pfx:ro
+    #Sqlserver and mongodb should run on container start.
+    depends_on:
+      - mssql
+      - mongodb
+    #ConnectionString to sql server database P10_MediLabo_Patient-back.
+    #environment:
+      #update connection string for using sa user.
+     #- SQLSERVER_URL=Server=localhost;User Id=sa;Password=Sql20243107*;Integrated Security=True;Database=P10_MediLabo_Patient-back;Trusted_Connection=True;TrustServerCertificate=True;
+     #- SQLSERVER_URL=Server=localhost;User Id=sa;Password=Sql20243107*;Integrated Security=True;Database=P10_MediLabo_Patient-back;Trusted_Connection=True;MultipleActiveResultSets=True;TrustServerCertificate=True;
+     #- SQLSERVER_URL=Server=localhost;Integrated Security=True;Database=P10_MediLabo_Patient-back;Trusted_Connection=True;MultipleActiveResultSets=True;TrustServerCertificate=True;
+     #- SQLSERVER_URL=Server=localhost;Integrated Security=True;Database=P10_MediLabo_Patient-back;Trusted_Connection=True;TrustServerCertificate=True;
+     #- SQLSERVER_URL=Server=127.0.0.1:1433;Integrated Security=True;Database=P10_MediLabo_Patient-back;Trusted_Connection=True;TrustServerCertificate=True;
+
+  patientdiabeteriskbackapi:
+    image: ${DOCKER_REGISTRY-}patientdiabeteriskbackapi
+    container_name: patientdiabeteriskbackapi
+    build:
+      context: .
+      dockerfile: PatientDiabeteRiskBackAPI/Dockerfile
+    ports:
+      - "7089:8087" 
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:8087;http://+:8086
+      - ASPNETCORE_HTTPS_PORT=8087
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Sql20243107*
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/patientfront.pfx
+    volumes:
+    # reference the certificate placed in the patientfront app Https folder and mount it in the container.
+        - ./PatientDiabeteRiskBackAPI/https/patientfront.pfx:/https/patientfront.pfx:ro
+
+#for persistent db datas
+volumes:
+  sql-data:
+  #mongo-data:  
+
+# from https://stackoverflow.com/questions/56499847/how-to-connect-to-a-sql-server-database-inside-a-docker-container
+networks:
+  mymssqlnet:

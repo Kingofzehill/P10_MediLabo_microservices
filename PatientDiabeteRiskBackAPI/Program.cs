@@ -6,11 +6,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using Serilog;
-using PatientDiabeteRiskBackAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// DB connection for Identity.
 builder.Services.AddDbContext<IdentityDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Patient-Back")));
 
@@ -95,7 +93,7 @@ builder.Services.AddAuthorizationBuilder()
         policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
     });
 
-builder.Services.AddCors(options =>
+/*//FIXRUN01 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsMediLabo",
         policy =>
@@ -104,7 +102,7 @@ builder.Services.AddCors(options =>
             policy.AllowAnyHeader();
             policy.AllowCredentials();
         });
-});
+});*/
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -117,6 +115,7 @@ builder.Services.AddScoped<PatientDiabeteRiskBackAPI.Services.PatientNoteService
 builder.Services.AddScoped<PatientDiabeteRiskBackAPI.Services.DiabeteService>();
 //replace AddHttpContextAccessor configuration, httpClient.BaseAddress is set directly in PatientService and PatientNoteService.
 builder.Services.AddHttpClient<PatientDiabeteRiskBackAPI.Services.PatientService>();
+
 // (FIX02) REPLACED by AddHttpClient. BaseAddress is set directly in Services files.
 /* builder.Services.AddHttpContextAccessor();
 
@@ -142,11 +141,11 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.File("logs/MediLabo_PatientDiabeteRiskBackAPI_log.txt", rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
     .CreateLogger();
 
-builder.Services.AddHttpsRedirection(options =>
+/*//FIXRUN01 builder.Services.AddHttpsRedirection(options =>
 {
     options.HttpsPort = 7089;
 });
-builder.WebHost.UseUrls("http://localhost:5078", "https://localhost:7089");
+builder.WebHost.UseUrls("http://localhost:5078", "https://localhost:7089");*/
 var app = builder.Build();
 
 
@@ -158,7 +157,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // (FIX001) solve sharing authentication between microservices.
-app.UseCors("CorsMediLabo");
+//FIXRUN01 app.UseCors("CorsMediLabo");
 
 app.UseHttpsRedirection();
 //app.UseStaticFiles();

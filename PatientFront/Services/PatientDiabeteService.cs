@@ -13,7 +13,11 @@ namespace PatientFront.Services
         public PatientDiabeteService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor, ILogger<PatientDiabeteService> logger)
         {
             //(FIX3.3) Baseaddress of PatientDiabeteRiskBackAPI.
-            httpClient.BaseAddress = new Uri("https://localhost:7089");
+            // For development.
+            //httpClient.BaseAddress = new Uri("https://localhost:7089");
+            // For docker container.
+            httpClient.BaseAddress = new Uri("https://patientdiabeteriskbackapi:8081");
+
             httpClient.DefaultRequestHeaders.Accept.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));

@@ -8,7 +8,7 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Activate multiple origins requests (cors) for allowing cross origins requests between microservices apps.
 //      https://learn.microsoft.com/fr-fr/aspnet/core/security/cors?view=aspnetcore-8.0
-builder.Services.AddCors(options =>
+/*//FIXRUN01 builder.Services.AddCors(options =>
 {
     //Get microservices url from docker-compose for allowing CORS requests.
     var PatientFrontUrl = builder.Configuration.GetValue<string>("PatientFrontUrl");
@@ -38,9 +38,8 @@ builder.Services.AddCors(options =>
             policy.AllowAnyHeader();
             policy.AllowCredentials();
         });
-});
+});*/
 
-// (TD007) To activate for docker-compose.
 // Health checks: libraries and integrity controls of http endpoints.
 //      https://learn.microsoft.com/fr-fr/aspnet/core/host-and-deploy/health-checks?view=aspnetcore-8.0
 builder.Services
@@ -55,21 +54,17 @@ builder.Configuration.AddJsonFile("ocelot.json");
 
 builder.WebHost.UseUrls("http://localhost:5236", "https://localhost:7196");
 WebApplication app = builder.Build();
-//var app = builder.Build();
 
-// (FIX001) solve sharing authentication between microservices.
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection(); //FIXRUN01 
 //app.UseStaticFiles();
 app.UseRouting();
 //app.UseAuthentication();
-app.UseCors("CorsMediLabo");
+//FIXRUN01 app.UseCors("CorsMediLabo");
 app.UseAuthorization();
 app.UseEndpoints(_ => { });
 
-// (TD007) To activate for docker-compose.
 // Create health checks endpoints (/hc // /liveness) of the middleware.
 //      https://stackoverflow.com/questions/72384646/usehealthchecks-vs-maphealthchecks
-// (TD006) using RequireAuthorization??? for avoiding unauthorize client to usurp port.
 app.MapHealthChecks("/hc", new HealthCheckOptions()
 {
     Predicate = _ => true,
@@ -83,33 +78,3 @@ app.MapHealthChecks("/liveness", new HealthCheckOptions
 
 await app.UseOcelot();
 await app.RunAsync();
-//app.Run();
-
-/*
-// (FIX001) solve sharing authentication between microservices.
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-app.UseRouting();
-app.UseCors("CorsMediLabo");
-app.UseAuthentication();
-app.UseAuthorization();
-app.UseEndpoints(_ => { });
-
-// (TD007) To activate for docker-compose.
-// Create health checks endpoints (/hc // /liveness) of the middleware.
-//      https://stackoverflow.com/questions/72384646/usehealthchecks-vs-maphealthchecks
-// (TD006) using RequireAuthorization??? for avoiding unauthorize client to usurp port.
-app.MapHealthChecks("/hc", new HealthCheckOptions()
-{
-    Predicate = _ => true,
-    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
-});
-
-app.MapHealthChecks("/liveness", new HealthCheckOptions
-{
-    Predicate = r => r.Name.Contains("self")
-});
-
-await app.UseOcelot();
-await app.RunAsync();
-*/
