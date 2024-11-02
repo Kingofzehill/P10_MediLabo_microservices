@@ -30,7 +30,7 @@ namespace PatientFront.Controllers
                 {
                     Log.Error($"[PatientFront][PatientDiabeteController][HttpGet]. Get diabete Report for Patient id: {id} = null.");
                     TempData["ErrorTitle"] = "Rapport Diabète";
-                    TempData["ErrorMessage"] = "La génération du rapport de risque de diabète pour le patient a généré une erreur.";
+                    TempData["ErrorMessage"] = "Vous n'avez pas les droits pour accéder au rapport de risque de diabète du patient.";
                     return View("404");
                 }
 

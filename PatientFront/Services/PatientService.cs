@@ -20,11 +20,24 @@ namespace PatientFront.Services
 
         public PatientService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor, ILogger<PatientService> logger)
         {
-            //(FIX3.2) Baseaddress of PatientBackAPI.
-            //For development.
-            httpClient.BaseAddress = new Uri("https://localhost:7244");
-            //For docker containers.
-            //httpClient.BaseAddress = new Uri("https://patientbackapi:8081");
+            //( PatientBackAPI.
+            // For local development.            
+            //httpClient.BaseAddress = new Uri("https://localhost:7244");
+
+            // Use API app DNS for containerized app. Port provides by conf.
+            var endPoint = "https://patientbackapi";
+
+            // FIXRUN06 dev-cert https certificate are not correctly handled by docker containers.
+            // In order to avoid generating an official certificate with letsencrypt (for example) we force to TRUE the certificate validation.
+            // Recommanded instructions from Microsoft in Enforce HTTPS in ASP.NET Core page was already made ==> https://learn.microsoft.com/en-us/aspnet/core/security/enforcing-ssl?view=aspnetcore-5.0&tabs=visual-studio
+            //      https://www.conradakunga.com/blog/disable-ssl-certificate-validation-in-net/
+            var httpClientHandler = new HttpClientHandler();
+            httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, sslPolicyErrors) =>
+            {
+                return true;
+            };
+            httpClient = new HttpClient(httpClientHandler) { BaseAddress = new Uri(endPoint) };
+            // END: Use API app DNS for containerized app. Port provides by conf.
 
             httpClient.DefaultRequestHeaders.Accept.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(
@@ -157,7 +170,7 @@ namespace PatientFront.Services
         /// <returns>Patient Output Model.</returns> 
         /// <remarks> URI: /Patient/Delete{id}.</remarks>
         /*public async Task<List<PatientOutputModel>> Delete(int id)*/
-        public async Task<PatientOutputModel> Delete(int id)
+            public async Task<PatientOutputModel> Delete(int id)
         {
             try
             {

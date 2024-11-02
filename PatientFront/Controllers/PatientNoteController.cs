@@ -31,7 +31,7 @@ namespace PatientFront.Controllers
                 {                                        
                     Log.Error($"[PatientFront][PatientNoteController][List][HttpGet]. Patients List = null.");
                     TempData["ErrorTitle"] = "Liste des Notes du Patient";
-                    TempData["ErrorMessage"] = "La liste des Notes du Patient a généré une erreur.";
+                    TempData["ErrorMessage"] = "Vous n'avez pas les droits pour accéder aux Notes du Patient.";
                     return View("404");
                 }
                 TempData["PatientId"] = id;

@@ -8,12 +8,13 @@ services:
       context: .
       dockerfile: PatientFront/Dockerfile    
     ports:
-      - "7288:8081" #https.
-      - "5174:8080" #http.
+      - "7288:443" #https.
+      #FIXRUN02- "5174:80" #http.
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:8081;http://+:8080
-      - ASPNETCORE_HTTPS_PORT=8081
+      #FIXRUN02- ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_URLS=https://+:443
+      - ASPNETCORE_HTTPS_PORT=443
       - ASPNETCORE_Kestrel__Certificates__Default__Password=Sql20243107* 
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/patientfront.pfx
     volumes:
@@ -27,12 +28,13 @@ services:
       context: .
       dockerfile: PatientBack.API/Dockerfile        
     ports:
-      - "7244:8081" #https.
-      - "5033:8080" #http.
+      - "7244:443" #https.
+      #FIXRUN02- "5033:80" #http.
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:8081;http://+:8080
-      - ASPNETCORE_HTTPS_PORT=8081
+      #FIXRUN02- ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_URLS=https://+:443
+      - ASPNETCORE_HTTPS_PORT=443
       - ASPNETCORE_Kestrel__Certificates__Default__Password=Sql20243107* 
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/patientfront.pfx
     depends_on:
@@ -42,17 +44,27 @@ services:
       - ./PatientBack.API/https/patientfront.pfx:/https/patientfront.pfx:ro
 
   #from https://www.mongodb.com/resources/products/compatibilities/docker https://www.bmc.com/blogs/mongodb-docker-container/
-  mongodb: 
-    image: mongodb/mongodb-community-server:6.0-ubi8
-    #environment:
-    #  - MONGODB_INITDB_ROOT_USERNAME=1000
-    #  - MONGODB_INITDB_ROOT_PASSWORD=1000
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    hostname: mongodb
+    #restart: always
     ports:
-      - "27017:27017" 
+      - "27017:27017"
     volumes:
-      - type: bind
-        source: ./data
-        target: /data/db
+      - mongodb-data:/data/db/
+    #image: mongodb/mongodb-community-server:6.0-ubi8
+    #environment:
+    #  - MONGODB_INITDB_ROOT_USERNAME=myUserAdmin
+    #  - MONGODB_INITDB_ROOT_PASSWORD=admin123
+    #ports:
+    #  - "27017:27017" 
+    #volumes:
+    #  - type: bind
+    #    source: ./data
+        #source: //c/MongoDB
+    #    target: /data/db
+        #target: c://MongoDB
   
   #SqlServer container. https://learn.microsoft.com/fr-fr/dotnet/architecture/microservices/multi-container-microservice-net-applications/database-server-container    
   #SqlServer configuration https://gist.github.com/rchardptrsn/508f954445829433e840c93167c042ef
@@ -80,12 +92,13 @@ services:
       context: .
       dockerfile: Ocelot.APIGateway/Dockerfile    
     ports:
-      - "7196:8081" #https.
-      - "5236:8080" #http.
+      - "7196:443" #https.
+      #FIXRUN02- "5236:80" #http.
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:8081;http://+:8080
-      - ASPNETCORE_HTTPS_PORT=8081
+      #FIXRUN02- ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_URLS=https://+:443
+      - ASPNETCORE_HTTPS_PORT=443
       - ASPNETCORE_Kestrel__Certificates__Default__Password=Sql20243107* 
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/patientfront.pfx
       #Microservices url for CORS.
@@ -106,12 +119,13 @@ services:
       context: .
       dockerfile: PatientNoteBackAPI/Dockerfile
     ports:
-      - "7080:8081" #https.
-      - "5247:8080" #http.
+      - "7080:443" #https.
+      #FIXRUN02- "5247:80" #http.
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:8081;http://+:8080
-      - ASPNETCORE_HTTPS_PORT=8081
+      #FIXRUN02- ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_URLS=https://+:443
+      - ASPNETCORE_HTTPS_PORT=443
       - ASPNETCORE_Kestrel__Certificates__Default__Password=Sql20243107* 
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/patientfront.pfx
     depends_on:
@@ -128,12 +142,13 @@ services:
       context: .
       dockerfile: PatientDiabeteRiskBackAPI/Dockerfile
     ports:
-      - "7089:8081" #https.
-      - "5078:8080" #http.
+      - "7089:443" #https.
+      #FIXRUN02- "5078:80" #http.
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:8081;http://+:8080
-      - ASPNETCORE_HTTPS_PORT=8081
+      #FIXRUN02- ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_URLS=https://+:443
+      - ASPNETCORE_HTTPS_PORT=443
       - ASPNETCORE_Kestrel__Certificates__Default__Password=Sql20243107* 
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/patientfront.pfx
     volumes:
@@ -143,6 +158,7 @@ services:
 #for persistent db datas
 volumes:
   sql-data:
+  mongodb-data: 
   #mongo-data:  
 
 # from https://stackoverflow.com/questions/56499847/how-to-connect-to-a-sql-server-database-inside-a-docker-container

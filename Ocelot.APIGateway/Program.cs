@@ -48,11 +48,16 @@ builder.Services
 
 // Ocelot service.
 builder.Services.AddOcelot(builder.Configuration);
-
 // Ocelot configuration.
 builder.Configuration.AddJsonFile("ocelot.json");
 
-builder.WebHost.UseUrls("http://localhost:5236", "https://localhost:7196");
+//FIXRUN02 (force https).
+/*builder.Services.AddHttpsRedirection(options =>
+{
+    options.HttpsPort = 7196;
+});
+builder.WebHost.UseUrls("https://localhost:7196"); //builder.WebHost.UseUrls("http://localhost:5236", "https://localhost:7196");*/
+
 WebApplication app = builder.Build();
 
 app.UseHttpsRedirection(); //FIXRUN01 

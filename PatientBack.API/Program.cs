@@ -148,11 +148,14 @@ builder.Services.AddScoped<IPatientService, PatientBackAPI.Services.PatientServi
 builder.Services.AddScoped<IAddressRepository, AddressRepository>();
 builder.Services.AddScoped<ILoginService, PatientBackAPI.Services.LoginService>();
 
-/*//FIXRUN01 builder.Services.AddHttpsRedirection(options =>
+//FIXRUN02 force https.
+/* not working
+builder.Services.AddHttpsRedirection(options =>
 {    
     options.HttpsPort = 7244;
 });
-builder.WebHost.UseUrls("http://localhost:5033", "https://localhost:7244");*/
+builder.WebHost.UseUrls("https://localhost:7244");//builder.WebHost.UseUrls("http://localhost:5033", "https://localhost:7244");*/
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

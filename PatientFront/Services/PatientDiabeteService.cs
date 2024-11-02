@@ -12,11 +12,24 @@ namespace PatientFront.Services
         private readonly ILogger<PatientDiabeteService> _logger;
         public PatientDiabeteService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor, ILogger<PatientDiabeteService> logger)
         {
-            //(FIX3.3) Baseaddress of PatientDiabeteRiskBackAPI.
-            // For development.
+            // PatientDiabeteRiskBackAPI.
+            // For local development.            
             //httpClient.BaseAddress = new Uri("https://localhost:7089");
-            // For docker container.
-            httpClient.BaseAddress = new Uri("https://patientdiabeteriskbackapi:8081");
+
+            //Use API app DNS for containerized app). Port provides by conf.
+            var endPoint = "https://patientdiabeteriskbackapi"; // "https://patientdiabeteriskbackapi:443";
+
+            // FIXRUN06 dev-cert https certificate are not correctly handled by docker containers.
+            // In order to avoid generating an official certificate with letsencrypt (for example) we force to TRUE the certificate validation.
+            // Recommanded instructions from Microsoft in Enforce HTTPS in ASP.NET Core page was already made ==> https://learn.microsoft.com/en-us/aspnet/core/security/enforcing-ssl?view=aspnetcore-5.0&tabs=visual-studio
+            //      https://www.conradakunga.com/blog/disable-ssl-certificate-validation-in-net/
+            var httpClientHandler = new HttpClientHandler();
+            httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, sslPolicyErrors) =>
+            {
+                return true;
+            };
+            httpClient = new HttpClient(httpClientHandler) { BaseAddress = new Uri(endPoint) };
+            // END: Use API app DNS for containerized app). Port provides by conf.
 
             httpClient.DefaultRequestHeaders.Accept.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(

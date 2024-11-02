@@ -6,8 +6,8 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "dotnetRunMessages": true,
-      "applicationUrl": "http://localhost:5236"
+      "dotnetRunMessages": true
+      //FIXRUN04 "applicationUrl": "http://localhost:5236"
     },
     "https": {
       "commandName": "Project",
@@ -16,7 +16,8 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:7196;http://localhost:5236"
+      //FIXRUN04 "applicationUrl": "https://localhost:7196;http://localhost:5236"
+      "applicationUrl": "https://localhost:7196"
     },
     "IIS Express": {
       "commandName": "IISExpress",
@@ -43,10 +44,10 @@
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
       //"DockerfileRunArguments": "-l mylabel=value",
       "environmentVariables": {
-        //"ASPNETCORE_URLS": "https://+:8081;http://+:8080",
+        //"ASPNETCORE_URLS": "https://+:443;http://+:80",
         //"ASPNETCORE_HTTPS_PORTS": "7196"
-        "ASPNETCORE_HTTPS_PORTS": "8081",
-        "ASPNETCORE_HTTP_PORTS": "8080"
+        "ASPNETCORE_HTTPS_PORTS": "443"
+        //FIXRUN04 "ASPNETCORE_HTTP_PORTS": "80"
       },
       "publishAllPorts": true,
       "useSSL": true

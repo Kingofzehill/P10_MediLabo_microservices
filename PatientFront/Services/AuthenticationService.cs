@@ -22,16 +22,24 @@ namespace PatientFront.Services
 
         public AuthenticationService(HttpClient httpClient, ILogger<AuthenticationService> logger, IHttpContextAccessor httpContextAccessor)
         {
-            //(FIX3.1) Baseaddress of PatientBackAPI.
-            // For development.
+            // PatientBackAPI.
+            // For local development.            
             //httpClient.BaseAddress = new Uri("https://localhost:7244");
-            //httpClient.BaseAddress = new Uri("https://192.168.1.20:7244"); //DNS IPV4 IP address of personnal computer
-            //httpClient.BaseAddress = new Uri("https://172.29.160.1:7244"); //IP IPV4 IP address of personnal computer (DNS)            
-            //For docker containers.
-            //httpClient.BaseAddress = new Uri("https://patientbackapi:8081");
-            //httpClient.BaseAddress = new Uri("https://host.docker.internal:8081");
-            //httpClient.BaseAddress = new Uri("https://localhost:8081");
-            httpClient.BaseAddress = new Uri("http://localhost:8081"); 
+            
+            // Use API DNS for containerized app. Port provides by configuration.
+            var endPoint = "https://patientbackapi"; 
+
+            // FIXRUN06 dev-cert https certificate are not correctly handled by docker containers.
+            // In order to avoid generating an official certificate with letsencrypt (for example) we force to TRUE the certificate validation.
+            // Recommanded instructions from Microsoft in Enforce HTTPS in ASP.NET Core page was already made ==> https://learn.microsoft.com/en-us/aspnet/core/security/enforcing-ssl?view=aspnetcore-5.0&tabs=visual-studio
+            //      https://www.conradakunga.com/blog/disable-ssl-certificate-validation-in-net/
+            var httpClientHandler = new HttpClientHandler();
+            httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, sslPolicyErrors) =>
+            {
+                return true;
+            };
+            httpClient = new HttpClient(httpClientHandler) { BaseAddress = new Uri(endPoint) };
+            // END: Use API DNS for containerized app. Port provides by configuration.
 
             httpClient.DefaultRequestHeaders.Accept.Clear();
             // Set Content-Type header for an HttpClient request : application/json
@@ -41,8 +49,6 @@ namespace PatientFront.Services
             _httpClient = httpClient;
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;            
-            //_httpContextAccessor.HttpContext.Request.ContentType = "application/json";
-            //_httpContextAccessor.HttpContext.Request.Method = "POST";
         }
 
         /// <summary>Front Authentication Service. Connection method.

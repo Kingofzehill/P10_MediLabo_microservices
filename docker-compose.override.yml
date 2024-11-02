@@ -6,11 +6,11 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development            
       #Dockerfile exposed port.   
-      - ASPNETCORE_HTTPS_PORTS=8081 
-      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=443 
+      #FIXRUN02- ASPNETCORE_HTTP_PORTS=80
     #ports:
-    #  - "8080" #http
-    #  - "8081" #https
+    #  - "80" #http
+    #  - "443" #https
     volumes:    
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro #https certificate password.
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro #https certificate file.    
@@ -19,11 +19,11 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development            
       #Dockerfile exposed port.   
-      - ASPNETCORE_HTTPS_PORTS=8081 
-      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=443 
+      #FIXRUN02- ASPNETCORE_HTTP_PORTS=80
     #ports:
-    #  - "8080" #http
-    #  - "8081" #https 
+    #  - "80" #http
+    #  - "443" #https 
     volumes:    
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro #https certificate password.
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro #https certificate file.    
@@ -32,11 +32,11 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development            
       #Dockerfile exposed port.   
-      - ASPNETCORE_HTTPS_PORTS=8081 
-      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=443 
+      #FIXRUN02 ASPNETCORE_HTTP_PORTS=80
     #ports:
-    #  - "8080" #http
-    #  - "8081" #https
+    #  - "80" #http
+    #  - "443" #https
     volumes:    
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro #https certificate password.
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro #https certificate file.    
@@ -45,11 +45,11 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development            
       #Dockerfile exposed port.   
-      - ASPNETCORE_HTTPS_PORTS=8081 
-      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=443 
+      #FIXRUN02- ASPNETCORE_HTTP_PORTS=80
     #ports:
-    #  - "8080" #http
-    #  - "8081" #https
+    #  - "80" #http
+    #  - "443" #https
     volumes:    
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro #https certificate password.
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro #https certificate file.    
@@ -58,11 +58,11 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development            
       #Dockerfile exposed port.   
-      - ASPNETCORE_HTTPS_PORTS=8081 
-      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=443 
+      #FIXRUN02- ASPNETCORE_HTTP_PORTS=80
     #ports:
-    #  - "8080" #http
-    #  - "8081" #https 
+    #  - "80" #http
+    #  - "443" #https 
     volumes:    
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro #https certificate password.
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro #https certificate file.          

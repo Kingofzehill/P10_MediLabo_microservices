@@ -34,7 +34,7 @@ namespace PatientFront.Controllers
                 {
                     Log.Error($"[PatientFront][PatientController][List][HttpGet]. Patients List = null.");
                     TempData["ErrorTitle"] = "Liste Patients";
-                    TempData["ErrorMessage"] = "La liste des patients a généré une erreur.";
+                    TempData["ErrorMessage"] = "Vous n'avez pas les droits pour accéder à la liste des patients.";
                     return View("404");
                 }
 
@@ -65,7 +65,7 @@ namespace PatientFront.Controllers
                 {
                     Log.Error($"[PatientFront][PatientController][Get][HttpGet]. Patients Get = null.");
                     TempData["ErrorTitle"] = "Détail Patient";
-                    TempData["ErrorMessage"] = "La recherche du patient a généré une erreur.";
+                    TempData["ErrorMessage"] = "Vous n'avez pas les droits pour accéder au détail d'un patient.";
                     return View("404");
                 }
 

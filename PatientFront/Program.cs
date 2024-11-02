@@ -85,11 +85,14 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.File("logs/MediLabo_PatientFront_log.txt", rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
     .CreateLogger();
 
-/*//FIXRUN01 builder.Services.AddHttpsRedirection(options =>
+//FIXRUN02 force https.
+/* not working
+builder.Services.AddHttpsRedirection(options =>
 {
     options.HttpsPort = 7288;
 });
-builder.WebHost.UseUrls("https://localhost:7288", "http://localhost:5174");*/
+builder.WebHost.UseUrls("https://localhost:7288"); //builder.WebHost.UseUrls("https://localhost:7288", "http://localhost:5174");*/
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
