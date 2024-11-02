@@ -13,12 +13,17 @@ using PatientNoteBackAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddDbContext<IdentityDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Patient-Back")));
+
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+        .AddEntityFrameworkStores<IdentityDbContext>()
+        .AddDefaultTokenProviders();
+
 // Swagger : Open API Bearer http security scheme configuration.
 // https://medium.com/@rahman3593/implementing-jwt-authentication-with-swagger-ca991b7aca08
+var jwt = builder.Configuration.GetSection("Jwt");
+var key = Encoding.ASCII.GetBytes(jwt["SecretKey"]!);
 builder.Services.AddSwaggerGen(options =>
 {
 options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
@@ -63,8 +68,6 @@ options.AddSecurityRequirement(new OpenApiSecurityRequirement
 });
 
 // Authentication with secretKey for token generation.
-var jwt = builder.Configuration.GetSection("Jwt");
-var key = Encoding.ASCII.GetBytes(jwt["SecretKey"]!);
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -90,13 +93,15 @@ builder.Services.AddAuthorizationBuilder()
         policy.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
     });
 
-// DB connection for Identity.
-builder.Services.AddDbContext<IdentityDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Patient-Back")));
+// Add services to the container.
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-        .AddEntityFrameworkStores<IdentityDbContext>()
-        .AddDefaultTokenProviders();
+// Scoped services for Note Repository and Service.
+builder.Services.AddScoped<INoteRepository, NoteRepository>();
+builder.Services.AddScoped<INoteService, NoteService>();
 
 // DB connection for Patient Notes.
 var mongoDbappsettings = builder.Configuration.GetSection("MongoDb");
@@ -115,9 +120,13 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.File("logs/MediLabo_PatientNotesBackAPI_log.txt", rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
     .CreateLogger();
 
-// Scoped services for Note Repository and Service.
-builder.Services.AddScoped<INoteRepository, NoteRepository>();
-builder.Services.AddScoped<INoteService, NoteService>();
+//FIXRUN02 force https.
+/* not working
+builder.Services.AddHttpsRedirection(options =>
+{
+    options.HttpsPort = 7080;
+});
+builder.WebHost.UseUrls("https://localhost:7080"); //builder.WebHost.UseUrls("http://localhost:5247", "https://localhost:7080");*/
 
 var app = builder.Build();
 
@@ -130,11 +139,11 @@ if (app.Environment.IsDevelopment())
 
 // (FIX001) solve sharing authentication between microservices.
 app.UseHttpsRedirection();
-app.UseStaticFiles();
-app.UseRouting();
-app.UseAuthentication();
+//app.UseStaticFiles();
+//app.UseRouting();
+//app.UseAuthentication();
 app.UseAuthorization();
-app.UseEndpoints(_ => { });
+//app.UseEndpoints(_ => { });
 
 app.MapControllers();
 

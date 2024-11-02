@@ -1,0 +1,166 @@
+version: '3.4'
+# https://www.yogihosting.com/docker-compose-aspnet-core/
+
+services:
+  patientfront:
+    image: ${DOCKER_REGISTRY-}patientfront        
+    build:
+      context: .
+      dockerfile: PatientFront/Dockerfile    
+    ports:
+      - "7288:443" #https.
+      #FIXRUN02- "5174:80" #http.
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      #FIXRUN02- ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_URLS=https://+:443
+      - ASPNETCORE_HTTPS_PORT=443
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Sql20243107* 
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/patientfront.pfx
+    volumes:
+    # Copy certificate placed in the patientfront app Https folder and mount it in the container into a https folder.
+      - ./PatientFront/https/patientfront.pfx:/https/patientfront.pfx:ro
+
+  patientbackapi:
+    image: ${DOCKER_REGISTRY-}patientbackapi
+    container_name: patientbackapi
+    build:
+      context: .
+      dockerfile: PatientBack.API/Dockerfile        
+    ports:
+      - "7244:443" #https.
+      #FIXRUN02- "5033:80" #http.
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      #FIXRUN02- ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_URLS=https://+:443
+      - ASPNETCORE_HTTPS_PORT=443
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Sql20243107* 
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/patientfront.pfx
+    depends_on:
+      - mssql
+    volumes:
+    # Copy certificate placed in the patientfront app Https folder and mount it in the container into a https folder.
+      - ./PatientBack.API/https/patientfront.pfx:/https/patientfront.pfx:ro
+
+  #from https://www.mongodb.com/resources/products/compatibilities/docker https://www.bmc.com/blogs/mongodb-docker-container/
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    hostname: mongodb
+    #restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db/
+    #image: mongodb/mongodb-community-server:6.0-ubi8
+    #environment:
+    #  - MONGODB_INITDB_ROOT_USERNAME=myUserAdmin
+    #  - MONGODB_INITDB_ROOT_PASSWORD=admin123
+    #ports:
+    #  - "27017:27017" 
+    #volumes:
+    #  - type: bind
+    #    source: ./data
+        #source: //c/MongoDB
+    #    target: /data/db
+        #target: c://MongoDB
+  
+  #SqlServer container. https://learn.microsoft.com/fr-fr/dotnet/architecture/microservices/multi-container-microservice-net-applications/database-server-container    
+  #SqlServer configuration https://gist.github.com/rchardptrsn/508f954445829433e840c93167c042ef
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mssql-db
+    hostname: mssql-db
+    ports:      
+      - "1433:1433"
+    environment:
+      - ACCEPT_EULA=1
+      - MSSQL_SA_PASSWORD=Sql20243107*
+    # from https://stackoverflow.com/questions/56499847/how-to-connect-to-a-sql-server-database-inside-a-docker-container
+    networks:
+      - mymssqlnet    
+    cap_add:
+      - NET_ADMIN      
+    volumes:
+      - ./sql-data:/var/opt/mssql/data      
+
+  ocelotapigateway:
+    image: ${DOCKER_REGISTRY-}ocelotapigateway
+    container_name: ocelotapigateway
+    build:
+      context: .
+      dockerfile: Ocelot.APIGateway/Dockerfile    
+    ports:
+      - "7196:443" #https.
+      #FIXRUN02- "5236:80" #http.
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      #FIXRUN02- ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_URLS=https://+:443
+      - ASPNETCORE_HTTPS_PORT=443
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Sql20243107* 
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/patientfront.pfx
+      #Microservices url for CORS.
+      - PatientFrontUrl=https://localhost:7288
+      - PatientBackAPIUrl=https://localhost:7244
+      - PatientNoteBackAPIUrl=https://localhost:7080
+      - PatientDiabeteRiskBackAPIUrl=https://localhost:7089    
+    depends_on:
+      - patientbackapi 
+    volumes:
+    # Copy certificate placed in the patientfront app Https folder and mount it in the container into a https folder.
+      - ./Ocelot.APIGateway/https/patientfront.pfx:/https/patientfront.pfx:ro
+        
+  patientnotebackapi:
+    image: ${DOCKER_REGISTRY-}patientnotebackapi
+    container_name: patientnotebackapi
+    build:
+      context: .
+      dockerfile: PatientNoteBackAPI/Dockerfile
+    ports:
+      - "7080:443" #https.
+      #FIXRUN02- "5247:80" #http.
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      #FIXRUN02- ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_URLS=https://+:443
+      - ASPNETCORE_HTTPS_PORT=443
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Sql20243107* 
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/patientfront.pfx
+    depends_on:
+      - mssql
+      - mongodb
+    volumes:
+    # Copy certificate placed in the patientfront app Https folder and mount it in the container into a https folder.
+      - ./PatientNoteBackAPI/https/patientfront.pfx:/https/patientfront.pfx:ro
+ 
+  patientdiabeteriskbackapi:
+    image: ${DOCKER_REGISTRY-}patientdiabeteriskbackapi
+    container_name: patientdiabeteriskbackapi
+    build:
+      context: .
+      dockerfile: PatientDiabeteRiskBackAPI/Dockerfile
+    ports:
+      - "7089:443" #https.
+      #FIXRUN02- "5078:80" #http.
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      #FIXRUN02- ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_URLS=https://+:443
+      - ASPNETCORE_HTTPS_PORT=443
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Sql20243107* 
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/patientfront.pfx
+    volumes:
+    # Copy certificate placed in the patientfront app Https folder and mount it in the container into a https folder.
+      - ./PatientDiabeteRiskBackAPI/https/patientfront.pfx:/https/patientfront.pfx:ro
+
+#for persistent db datas
+volumes:
+  sql-data:
+  mongodb-data: 
+  #mongo-data:  
+
+# from https://stackoverflow.com/questions/56499847/how-to-connect-to-a-sql-server-database-inside-a-docker-container
+networks:
+  mymssqlnet:

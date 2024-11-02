@@ -5,7 +5,9 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
 	<RootNamespace>PatientBackAPI</RootNamespace> 
-    <UserSecretsId>16e048ca-d83a-4775-95d5-05290e531071</UserSecretsId>
+    <UserSecretsId>16e048ca-d83a-4775-95d5-05290e531071</UserSecretsId> 
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS> 
+    <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>     
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,6 +23,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.6" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.5" />
     <PackageReference Include="Serilog" Version="4.0.1" />
     <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />

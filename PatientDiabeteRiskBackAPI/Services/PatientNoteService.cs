@@ -1,5 +1,5 @@
-﻿using NuGet.Common;
-using PatientNoteBackAPI.Models.OutputModels;
+﻿//using NuGet.Common;
+using PatientDiabeteRiskBackAPI.Models.OutputModels;
 using Serilog;
 using System.Net;
 using System.Net.Http.Headers;
@@ -14,8 +14,25 @@ namespace PatientDiabeteRiskBackAPI.Services
 
         public PatientNoteService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor, ILogger<PatientDiabeteRiskBackAPI.Services.PatientNoteService> logger)
         {
-            // Fix baseaddress defined in httpclient of program.cs for PatientNoteService which etrangly remains at null.
-            httpClient.BaseAddress = new Uri("https://localhost:7079");
+            // PatientNoteBackAPI
+            // For local development.            
+            //httpClient.BaseAddress = new Uri("https://localhost:7080");
+
+            // Use API app DNS for containerized apps. Port provides by configuration.
+            var endPoint = "https://patientnotebackapi";
+
+            // FIXRUN06 dev-cert https certificate are not correctly handled by docker containers.
+            // In order to avoid generating an official certificate with letsencrypt (for example) we force to TRUE the certificate validation.
+            // Recommanded instructions from Microsoft in Enforce HTTPS in ASP.NET Core page was already made ==> https://learn.microsoft.com/en-us/aspnet/core/security/enforcing-ssl?view=aspnetcore-5.0&tabs=visual-studio
+            //      https://www.conradakunga.com/blog/disable-ssl-certificate-validation-in-net/
+            var httpClientHandler = new HttpClientHandler();
+            httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, sslPolicyErrors) =>
+            {
+                return true;
+            };
+            httpClient = new HttpClient(httpClientHandler) { BaseAddress = new Uri(endPoint) };
+            // END: Use API app DNS for containerized apps. Port provides by configuration.
+
             httpClient.DefaultRequestHeaders.Accept.Clear();
             httpClient.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));

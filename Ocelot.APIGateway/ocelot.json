@@ -1,7 +1,7 @@
 {
   // (UPD019) Ocelot service configuration and routes to PatientBackAPI methods.
   "GlobalConfiguration": {
-    "BaseUrl": "https://localhost:7195",
+    "BaseUrl": "https://localhost:7196",
     "RateLimitOptions": {
       "DisableRateLimitHeaders": true
     }
@@ -16,7 +16,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7243
+          "Port": 7244
         }
       ],
       //  ignore SSL warnings (errors). (make sense in local development environments).
@@ -31,7 +31,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7243
+          "Port": 7244
         }
       ],
       "DangerousAcceptAnyServerCertificateValidator": true
@@ -44,7 +44,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7243
+          "Port": 7244
         }
       ],
       "DangerousAcceptAnyServerCertificateValidator": true
@@ -57,7 +57,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7243
+          "Port": 7244
         }
       ],
       "DangerousAcceptAnyServerCertificateValidator": true
@@ -70,7 +70,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7243
+          "Port": 7244
         }
       ],
       "DangerousAcceptAnyServerCertificateValidator": true
@@ -83,7 +83,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7243
+          "Port": 7244
         }
       ],
       "DangerousAcceptAnyServerCertificateValidator": true
@@ -96,7 +96,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7079
+          "Port": 7080
         }
       ],
       "DangerousAcceptAnyServerCertificateValidator": true
@@ -109,7 +109,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7079
+          "Port": 7080
         }
       ],
       "DangerousAcceptAnyServerCertificateValidator": true
@@ -122,7 +122,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7079
+          "Port": 7080
         }
       ],
       "DangerousAcceptAnyServerCertificateValidator": true
@@ -135,7 +135,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7079
+          "Port": 7080
         }
       ],
       "DangerousAcceptAnyServerCertificateValidator": true
@@ -148,7 +148,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 7088
+          "Port": 7089
         }
       ],
       "DangerousAcceptAnyServerCertificateValidator": true

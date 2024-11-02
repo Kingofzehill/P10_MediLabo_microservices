@@ -4,76 +4,72 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 
-/*var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
-
-app.MapGet("/", () => "Hello World!");
-
-app.Run();
-*/
-
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-// (TD007) To activate for docker-compose.
-/*
 // Activate multiple origins requests (cors) for allowing cross origins requests between microservices apps.
 //      https://learn.microsoft.com/fr-fr/aspnet/core/security/cors?view=aspnetcore-8.0
-builder.Services.AddCors(options =>
+/*//FIXRUN01 builder.Services.AddCors(options =>
 {
-    var patientFrontUrl = builder.Configuration.GetValue<string>("PatientFrontUrl");
-    var patientBackAPIUrl = builder.Configuration.GetValue<string>("PatientBackAPIUrl");
-    var PatientNoteAPIUrl = builder.Configuration.GetValue<string>("PatientNoteAPIUrl");
-    options.AddPolicy("CorsPolicy",
+    //Get microservices url from docker-compose for allowing CORS requests.
+    var PatientFrontUrl = builder.Configuration.GetValue<string>("PatientFrontUrl");
+    var PatientServiceUrl = builder.Configuration.GetValue<string>("PatientBackAPIUrl");
+    var PatientNoteUrl = builder.Configuration.GetValue<string>("PatientNoteBackAPIUrl");
+    var PatientRapportDiabeteUrl = builder.Configuration.GetValue<string>("PatientDiabeteRiskBackAPIUrl");
+    options.AddPolicy("CorsMediLabo",
         policy =>
         {
-            if (!string.IsNullOrEmpty(patientFrontUrl))
+            if (!string.IsNullOrEmpty(PatientFrontUrl))
             {
-                policy.WithOrigins(patientFrontUrl);
+                policy.WithOrigins(PatientFrontUrl);
             }
-            if (!string.IsNullOrEmpty(patientBackAPIUrl))
+            if (!string.IsNullOrEmpty(PatientServiceUrl))
             {
-                policy.WithOrigins(patientBackAPIUrl);
+                policy.WithOrigins(PatientServiceUrl);
             }
-            if (!string.IsNullOrEmpty(PatientNoteAPIUrl))
+            if (!string.IsNullOrEmpty(PatientNoteUrl))
             {
-                policy.WithOrigins(PatientNoteAPIUrl);
+                policy.WithOrigins(PatientNoteUrl);
+            }
+            if (!string.IsNullOrEmpty(PatientRapportDiabeteUrl))
+            {
+                policy.WithOrigins(PatientRapportDiabeteUrl);
             }
             policy.AllowAnyMethod();
             policy.AllowAnyHeader();
             policy.AllowCredentials();
         });
-});
-*/
+});*/
 
-// (TD007) To activate for docker-compose.
 // Health checks: libraries and integrity controls of http endpoints.
 //      https://learn.microsoft.com/fr-fr/aspnet/core/host-and-deploy/health-checks?view=aspnetcore-8.0
 builder.Services
     .AddHealthChecks()
     .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]);
 
-// Ocelot configuration.
-//builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
-builder.Configuration.AddJsonFile("ocelot.json");
 // Ocelot service.
 builder.Services.AddOcelot(builder.Configuration);
+// Ocelot configuration.
+builder.Configuration.AddJsonFile("ocelot.json");
+
+//FIXRUN02 (force https).
+/*builder.Services.AddHttpsRedirection(options =>
+{
+    options.HttpsPort = 7196;
+});
+builder.WebHost.UseUrls("https://localhost:7196"); //builder.WebHost.UseUrls("http://localhost:5236", "https://localhost:7196");*/
 
 WebApplication app = builder.Build();
-//var app = builder.Build();
 
-//app.UseCors("CorsPolicy");
-// (FIX001) solve sharing authentication between microservices.
-app.UseHttpsRedirection();
-app.UseStaticFiles();
+app.UseHttpsRedirection(); //FIXRUN01 
+//app.UseStaticFiles();
 app.UseRouting();
-app.UseAuthentication();
+//app.UseAuthentication();
+//FIXRUN01 app.UseCors("CorsMediLabo");
 app.UseAuthorization();
 app.UseEndpoints(_ => { });
 
-// (TD007) To activate for docker-compose.
 // Create health checks endpoints (/hc // /liveness) of the middleware.
 //      https://stackoverflow.com/questions/72384646/usehealthchecks-vs-maphealthchecks
-// (TD006) using RequireAuthorization??? for avoiding unauthorize client to usurp port.
 app.MapHealthChecks("/hc", new HealthCheckOptions()
 {
     Predicate = _ => true,
@@ -86,4 +82,4 @@ app.MapHealthChecks("/liveness", new HealthCheckOptions
 });
 
 await app.UseOcelot();
-app.Run();
+await app.RunAsync();

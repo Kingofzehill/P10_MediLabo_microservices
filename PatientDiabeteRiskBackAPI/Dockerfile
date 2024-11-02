@@ -1,25 +1,27 @@
 #See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-#Depending on the operating system of the host machines(s) that will build or run the containers, the image specified in the FROM statement may need to be changed.
-#For more information, please see https://aka.ms/containercompat
-
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-nanoserver-1809 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+USER app
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
+#FIXRUN03 change EXPOSE 8080 for 80 and deactivate
+#EXPOSE 80
+#FIXRUN03 change EXPOSE 8081 for 443
+EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0-nanoserver-1809 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["PatientDiabeteRiskBackAPI/PatientDiabeteRiskBackAPI.csproj", "PatientDiabeteRiskBackAPI/"]
+COPY ["PatientBack.API/PatientBackAPI.csproj", "PatientBack.API/"]
+COPY ["PatientNoteBackAPI/PatientNoteBackAPI.csproj", "PatientNoteBackAPI/"]
 RUN dotnet restore "./PatientDiabeteRiskBackAPI/PatientDiabeteRiskBackAPI.csproj"
 COPY . .
 WORKDIR "/src/PatientDiabeteRiskBackAPI"
-RUN dotnet build "./PatientDiabeteRiskBackAPI.csproj" -c %BUILD_CONFIGURATION% -o /app/build
+RUN dotnet build "./PatientDiabeteRiskBackAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./PatientDiabeteRiskBackAPI.csproj" -c %BUILD_CONFIGURATION% -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./PatientDiabeteRiskBackAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app

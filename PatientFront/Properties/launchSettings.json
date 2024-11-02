@@ -1,31 +1,23 @@
-﻿{
-  "$schema": "http://json.schemastore.org/launchsettings.json",
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:41216",
-      "sslPort": 44374
-    }
-  },
+{
   "profiles": {
     "http": {
       "commandName": "Project",
-      "dotnetRunMessages": true,
       "launchBrowser": true,
-      "applicationUrl": "http://localhost:5174",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "dotnetRunMessages": true
+      //FIXRUN04 "applicationUrl": "http://localhost:5174"
     },
     "https": {
       "commandName": "Project",
-      "dotnetRunMessages": true,
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:7287;http://localhost:5174",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "dotnetRunMessages": true,
+      //FIXRUN04 "applicationUrl": "https://localhost:7288;http://localhost:5174"
+      "applicationUrl": "https://localhost:7288"
     },
     "IIS Express": {
       "commandName": "IISExpress",
@@ -33,6 +25,43 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
+    },
+    /*"Container (Dockerfile)": {
+      "commandName": "Docker",
+      "launchBrowser": true,
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "environmentVariables": {
+        "ASPNETCORE_HTTP_PORTS": "5174",
+        "ASPNETCORE_HTTPS_PORTS": "7288"
+      },
+      "publishAllPorts": true,
+      "useSSL": true
+    }
+  },*/
+    "Docker": {
+      "commandName": "Docker",
+      "launchBrowser": true,
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      //"DockerfileRunArguments": "-l mylabel=value",
+      "environmentVariables": {
+        //"ASPNETCORE_URLS": "https://+:443;http://+:80",
+        //"ASPNETCORE_HTTPS_PORTS": "7288"
+        "ASPNETCORE_HTTPS_PORTS": "443"
+        //FIXRUN04 "ASPNETCORE_HTTP_PORTS": "80"
+      },
+      "publishAllPorts": true,
+      "useSSL": true
+      //"sslPort": 7288,
+      //"httpPort": 5174
+    }
+  },
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:41216",
+      "sslPort": 44374
     }
   }
 }
