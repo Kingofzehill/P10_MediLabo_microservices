@@ -52,25 +52,12 @@ builder.Services.AddSwaggerGen(options =>
             new List<string>()
         }
     });
-    // Swagger API xml documentation.
-    /*
-    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";    
-    //options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
-    //FileStream fs = new FileStream(@"" + offlinePath, FileMode.Create);
-    var repFic = "C:\\Users\\smour\\source\\repos\\OCR\\Prj10";
-    var fichier = File.Create(repFic, 512, FileOptions.None);
-    options.IncludeXmlComments(Path.Combine("C:\\Users\\smour\\source\\repos\\OCR\\Prj10", xmlFilename));
-    */
 });
 
 // Authentication with secretKey for token generation.
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        // (FIX001) solve sharing authentication between microservices.
-        //options.Authority = "https://localhost:7244"; // PatientBackAPI microservice.
-        //options.Audience = "https://localhost:7244"; // PatientBackAPI microservice.
-
         options.RequireHttpsMetadata = false;
         options.SaveToken = true;
         options.TokenValidationParameters = new TokenValidationParameters
@@ -116,22 +103,6 @@ builder.Services.AddScoped<PatientDiabeteRiskBackAPI.Services.DiabeteService>();
 //replace AddHttpContextAccessor configuration, httpClient.BaseAddress is set directly in PatientService and PatientNoteService.
 builder.Services.AddHttpClient<PatientDiabeteRiskBackAPI.Services.PatientService>();
 
-// (FIX02) REPLACED by AddHttpClient. BaseAddress is set directly in Services files.
-/* builder.Services.AddHttpContextAccessor();
-
-// Add http client to PatientBackAPI microservice for API methods access.
-builder.Services.AddHttpClient<PatientDiabeteRiskBackAPI.Services.PatientService>(client =>
-{
-    client.BaseAddress = new Uri("https://localhost:7244"); // URL from PatientBackAPIlaunchSettings.json.
-});
-
-// Add http client to PatientNoteBackAPI microservice for API methods access.
-builder.Services.AddHttpClient<PatientDiabeteRiskBackAPI.Services.PatientNoteService>(client =>
-{
-    client.BaseAddress = new Uri("https://localhost:7080"); // URL from PatientNoteBackAPI launchSettings.json.
-});
-*/
-
 // Logs configuration (Serilog).
 // https://serilog.net/ 
 // https://www.nuget.org/packages/Serilog.Sinks.File 
@@ -140,14 +111,6 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .WriteTo.File("logs/MediLabo_PatientDiabeteRiskBackAPI_log.txt", rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
     .CreateLogger();
-
-//FIXRUN02 force https.
-/* not working
-builder.Services.AddHttpsRedirection(options =>
-{
-    options.HttpsPort = 7089;
-});
-builder.WebHost.UseUrls("https://localhost:7089"); //builder.WebHost.UseUrls("http://localhost:5078", "https://localhost:7089");*/
 
 var app = builder.Build();
 
@@ -168,9 +131,6 @@ app.UseHttpsRedirection();
 //app.UseAuthentication();
 app.UseAuthorization();
 //app.UseEndpoints(_ => { });
-
-// (UPD022) Midlleware Service.
-//app.UseMiddleware<PatientDiabeteRiskBackAPI.Services.MiddlewareService>();
 
 app.MapControllers();
 

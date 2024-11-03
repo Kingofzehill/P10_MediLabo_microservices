@@ -130,8 +130,7 @@ namespace PatientNoteBackAPI.Controllers
         /// <response code ="200">OK.</response>    
         /// <response code ="401">Unauthorized.</response>  
         /// <response code ="404">Not found.</response>
-        /// <response code ="500">Internal error (exception).</response>
-        //[HttpDelete("{id:length(24)}")]
+        /// <response code ="500">Internal error (exception).</response>        
         [HttpDelete]
         [Route("Delete")]
         [Authorize("Practitioner")]        
@@ -139,7 +138,7 @@ namespace PatientNoteBackAPI.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Delete([FromQuery] string id) // {670d136f831d2836be4d400a}
+        public async Task<IActionResult> Delete([FromQuery] string id) 
         {
             try
             {

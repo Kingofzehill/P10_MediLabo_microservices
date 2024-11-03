@@ -62,13 +62,6 @@ builder.Services.AddHttpClient<PatientFront.Services.PatientDiabeteService>(clie
 // (UPD026) Add dependency to service ILoginService (interface) from PatientBackAPI with AuthenticationService type.
 builder.Services.AddScoped<ILoginService, AuthenticationService>();
 
-//replace AddHttpContextAccessor configuration used by httpClient. BaseAddress is set directly in PatientService and PatientNoteService.
-/*builder.Services.AddHttpContextAccessor();
-builder.Services.AddHttpClient<PatientFront.Services.PatientService>();
-builder.Services.AddHttpClient<PatientFront.Services.AuthenticationService>();
-builder.Services.AddHttpClient<PatientFront.Services.PatientNoteService>();
-builder.Services.AddHttpClient<PatientFront.Services.PatientDiabeteService>();*/
-
 // (UPD021) Cookie for Microsoft Asp.Net authentication. 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
        .AddCookie(options =>
@@ -85,21 +78,12 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.File("logs/MediLabo_PatientFront_log.txt", rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
     .CreateLogger();
 
-//FIXRUN02 force https.
-/* not working
-builder.Services.AddHttpsRedirection(options =>
-{
-    options.HttpsPort = 7288;
-});
-builder.WebHost.UseUrls("https://localhost:7288"); //builder.WebHost.UseUrls("https://localhost:7288", "http://localhost:5174");*/
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
-    // (UPD027) Add middleware for dealing with error statut code (401, 403, 404).
+    app.UseExceptionHandler("/Home/Error");    
     app.UseStatusCodePagesWithReExecute("/Home/Error{0}");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     // UseHsts isn't recommended in development because the HSTS settings are highly cacheable by browsers.

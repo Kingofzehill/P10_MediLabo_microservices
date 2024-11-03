@@ -29,18 +29,6 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    /*"Container (Dockerfile)": {
-      "commandName": "Docker",
-      "launchBrowser": true,
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
-      "environmentVariables": {
-        "ASPNETCORE_HTTP_PORTS": "5078",
-        "ASPNETCORE_HTTPS_PORTS": "7089"
-      },
-      "publishAllPorts": true,
-      "useSSL": true
-    }
-  },*/
     "Docker": {
       "commandName": "Docker",
       "launchBrowser": false,
@@ -49,7 +37,7 @@
       "environmentVariables": {
         //"ASPNETCORE_URLS": "https://+:443;http://+:80",
         //"ASPNETCORE_HTTPS_PORTS": "7089"
-        "ASPNETCORE_HTTPS_PORTS": "443",
+        "ASPNETCORE_HTTPS_PORTS": "443"
         //FIXRUN04 "ASPNETCORE_HTTP_PORTS": "80"
       },
       "publishAllPorts": true,

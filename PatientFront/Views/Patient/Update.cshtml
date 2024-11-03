@@ -1,5 +1,4 @@
-﻿@*@model PatientBackAPI.Models.InputModels.PatientInputModel*@
-@model PatientBackAPI.Models.OutputModels.PatientOutputModel
+﻿@model PatientBackAPI.Models.OutputModels.PatientOutputModel
 
 @{
     ViewData["Title"] = "Mettre à jour un patient";
@@ -7,8 +6,7 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<form asp-action="Update">
-    @*<input type="hidden" name="patientId" value="@TempData["patientId"]" />*@
+<form asp-action="Update">    
     <input type="hidden" asp-for="Id" />
     <div class="form-group">
         <label asp-for="Firstname" class="control-label">Prénom</label>

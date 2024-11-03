@@ -25,8 +25,6 @@ namespace PatientNoteBackAPI.Services
             var strId = (objectId != ObjectId.Empty ? objectId.ToString() : string.Empty);
             return new NoteOutputModel
             {
-                //Id = note.Id,
-                
                 Id = strId,
                 NoteContent = note.NoteContent,
                 PatientId = note.PatientId,

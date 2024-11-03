@@ -40,7 +40,7 @@ Pour faire fonctionner le projet, vous devez au préalable avoir installé sur v
   1. Lancer Docker Desktop (en mode administrateur).
   2. Lancer Visual Studio (en mode administrateur).
   3. Dans Visual Studio, cloner le projet `https://github.com/Kingofzehill/P10_MediLabo_microservices.git`
-  4. Veuiller adapter les ConnectionString des bases de données à votre configuration locale dans les fichiers appsettings.json des projets : PatientBackAPI, 
+  4. Veuiller adapter les ConnectionString des bases de données à votre configuration locale dans les fichiers appsettings.json des projets : PatientBackAPI, PatientNoteBackAPI, PatientDiabeteRiskBackAPI. 
   5. Sélectionner le projet Docker Compose.
   6. Pour pouvoir exécuter la solution localement (localhost), vous devez installer un certificat de sécurité SSL. Il permet à l'application d'utiliser le protocole HTTPS pour les communications avec les différents microservices.
   Veuillez suivre la documentation Microsoft, créer un certificat auto-signé avec dotnet dev-certs : https://learn.microsoft.com/fr-fr/dotnet/core/additional-tools/self-signed-certificates-guide#create-a-self-signed-certificate 

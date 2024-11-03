@@ -53,18 +53,6 @@ services:
       - "27017:27017"
     volumes:
       - mongodb-data:/data/db/
-    #image: mongodb/mongodb-community-server:6.0-ubi8
-    #environment:
-    #  - MONGODB_INITDB_ROOT_USERNAME=myUserAdmin
-    #  - MONGODB_INITDB_ROOT_PASSWORD=admin123
-    #ports:
-    #  - "27017:27017" 
-    #volumes:
-    #  - type: bind
-    #    source: ./data
-        #source: //c/MongoDB
-    #    target: /data/db
-        #target: c://MongoDB
   
   #SqlServer container. https://learn.microsoft.com/fr-fr/dotnet/architecture/microservices/multi-container-microservice-net-applications/database-server-container    
   #SqlServer configuration https://gist.github.com/rchardptrsn/508f954445829433e840c93167c042ef

@@ -1,9 +1,4 @@
-﻿//using Microsoft.OpenApi.Extensions;
-//using NuGet.Common;
-//using PatientBackAPI.Services;
-using PatientDiabeteRiskBackAPI.Models;
-//using PatientNoteBackAPI.Services;
-//using System.Collections.Generic;
+﻿using PatientDiabeteRiskBackAPI.Models;
 
 namespace PatientDiabeteRiskBackAPI.Services
 {

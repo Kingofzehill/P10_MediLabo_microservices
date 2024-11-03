@@ -3,8 +3,7 @@
     /// <summary>
     /// DTO Address Class.
     /// </summary>
-    /// <remarks></remarks>
-    // (UPD002) Sprint 01, US 01 : Address class.
+    /// <remarks></remarks>    
     public class Address
     {
         public int Id { get; set; }

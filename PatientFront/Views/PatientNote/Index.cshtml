@@ -12,18 +12,7 @@
         @TempData["SuccessMessage"]
     </div>
 }
-@*
-@{
-    bool bCreateDisplay = false;
-}
-@foreach (var note in Model)
-{
-    if (bCreateDisplay == false)
-    {
-        <a asp-action="Create" asp-controller="PatientNote" asp-route-Id="@note.PatientId" class="btn btn-outline-secondary">Créer une Note</a>
-        bCreateDisplay = true;
-    }
-}*@
+
 @{
     var patientId = TempData["PatientId"];
     if (patientId != null)
@@ -45,8 +34,7 @@
             @foreach (var note in Model)
             {
                 <tr>
-                    <td>@note.PatientId</td>
-                    @*<td>@string.IsNullOrEmpty(note.Id)</td>*@
+                    <td>@note.PatientId</td>                    
                     <td>@note.Id</td>
                     <td>@note.NoteContent</td>
                     <td><a asp-action="Delete" asp-controller="PatientNote" asp-route-Id="@note.Id">Supprimer</a></td>

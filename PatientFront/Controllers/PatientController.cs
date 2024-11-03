@@ -90,57 +90,19 @@ namespace PatientFront.Controllers
         {
             return View();
         }
-        /*public async Task<IActionResult> Create()
-        {
-            //return View(nameof(Create));
-            var inputModel = new PatientInputModel
-            {
-                Firstname = "",
-                Lastname = "",
-                //BirthDate = new DateTime(),
-                BirthDate = DateTime.Now,
-                Gender = "",
-                Address = "",
-                PhoneNumber = ""
-            };
-            return View(inputModel);*/
-            /*var outputModel = new PatientOutputModel
-            {                
-                Firstname = "",
-                Lastname = "",
-                BirthDate = DateTime.Now,
-                Gender = "",
-                Address = "",
-                PhoneNumber = ""
-            };
-            return View(outputModel);*/
-        //}
 
         /// <summary>PatientFront. Patient Controller. Create method.</summary>                
         /// Post Patient input model for creation.</summary>  
         /// <returns>Patient created.</returns> 
         /// <remarks>[HttpPost]</remarks>        
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("Firstname, Lastname, BirthDate, Gender, Address, PhoneNumber")] PatientInputModel input)
-        //public async Task<IActionResult> Create(PatientInputModel input)                
-        //public async Task<IActionResult> Create(PatientOutputModel input)
+        [ValidateAntiForgeryToken]        
         public async Task<IActionResult> Create([Bind("Firstname, Lastname, BirthDate, Gender, Address, PhoneNumber")] PatientInputModel input)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    /*var patientInputModel = new PatientInputModel
-                    {
-                        Firstname = input.Firstname,
-                        Lastname = input.Lastname,
-                        BirthDate = input.BirthDate,
-                        Gender = input.Gender,
-                        Address = input.Address,
-                        PhoneNumber = input.PhoneNumber
-                    };
-                    var patient = await _patientService.Create(patientInputModel);*/
                     var patient = await _patientService.Create(input);
                     if (patient == null)
                     {
@@ -191,18 +153,6 @@ namespace PatientFront.Controllers
                     return View("404");
                 }
 
-                /*var inputModel = new PatientInputModel
-                // Store Patient Id for update.                
-                TempData["patientId"] = id;
-                {
-                    Firstname = patient.Firstname,
-                    Lastname = patient.Lastname,
-                    BirthDate = patient.BirthDate,
-                    Gender = patient.Gender,
-                    Address = patient.Address,
-                    PhoneNumber = patient.PhoneNumber
-                };
-                return View(inputModel);*/
                 var outputModel = new PatientOutputModel
                 {
                     Id = patient.Id,
@@ -222,8 +172,7 @@ namespace PatientFront.Controllers
                 Log.Error($"{ex.StackTrace} : {ex.Message}");
                 return Problem(
                     detail: ex.StackTrace,
-                    title: ex.Message);
-                //return StatusCode(500, "Internal server error");
+                    title: ex.Message);                
             }
         }
 
@@ -233,8 +182,7 @@ namespace PatientFront.Controllers
         /// <returns>Patient (output model) updated.</returns> 
         /// <remarks>[HttpPost]</remarks>
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Update(int id, PatientInputModel input)
+        [ValidateAntiForgeryToken]        
         public async Task<IActionResult> Update(int id, PatientOutputModel input)
         {
             try
@@ -250,7 +198,7 @@ namespace PatientFront.Controllers
                         Address = input.Address,
                         PhoneNumber = input.PhoneNumber
                     };
-                    //var patient = await _patientService.Update(id, input);
+                    
                     var patient = await _patientService.Update(input.Id, patientInputModel);
                     if (patient == null)
                     {

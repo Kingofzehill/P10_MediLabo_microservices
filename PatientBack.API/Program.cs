@@ -64,26 +64,12 @@ builder.Services.AddSwaggerGen(options =>
             new List<string>()
         }
     });
-    // Swagger API xml documentation.
-    /*
-    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";    
-    //options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
-    //FileStream fs = new FileStream(@"" + offlinePath, FileMode.Create);
-    var repFic = "C:\\Users\\smour\\source\\repos\\OCR\\Prj10";
-    var fichier = File.Create(repFic, 512, FileOptions.None);
-    options.IncludeXmlComments(Path.Combine("C:\\Users\\smour\\source\\repos\\OCR\\Prj10", xmlFilename));
-    */
 });
 
 // (UPD011) JWT Bearer Authentication configuration with Secret Key to use for token generation.
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
-    {
-        // (FIX001) solve sharing authentication between microservices.
-        //options.Authority = "https://localhost:7244"; // PatientBackAPI microservice.
-        //options.Audience = "https://localhost:7244"; // PatientBackAPI microservice.
-        
-        // https not required.
+    {              
         options.RequireHttpsMetadata = false;
         options.SaveToken = true;
         // Token validation settings.
@@ -91,12 +77,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             ValidateIssuerSigningKey = true,
             // Mitigates forwarding attacks (ValidateIssuer / ValidateAudience).
-            ValidateIssuer = false,//ValidateIssuer = true,
-            ValidateAudience = false,//ValidateAudience = true,
+            ValidateIssuer = false,
+            ValidateAudience = false,
             ValidateLifetime = true,
-            // Valid issuer and audience for token check.
-            //ValidIssuer = jwt["Issuer"],
-            //ValidAudience = jwt["Audience"],
             // Set security key to use.
             IssuerSigningKey = new SymmetricSecurityKey(key)
         };
@@ -147,14 +130,6 @@ builder.Services.AddScoped<IPatientRepository, PatientRepository>();
 builder.Services.AddScoped<IPatientService, PatientBackAPI.Services.PatientService>();
 builder.Services.AddScoped<IAddressRepository, AddressRepository>();
 builder.Services.AddScoped<ILoginService, PatientBackAPI.Services.LoginService>();
-
-//FIXRUN02 force https.
-/* not working
-builder.Services.AddHttpsRedirection(options =>
-{    
-    options.HttpsPort = 7244;
-});
-builder.WebHost.UseUrls("https://localhost:7244");//builder.WebHost.UseUrls("http://localhost:5033", "https://localhost:7244");*/
 
 var app = builder.Build();
 

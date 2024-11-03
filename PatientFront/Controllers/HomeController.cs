@@ -27,9 +27,7 @@ namespace PatientFront.Controllers
         public async Task<IActionResult> Error(int statusCode)
         {
             if (statusCode == 404)
-            {
-                //return await Task.FromResult(View("404")); //"~/Views/Shared/_AddBranch.cshtml"
-                //return await Task.FromResult(View("Views/Shared/404.cshtml"));
+            {                
                 TempData["ErrorTitle"] = "404 - Page Not Found";
                 TempData["ErrorMessage"] = "Les identifiants saisis ne sont pas trouvés. Veuillez vérifier utilisateur et mot de passe.";   
                 return View("Views/Shared/404.cshtml");

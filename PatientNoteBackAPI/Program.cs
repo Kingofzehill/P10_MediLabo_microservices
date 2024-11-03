@@ -56,15 +56,6 @@ options.AddSecurityRequirement(new OpenApiSecurityRequirement
             new List<string>()
         }
     });
-    // Swagger API xml documentation.
-    /*
-    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";    
-    //options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
-    //FileStream fs = new FileStream(@"" + offlinePath, FileMode.Create);
-    var repFic = "C:\\Users\\smour\\source\\repos\\OCR\\Prj10";
-    var fichier = File.Create(repFic, 512, FileOptions.None);
-    options.IncludeXmlComments(Path.Combine("C:\\Users\\smour\\source\\repos\\OCR\\Prj10", xmlFilename));
-    */
 });
 
 // Authentication with secretKey for token generation.
@@ -119,14 +110,6 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .WriteTo.File("logs/MediLabo_PatientNotesBackAPI_log.txt", rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
     .CreateLogger();
-
-//FIXRUN02 force https.
-/* not working
-builder.Services.AddHttpsRedirection(options =>
-{
-    options.HttpsPort = 7080;
-});
-builder.WebHost.UseUrls("https://localhost:7080"); //builder.WebHost.UseUrls("http://localhost:5247", "https://localhost:7080");*/
 
 var app = builder.Build();
 

@@ -1,5 +1,4 @@
-﻿@*@model PatientBackAPI.Models.OutputModels.PatientOutputModel*@
-@model PatientBackAPI.Models.InputModels.PatientInputModel
+﻿@model PatientBackAPI.Models.InputModels.PatientInputModel
 
 @{
     ViewData["Title"] = "Création d'un Patient.";
@@ -37,8 +36,7 @@
         <label asp-for="PhoneNumber" class="control-label">Téléphone</label>
         <input asp-for="PhoneNumber" class="form-control" />
         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-    </div>
-    @*<div class="form-group mt-1">*@
+    </div>    
     <div class="form-group mt-1">
         <input type="submit" value="Créer le Patient" class="btn btn-primary" />
     </div>

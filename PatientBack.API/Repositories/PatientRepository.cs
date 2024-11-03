@@ -15,8 +15,7 @@ namespace PatientBackAPI.Repositories
 
         /// <summary>Patient Repository (CRUD operation). List.</summary>      
         /// <return>List of Patients DTO objects.</return>         
-        /// <remarks></remarks>
-        //public async Task<List<Patient>> List() => await Task.Run(() => _context.Patients.Include(p => p.Address).ToListAsync());
+        /// <remarks></remarks>        
         public async Task<List<Patient>> List()
         { 
             try
@@ -32,8 +31,7 @@ namespace PatientBackAPI.Repositories
         /// <summary>Patient Repository (CRUD operation). Get by id.</summary>      
         /// <return>Returns Patient DTO object.</return> 
         /// <param name="id">Patient id to get.</param>
-        /// <remarks></remarks>
-        //public async Task<Patient> Get(int id) => await _context.Patients.FindAsync(id);
+        /// <remarks></remarks>        
         public async Task<Patient> Get(int id)
         {
             try

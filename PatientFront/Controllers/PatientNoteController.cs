@@ -80,10 +80,7 @@ namespace PatientFront.Controllers
                         return View("404");
                     }
                     TempData["SuccessMessage"] = "La note du patient a été créée.";
-                    TempData["PatientId"] = note.PatientId;
-                    //return RedirectToAction(nameof(Index));
-                    //return RedirectToAction("Index", "Patient");
-                    //return RedirectToAction("Index", "PatientNote");
+                    TempData["PatientId"] = note.PatientId;                    
                     return RedirectToAction("Index", new { id = note.PatientId });
                 }
                 ModelState.AddModelError(string.Empty, "Les informations fournies sont incomplètes. Veuillez vérifier les informations saisies.");

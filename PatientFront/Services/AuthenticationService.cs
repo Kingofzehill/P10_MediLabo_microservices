@@ -61,11 +61,7 @@ namespace PatientFront.Services
         public async Task<string> Login(string username, string password)
         {
             try
-            {
-                //ServicePointManager.ServerCertificateValidationCallback = delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; };
-                
-                // Use HttpClient defined to PatientBack API authentication method, route "/Authentication/Login".
-                // Transmits username and password for login and check code 200 (success).
+            {                
                 var connection = await _httpClient.PostAsJsonAsync("/Authentication/Login",
                     new { Username = username, Password = password });
                 connection.EnsureSuccessStatusCode();

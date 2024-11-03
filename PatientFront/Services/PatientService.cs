@@ -168,8 +168,7 @@ namespace PatientFront.Services
         /// Use PatientBack API for Patient Delete.</summary>     
         /// <param name="id">Patient Id.</param>         
         /// <returns>Patient Output Model.</returns> 
-        /// <remarks> URI: /Patient/Delete{id}.</remarks>
-        /*public async Task<List<PatientOutputModel>> Delete(int id)*/
+        /// <remarks> URI: /Patient/Delete{id}.</remarks>        
             public async Task<PatientOutputModel> Delete(int id)
         {
             try
@@ -189,8 +188,7 @@ namespace PatientFront.Services
             catch (Exception ex)
             {
                 Log.Error(ex, $"[PatientFront][PatientService][Delete] Error on Patient Delete id: {id}.");
-                Log.Error($"{ex.StackTrace} : {ex.Message}");
-                //return new List<PatientOutputModel>();
+                Log.Error($"{ex.StackTrace} : {ex.Message}");                
                 return null;
             }
         }

@@ -5,8 +5,7 @@ namespace PatientBackAPI.Domain
     /// <summary>
     /// DTO Patient Class.
     /// </summary>
-    /// <remarks></remarks>
-    // (UPD001) Sprint 01, US 01 : Patient class.
+    /// <remarks></remarks>    
     public class Patient
     {
         public int Id { get; set; }

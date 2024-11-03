@@ -31,8 +31,7 @@ namespace PatientBackAPI.Services
                 Gender = patient.Gender,
             };
             
-            // Postal address is optionnal.
-            //if (patient.Address is not null)
+            // Postal address is optionnal.            
             if (patient.AddressId.HasValue)
             {                
                 var address = await _addressRepository.GetById((int)patient.AddressId.Value);                
@@ -73,15 +72,10 @@ namespace PatientBackAPI.Services
                 // (TODO03) manage create address.
                 var address = await _addressRepository.GetByName(input.Address);
                 if (address == null)
-                {
-                    // Create.
+                {                    
                     var addressCreated = await _addressRepository.Create(new Address { AddressContent = input.Address });
                     patient.AddressId = addressCreated.Id;
                     patient.Address = addressCreated;
-                    /*// Update.
-                    var addressUpdated = await _addressRepository.Update(new Address { AddressContent = input.Address });
-                    patient.Address = addressUpdated;
-                    patient.AddressId = addressUpdated.Id;*/
                 }        
                 else
                 {
@@ -199,9 +193,7 @@ namespace PatientBackAPI.Services
         public async Task<PatientOutputModel?> Delete(int id)
         {
             try
-            {
-                // (TODO04) Manage address delete
-                // Get patient with ID, and use address ID for delete.
+            {                
                 var patientCheck = await _patientRepository.Get(id);
                 if (patientCheck is not null)
                 {

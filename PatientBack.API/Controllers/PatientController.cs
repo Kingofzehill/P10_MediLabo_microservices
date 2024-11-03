@@ -57,8 +57,7 @@ namespace PatientBackAPI.Controllers
         /// <response code ="401">Unauthorized.</response>  
         /// <response code ="404">Not found.</response>
         /// <response code ="500">Internal error (exception).</response>
-        [HttpGet]
-        //[Route("Get/{id}")]
+        [HttpGet]        
         [Route("Get")]
         [Authorize(Policy = "OrganizerOrPractitioner")] // Authorize for specific policy (this policy check if user has role Organizer or Practitioner).
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -130,12 +129,9 @@ namespace PatientBackAPI.Controllers
         /// <response code ="401">Unauthorized.</response>  
         /// <response code ="404">Not found.</response>
         /// <response code ="500">Internal error (exception).</response>
-        [HttpPut]
-        //[Route("Update/{id}")]
+        [HttpPut]        
         [Route("Update")]
         [Authorize("Organizer")]
-        //[Authorize(Roles = "Organizer")] // Authorize for user which has the specified role.
-        //[Authorize(Policy = "Organizer")] // Authorize policy (user which has the specified role).
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -173,12 +169,9 @@ namespace PatientBackAPI.Controllers
         /// <response code ="401">Unauthorized.</response>  
         /// <response code ="404">Not found.</response>
         /// <response code ="500">Internal error (exception).</response>
-        [HttpDelete]
-        //[Route("Delete/{id}")]
+        [HttpDelete]        
         [Route("Delete")]
-        [Authorize("Organizer")]
-        //[Authorize(Roles = "Organizer")] // Authorize for user which has the specified role.
-        //[Authorize(Policy = "Organizer")] // Authorize policy (user which has the specified role).
+        [Authorize("Organizer")]        
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
