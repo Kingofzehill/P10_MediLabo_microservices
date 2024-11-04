@@ -2,11 +2,11 @@ MédiLabo Microservices solution.
 Projet 10 OpenClassRooms : Développez une solution en microservices pour votre client.
 ---
 # Informations Générales
-La solution de Microservices MédiLabo a pour objet d'administrer les données des Patients par le secrétariat et aux Praticiens de saisir les Notes concernant la patientèle. Elle inclut la génération de rapport de risque de Diabète pour un Patient.
+La solution de Microservices MédiLabo a pour objet d'administrer les données des Patients par les Organisateurs et permet aux Praticiens de saisir les Notes concernant la patientèle. Elle inclut pour un Praticien la possibilité de générer un rapport de risque de Diabète pour un Patient.
 
 La solution inclus les projets (microservices) suivants : 
-- (PatientBackAPI) API permettant aux Secrétaires (Organizer) de gérer la base Patients de MédiLabo (ajout, modification, suppression, accès à un et à la liste des Patients).
-- (PatientNoteBackAPI) API aux Practiens (Practitioner) leur permettant d'ajouter des Notes sur leurs Patients.
+- (PatientBackAPI) API permettant aux Organisateurs (Organizer) de gérer la base Patients de MédiLabo (ajout, modification, suppression, accès à un et à la liste des Patients).
+- (PatientNoteBackAPI) API permettant aux Practiens (Practitioner) d'ajouter des Notes aux Patients.
 - (PatientDiabeteRiskBackAPI) API permettant d'évaluer le risque de Diabète d'un Patient à partir des termes déclencheurs détectées dans les Notes saisies par le Praticien.
 - (PatientFront) Site web en Front permettant d'accéder aux méthodes des API selon les droits de l'utilisateur connecté en affichant les informations dans des interfaces utilisateurs.
 - (OcelotAPIGateway) Une passerelle Ocelot permettant de router les requêtes entre les microserivces.
@@ -43,20 +43,26 @@ Pour faire fonctionner le projet, vous devez au préalable avoir installé sur v
   4. Veuiller adapter les ConnectionString des bases de données à votre configuration locale dans les fichiers appsettings.json des projets : PatientBackAPI, PatientNoteBackAPI, PatientDiabeteRiskBackAPI. 
   5. Sélectionner le projet Docker Compose.
   6. Pour pouvoir exécuter la solution localement (localhost), vous devez installer un certificat de sécurité SSL. Il permet à l'application d'utiliser le protocole HTTPS pour les communications avec les différents microservices.
-  Veuillez suivre la documentation Microsoft, créer un certificat auto-signé avec dotnet dev-certs : https://learn.microsoft.com/fr-fr/dotnet/core/additional-tools/self-signed-certificates-guide#create-a-self-signed-certificate 
+  Veuillez suivre la documentation Microsoft pour créer un certificat auto-signé avec dotnet dev-certs : https://learn.microsoft.com/fr-fr/dotnet/core/additional-tools/self-signed-certificates-guide#create-a-self-signed-certificate 
+  Une fois le certificat créé (veuillez le nommer patientfront.pfx) et remplacer le certificat dans les dossiers /https de chaque projet par celui généré. 
+  Pour qu'il soit reconnu par Windows comme un certificat provenant d'une autorité de confiance, veuillez rechercher l'outil "Gérer les certificats utilisateur" et copier le certificat "localhost" présent dans le dossier "Personnel/Certificats" dans le dossier "Autorité de certification racines de confiance/Certificats.
   7. Nous vous conseillons d'activer l'utilisateur système sa dans SQL Server Management Studio (voir dossier Sécurités / Connexions). Dans les propriétés de la connexion sa, onglet Etat, passer "Autorisation de se connecter au moteur de base de données" à Autoriser, passer "Connexion" à Activé.
   8. La base de données Ms Sql Server P10_MediLabo_Patient-back est crée lorsque la solution est démarrée la première fois. Veuillez donc lancer la solution en debug une première fois et arrêter le débogage lorsque la page d'accueil de la solution est affichée.
-  9. Vous pouvez ajouter les données de test Patients en suivant le document : 20241024_Create MsSQL database and patients test datas_v1.0.docx. Ce document se situe dans le répertoire ..\Ressources\Test Datas MsSqlServer\ des sources de la solution.  
-  10. La base de données Mongo DB P10_MediLabo_PatientNotes-back est à créer (collection Notes) en suivant le document  : 20241024_Create MongoDB database and notes test datas_v1.docx.
+  9. Vous pouvez ajouter les données de test Patients en suivant le document : "20241024_Create MsSQL database and patients test datas_v1.0.docx". Ce document se situe dans le répertoire ..\Ressources\Test Datas MsSqlServer\ des sources de la solution.  
+  Profitez en pour activer la connexion "sa" tel qu'indiqué dans le document.
+  10. La base de données Mongo DB P10_MediLabo_PatientNotes-back est à créer (collection Notes) en suivant le document  : "20241024_Create MongoDB database and notes test datas_v1.docx".
   Ce document se situe dans le répertoire ..\Ressources\Test Data MongoDB\ des sources de la solution. Vous pouvez ajouter les données de test des Notes Patients en suivant ce document.
-  11. Dans la console PowerShell Développeur de Visual Studio, saisir les commandes :
+  11. Rechercher le Gestionnaire de configuration Sql Server. 
+  Dans la partie "Services Sql Server" assurez vous que les services "SQL Server" et "SQL Server Browser" sont démarrés.
+  Dans la partie "configuration du Réseau SQL Server / Procotocles pour MSSQLSERVER", veuillez activer : mémoire partagé, canaux nommés et tcp/ip.
+  12. Dans la console PowerShell Développeur de Visual Studio, saisir les commandes :
   `docker-compose build` : génère les images des conteneurs.
   `docker-compose up` : démarre les conteneurs.
 
   
 # Utilisation
-Si le démarrage de la solution a été effectué correctement, les conteneurs des services sont affichés dans Docker Desktop.
-## Pour accéder au site Web du Front client : https://localhost:7288/
+Si le démarrage de la solution a été réalisé correctement, les conteneurs des services sont affichés dans Docker Desktop.
+## Vous pouvez accéder au site Web du Front client via https://localhost:7288/
 Dans le menu du site, cliquer sur le lien Se connecter et utiliser l'un des comptes utilisateurs ci-dessous (automatiquement créés lors du premier démarrage de la solution) pour vous connecter.
 
 ## __Compte de test Secrétériat__:
@@ -77,7 +83,7 @@ Ce rôle permet aussi de générer un rapport de risque de diabète pour un Pati
 
 Quand vous êtes connectés pour accéder aux Patients, cliquer sur le lien Patients.
 
-# Recommandations d'amélioration "Green"
+# Recommandations d'améliorations "Green Code"
 - Utiliser un linter. Un Linter est un outil permettant d'analyser le code et l'améliorer. Il diagnostique et corrige des problèmes techniques, aide à maintenir le code lisible et cohérent. Mesure la qualité du code.
 -- https://code.gouv.fr/fr/bluehats/ecocode/
 -- https://fr.linkedin.com/advice/1/why-should-you-use-linter-your-code-skills-application-development-exyhf
